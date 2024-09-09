@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Sidebar from "./sidebar";
+import Sidebar from "./Sidebar";
 const Profile = () => {
       const { loginInfo } = useSelector((state) => state.auth);
   return (
