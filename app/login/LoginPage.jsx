@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify"; // Import ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
 import { useSelector, useDispatch } from "react-redux";
-import { login, getMe } from "../GlobalRedux/features/auth/authSlice";
+import { login, getMe, reset } from "../GlobalRedux/features/auth/authSlice"; // Import reset action
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
@@ -21,37 +22,35 @@ const LoginPage = () => {
   const { loginInfo, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  // console.log(loginInfo)
-//   useEffect(() => {
-//     if (isError) {
-//       toast.error("Invalid credentials. Please try again!", {
-//         closeOnClick: true,
-//         autoClose: 2000,
-//       });
-//     }
 
-//     if (isSuccess || loginInfo?.token) {
-//       dispatch(getMe(loginInfo.token));
-        
-//       if (loginInfo.user.isEmailVerified) {
-//         router.push("/dashboard");
-//       } else {
-//         router.push("/email-verify");
-//       }
-//     }
-//   }, [isError, isSuccess, loginInfo, dispatch, router]);
+ useEffect(() => {
+   if (isError) {
+     toast.error(message || "Invalid credentials. Please try again!", {
+       closeOnClick: true,
+       autoClose: 2000,
+     });
+   }
 
-    useEffect(() => {
-      if (isSuccess || loginInfo?.token) {
-        // Perform client-side localStorage logic inside useEffect
-        if (typeof window !== "undefined") {
-          localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
-          router.push("/")
-        }
-      }
-    }, [isSuccess, loginInfo]);
-    
-    
+   if (isSuccess || loginInfo?.token) {
+     // Ensure localStorage logic runs only on the client side
+     if (typeof window !== "undefined") {
+       localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+       toast.success("Login successful!", {
+         closeOnClick: true,
+         autoClose: 2000,
+       });
+       router.push("/");
+     }
+   }
+
+   // Reset auth state after a short delay to ensure localStorage is set
+   const resetAuthState = setTimeout(() => {
+     dispatch(reset());
+   }, 500); // Delay reset by 500ms
+
+   return () => clearTimeout(resetAuthState); // Cleanup timeout on component unmount
+ }, [isError, isSuccess, loginInfo, message, dispatch, router]);
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -61,12 +60,10 @@ const LoginPage = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-console.log("LOGGIN IN");
     const userData = {
       email,
       password,
     };
-    
     dispatch(login(userData));
   };
 
@@ -75,7 +72,7 @@ console.log("LOGGIN IN");
       style={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
-        height: "100vh",
+        height: "100vh", // Ensure the entire page height is covered
       }}
     >
       <div
@@ -150,15 +147,25 @@ console.log("LOGGIN IN");
           </form>
         </div>
       </div>
-      <div className="w-full h-full relative">
+
+      {/* Full-height image container */}
+      <div
+        className="w-full h-full relative"
+        style={{
+          height: "100vh", // Ensure this div takes the full viewport height
+        }}
+      >
         <Image
           src="https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Description of image"
           layout="fill"
-          objectFit="cover"
+          objectFit="cover" // Cover the entire container
           priority
         />
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

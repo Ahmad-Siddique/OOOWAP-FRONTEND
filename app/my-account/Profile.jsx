@@ -1,8 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import axios from 'axios'
 import Sidebar from "./Sidebar";
 const Profile = () => {
-      const { loginInfo } = useSelector((state) => state.auth);
+  const { loginInfo } = useSelector((state) => state.auth);
+  const [userData, setuserData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+
+  let config = {
+    headers: {
+      Authorization: `Bearer ${loginInfo.token}`,
+    },
+  };
+
+  const fetchUSerData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/featured-products`,
+        config
+      );
+      setuserData(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching userData:", error);
+      // toast.error("Error fetching userData!");
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUSerData();
+  }, []);
+
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Main Row */}
@@ -22,19 +52,7 @@ const Profile = () => {
                   {loginInfo.user.firstName} {loginInfo.user.lastName}
                 </h2>
                 <p className="text-gray-600 mt-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Integer nec odio. Praesent libero. Sed cursus ante dapibus
-                  diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.
-                  Duis sagittis ipsum.Lorem ipsum dolor sit amet, consectetur
-                  adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
-                  ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum
-                  imperdiet. Duis sagittis ipsum.Lorem ipsum dolor sit amet,
-                  consectetur adipiscing elit. Integer nec odio. Praesent
-                  libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem
-                  at nibh elementum imperdiet. Duis sagittis ipsum.Lorem ipsum
-                  dolor sit amet, consectetur adipiscing elit. Integer nec odio.
-                  Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla
-                  quis sem at nibh elementum imperdiet. Duis sagittis ipsum.
+                  {userData && userData.userDescription}
                 </p>
               </div>
             )}
@@ -47,43 +65,28 @@ const Profile = () => {
             </h3>
             <div className="grid grid-cols-3 gap-4">
               {/* Product Card 1 */}
-              <div className="bg-white shadow-md p-4">
-                <img
-                  src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="Product 1"
-                  className="w-full h-32 object-cover mb-2"
-                />
-                <h4 className="text-lg font-semibold">Product 1</h4>
-                <p className="text-gray-600">Description of product 1</p>
-              </div>
 
-              {/* Product Card 2 */}
-              <div className="bg-white shadow-md p-4">
-                <img
-                  src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="Product 2"
-                  className="w-full h-32 object-cover mb-2"
-                />
-                <h4 className="text-lg font-semibold">Product 2</h4>
-                <p className="text-gray-600">Description of product 2</p>
-              </div>
+              {userData.featuredProducts && userData.featuredProducts.length != 0
+                ? userData.featuredProducts.map((data) => {
+                    return (
+                      <div className="bg-white shadow-md p-4">
+                        <img
+                          src={data.imageUrl}
+                          alt="Product 1"
+                          className="w-full h-32 object-cover mb-2"
+                        />
+                        <h4 className="text-lg font-semibold">{data.name}</h4>
+                        <p className="text-gray-600">{data.description}</p>
+                      </div>
+                    );
+                  })
+                : "No Featured Prodcuts"}
 
-              {/* Product Card 3 */}
-              <div className="bg-white shadow-md p-4">
-                <img
-                  src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="Product 3"
-                  className="w-full h-32 object-cover mb-2"
-                />
-                <h4 className="text-lg font-semibold">Product 3</h4>
-                <p className="text-gray-600">Description of product 3</p>
-              </div>
+             
             </div>
           </div>
-              </div>
-              <Sidebar />
-
-        
+        </div>
+        <Sidebar />
       </div>
     </div>
   );

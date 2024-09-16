@@ -1,114 +1,159 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const TradeHistory = () => {
-  // Sample data for trade history
-  const tradeHistory = [
-    {
-      id: 1,
-      userProduct: {
-        image:
-          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop",
-        name: "User Product 1",
-        price: "$100",
-      },
-      tradeProduct: {
-        image:
-          "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop",
-        name: "Trade Product 1",
-        price: "$150",
-      },
-      startDate: "2023-08-15",
-      endDate: "2023-08-20",
-    },
-    {
-      id: 2,
-      userProduct: {
-        image:
-          "https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=1999&auto=format&fit=crop",
-        name: "User Product 2",
-        price: "$120",
-      },
-      tradeProduct: {
-        image:
-          "https://images.unsplash.com/photo-1556228578-8c89e6adf883?q=80&w=1974&auto=format&fit=crop",
-        name: "Trade Product 2",
-        price: "$180",
-      },
-      startDate: "2023-07-10",
-      endDate: "2023-07-15",
-    },
-    {
-      id: 3,
-      userProduct: {
-        image:
-          "https://images.unsplash.com/photo-1574169208507-843761748e2a?q=80&w=1999&auto=format&fit=crop",
-        name: "User Product 3",
-        price: "$90",
-      },
-      tradeProduct: {
-        image:
-          "https://images.unsplash.com/photo-1560807707-8cc77767d783?q=80&w=1999&auto=format&fit=crop",
-        name: "Trade Product 3",
-        price: "$130",
-      },
-      startDate: "2023-06-01",
-      endDate: "2023-06-05",
-    },
-  ];
+  const { loginInfo } = useSelector((state) => state.auth);
+  const [tradeHistory, setTradeHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTradeHistory = async () => {
+      try {
+        const token = loginInfo
+          ? loginInfo.token
+          : null;
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const { data } = await axios.get(
+          process.env.NEXT_PUBLIC_API_URL + "/trade/history",
+          config
+        );
+
+        setTradeHistory(data.data);
+      } catch (error) {
+        setError(
+          error.response?.data?.message || "Error fetching trade history"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTradeHistory();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center">
+        <svg
+          className="animate-spin h-8 w-8 text-yellow-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v8H4z"
+          ></path>
+        </svg>
+        <span className="ml-2 text-gray-700">Loading trade history...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-600">{error}</p>;
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold mb-6">Trade History</h1>
       <div className="space-y-6">
-        {tradeHistory.map((trade) => (
-          <div
-            key={trade.id}
-            className="bg-white shadow-lg p-6 flex items-center justify-between"
-          >
-            {/* Left Section: Two Product Images */}
-            <div className="flex space-x-4">
-              {/* User's Product */}
-              <div className="flex items-center">
-                <img
-                  src={trade.userProduct.image}
-                  alt="User's Product"
-                  className="w-32 h-32 object-cover rounded-md"
-                />
-                <div className="ml-4">
-                  <h4 className="text-lg font-semibold">
-                    {trade.userProduct.name}
-                  </h4>
-                  <p className="text-gray-600">
-                    Price: {trade.userProduct.price}
-                  </p>
+        {tradeHistory.length > 0 ? (
+          tradeHistory.map((trade) => (
+            <div
+              key={trade._id}
+              className="bg-white shadow-lg p-6 flex items-center justify-between"
+            >
+              {/* Left Section: Two Product Images */}
+              <div className="flex space-x-4">
+                {/* Offerer's Product */}
+                <div className="flex items-center">
+                  <img
+                    src={trade.offererProduct?.imageUrl || "/placeholder.png"}
+                    alt="Offerer's Product"
+                    className="w-32 h-32 object-cover rounded-md"
+                  />
+                  <div className="ml-4">
+                    <h4 className="text-lg font-semibold">
+                      {trade.offererProduct?.name || "Unknown Product"}
+                    </h4>
+                    <p className="text-gray-600">
+                      Price: ${trade.offererProduct?.price || "N/A"}
+                    </p>
+                    <p className="text-gray-500">
+                      Offerer:{" "}
+                      {trade.offererProduct.userId == loginInfo.user.id
+                        ? "You"
+                        : "Other User"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Receiver's Product */}
+                <div className="flex items-center">
+                  <img
+                    src={trade.receiverProduct?.imageUrl || "/placeholder.png"}
+                    alt="Receiver's Product"
+                    className="w-32 h-32 object-cover rounded-md"
+                  />
+                  <div className="ml-4">
+                    <h4 className="text-lg font-semibold">
+                      {trade.receiverProduct?.name || "Unknown Product"}
+                    </h4>
+                    <p className="text-gray-600">
+                      Price: ${trade.receiverProduct?.price || "N/A"}
+                    </p>
+                    <p className="text-gray-500">
+                      Receiver:{" "}
+                      {trade.receiverProduct.userId == loginInfo.user.id
+                        ? "You"
+                        : "Other User"}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Other User's Product */}
-              <div className="flex items-center">
-                <img
-                  src={trade.tradeProduct.image}
-                  alt="Other User's Product"
-                  className="w-32 h-32 object-cover rounded-md"
-                />
-                <div className="ml-4">
-                  <h4 className="text-lg font-semibold">
-                    {trade.tradeProduct.name}
-                  </h4>
-                  <p className="text-gray-600">
-                    Price: {trade.tradeProduct.price}
-                  </p>
-                </div>
+              {/* Right Section: Trade Details */}
+              <div className="text-right">
+                <p className="text-gray-600">
+                  Trade Status:{" "}
+                  <span className="font-bold capitalize">{trade.status}</span>
+                </p>
+                <p className="text-gray-600">
+                  Trade Started:{" "}
+                  {trade.startDate
+                    ? new Date(trade.startDate).toLocaleDateString()
+                    : "N/A"}
+                </p>
+                <p className="text-gray-600">
+                  Trade Ended:{" "}
+                  {trade.endDate
+                    ? new Date(trade.endDate).toLocaleDateString()
+                    : "N/A"}
+                </p>
               </div>
             </div>
-
-            {/* Right Section: Trade Details */}
-            <div className="text-right">
-              <p className="text-gray-600">Trade Started: {trade.startDate}</p>
-              <p className="text-gray-600">Trade Ended: {trade.endDate}</p>
-            </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No trade history found.</p>
+        )}
       </div>
     </div>
   );

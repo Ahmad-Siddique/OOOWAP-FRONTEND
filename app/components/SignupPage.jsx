@@ -4,6 +4,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../GlobalRedux/features/auth/authSlice"; // Import your register slice
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +19,8 @@ const SignupPage = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [errors, setErrors] = useState({});
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { isLoading, isSuccess, message } = useSelector((state) => state.auth); // Get state from auth slice
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,27 +31,56 @@ const SignupPage = () => {
     setProfilePic(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validateForm = () => {
     const newErrors = {};
     if (!formData.firstName) newErrors.firstName = "First Name is required";
     if (!formData.lastName) newErrors.lastName = "Last Name is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.phone) newErrors.phone = "Phone Number is required";
+    if (!/^\d+$/.test(formData.phone)) newErrors.phone = "Invalid phone number";
     if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
 
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-    } else {
-      router.push("/login");
+      return;
     }
+
+    // Prepare form data for submission, including profile picture
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append("firstName", formData.firstName);
+    formDataToSubmit.append("lastName", formData.lastName);
+    formDataToSubmit.append("email", formData.email);
+    formDataToSubmit.append("phonenumber", formData.phone);
+    formDataToSubmit.append("password", formData.password);
+    if (profilePic) {
+      formDataToSubmit.append("image", profilePic);
+    }
+
+    // Dispatch register action
+    dispatch(register(formDataToSubmit));
   };
+
+  // Check if registration is successful and navigate to login page
+  if (isSuccess) {
+    router.push("/login");
+  }
 
   return (
     <div className="flex w-screen h-screen">
       <div className="w-1/2 flex items-center justify-center bg-white p-8">
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <h1 className="text-2xl font-bold mb-4">JOIN OUR MEMBERSHIP</h1>
           <div>
             <label
@@ -62,7 +95,7 @@ const SignupPage = () => {
               name="firstName"
               value={formData.firstName}
               onChange={handleInputChange}
-              className="input"
+              className="input input-bordered w-full"
               required
             />
             {errors.firstName && (
@@ -82,7 +115,7 @@ const SignupPage = () => {
               name="lastName"
               value={formData.lastName}
               onChange={handleInputChange}
-              className="input"
+              className="input input-bordered w-full"
               required
             />
             {errors.lastName && (
@@ -99,7 +132,7 @@ const SignupPage = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="input"
+              className="input input-bordered w-full"
               required
             />
             {errors.email && (
@@ -116,7 +149,7 @@ const SignupPage = () => {
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="input"
+              className="input input-bordered w-full"
               required
             />
             {errors.phone && (
@@ -135,7 +168,7 @@ const SignupPage = () => {
               id="profilePic"
               name="profilePic"
               onChange={handleFileChange}
-              className="input"
+              className="input input-bordered w-full"
             />
           </div>
           <div>
@@ -151,7 +184,7 @@ const SignupPage = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="input"
+              className="input input-bordered w-full"
               required
             />
           </div>
@@ -168,16 +201,21 @@ const SignupPage = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              className="input"
+              className="input input-bordered w-full"
               required
             />
             {errors.confirmPassword && (
               <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
             )}
           </div>
-          <button type="submit" className="btn btn-primary">
-            Sign Up
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
+          {message && <p className="text-red-500 text-sm mt-2">{message}</p>}
           <p className="mt-2 text-sm">
             Already a member?{" "}
             <a href="/login" className="text-blue-500">

@@ -17,7 +17,7 @@ export default function UserProfile() {
           backgroundImage: `url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
         }}
       >
-        <div className="w-full px-12 py-8 flex justify-between items-center">
+        <div className="container w-full  py-8 flex justify-between items-center">
           {/* Left Column */}
           {loginInfo && (
             <div className="flex items-center space-x-4">

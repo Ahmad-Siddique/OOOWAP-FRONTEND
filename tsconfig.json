@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/components/SignupPage.tsx"
+    "app/components/SignupPage.jsx"
 , "app/login/LoginPage.jsx", "app/GlobalRedux/Provider.jsx"  ],
   "exclude": ["node_modules"]
 }

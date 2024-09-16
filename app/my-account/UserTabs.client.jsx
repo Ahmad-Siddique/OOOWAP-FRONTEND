@@ -6,6 +6,7 @@ import ProfileSettings from "./ProfileSettings";
 import PendingItems from "./PendingItems";
 import Reviews from "./Reviews";
 import TradeHistory from "./TradeHistory";
+import Dispute from "./Dispute";
 
 export default function UserTabs() {
   const [activeTab, setActiveTab] = useState("Profile");
@@ -33,7 +34,7 @@ export default function UserTabs() {
       case "Pending Items":
         return (
           <div className="p-4">
-           <PendingItems />
+            <PendingItems />
           </div>
         );
       case "Reviews":
@@ -46,6 +47,12 @@ export default function UserTabs() {
         return (
           <div className="p-4">
             <TradeHistory />
+          </div>
+        );
+      case "Dispute":
+        return (
+          <div className="p-4">
+            <Dispute />
           </div>
         );
       default:
@@ -104,6 +111,15 @@ export default function UserTabs() {
           onClick={() => setActiveTab("Trade History")}
         >
           Trade History
+        </a>
+
+        <a
+          className={`tab tab-bordered ${
+            activeTab === "Dispute" ? "tab-active" : ""
+          }`}
+          onClick={() => setActiveTab("Dispute")}
+        >
+          Dispute
         </a>
       </div>
 

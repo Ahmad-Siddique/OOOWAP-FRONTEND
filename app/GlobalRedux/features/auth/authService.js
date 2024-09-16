@@ -1,44 +1,34 @@
-"use client";
+// services/authService.js
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:5000/api/v1";
-// API_URL is correctly defined using NEXT_PUBLIC_API_URL
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL + "/auth/";
-console.log("API_URL", API_URL); // Ensure it logs the correct value
+// axios.defaults.baseURL = API_URL;
 
 // Register user
 const register = async (userData) => {
-  const response = await axios.post(API_URL + "register", userData);
+  const response = await axios.post(API_URL+"register", userData);
   return response.data;
 };
 
 // Login user
 const login = async (userData) => {
-//   const API_URL = "http://localhost:5000/api/v1/auth/login"; // Hardcode the URL
-//   console.log("API_URL", API_URL); // Double-check the logged output
-  const response = await axios.post(
-    API_URL + "login",
-    userData
-    );
-    console.log(response)
+  const response = await axios.post(API_URL+"login", userData);
   return response.data;
 };
 
 // Get User Info
 const getMe = async (token) => {
-  const response = await axios.get(API_URL + "getMe", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+  const response = await axios.get(API_URL+"getMe", {
+    headers: { Authorization: `Bearer ${token}` },
   });
+  return response.data;
+};
 
-  if (response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
-    localStorage.setItem(
-      "planSelected",
-      JSON.stringify(response.data.data.planSelected)
-    );
-  }
-
+// Update User Info
+const updateUserProfile = async (data, token) => {
+  const response = await axios.put(API_URL+"updateProfile", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 
@@ -46,14 +36,14 @@ const getMe = async (token) => {
 const logout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("loginInfo");
-  
 };
 
 const authService = {
   register,
-  logout,
   login,
   getMe,
+  updateUserProfile,
+  logout,
 };
 
 export default authService;
