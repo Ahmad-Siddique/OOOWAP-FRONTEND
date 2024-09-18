@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
-import { toast } from "react-toastify"; // Ensure you have react-toastify installed
+import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
 const Products = () => {
   const { loginInfo } = useSelector((state) => state.auth);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const [isError, setIsError] = useState(false);
-  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -23,10 +21,10 @@ const Products = () => {
     image: null,
   });
   const [editProduct, setEditProduct] = useState(null);
-  const [showDeletePopup, setShowDeletePopup] = useState(false); // Delete confirmation state
-  const [productToDelete, setProductToDelete] = useState(null); // Track product to delete
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
-  let config = {
+  const config = {
     headers: {
       Authorization: `Bearer ${loginInfo.token}`,
     },
@@ -41,10 +39,9 @@ const Products = () => {
           config
         );
         setCategories(response.data);
-        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching categories:", error);
         toast.error("Error fetching categories!");
+      } finally {
         setIsLoading(false);
       }
     };
@@ -57,23 +54,16 @@ const Products = () => {
           config
         );
         setProducts(response.data);
-        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching products:", error);
         toast.error("Error fetching products!");
+      } finally {
         setIsLoading(false);
       }
     };
 
     fetchCategories();
     fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-  }, [isError, message]);
+  }, [loginInfo.token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -89,17 +79,9 @@ const Products = () => {
 
     try {
       const formDataToSubmit = new FormData();
-
-      // Append each form field to FormData correctly
       Object.keys(formData).forEach((key) => {
         formDataToSubmit.append(key, formData[key]);
       });
-
-      let config = {
-        headers: {
-          Authorization: `Bearer ${loginInfo.token}`,
-        },
-      };
 
       if (editProduct) {
         await axios.put(
@@ -118,15 +100,12 @@ const Products = () => {
       }
 
       setShowModal(false);
-
-      // Refetch products after adding/updating
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
         config
       );
       setProducts(response.data);
     } catch (error) {
-      console.error("Error:", error);
       toast.error("Error adding/updating product!");
     }
   };
@@ -134,19 +113,17 @@ const Products = () => {
   const handleDelete = async (productId) => {
     try {
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/${productId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/products/${productId}`,
         config
       );
       toast.success("Product deleted successfully!");
-      // Refetch products after deleting
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
         config
       );
       setProducts(response.data);
       setShowDeletePopup(false);
     } catch (error) {
-      console.error("Error:", error);
       toast.error("Error deleting product!");
     }
   };
@@ -173,6 +150,25 @@ const Products = () => {
 
   const confirmDelete = () => {
     handleDelete(productToDelete);
+  };
+
+  // Feature product handler
+  const handleFeature = async (productId) => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/products/${productId}/feature`,
+        { featured: true },
+        config
+      );
+      toast.success("Product featured successfully!");
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
+        config
+      );
+      setProducts(response.data);
+    } catch (error) {
+      toast.error("Error featuring product!");
+    }
   };
 
   return (
@@ -202,7 +198,7 @@ const Products = () => {
 
       {isLoading ? (
         <div className="flex justify-center">
-          <div className="loader">Loading...</div> {/* Loading spinner */}
+          <div className="loader">Loading...</div>
         </div>
       ) : (
         <div className="grid grid-cols-12 gap-4">
@@ -231,7 +227,12 @@ const Products = () => {
                     >
                       Edit
                     </button>
-                    <button className="btn btn-yellow">Featured</button>
+                    <button
+                      className="btn btn-yellow"
+                      onClick={() => handleFeature(product._id)}
+                    >
+                      Feature
+                    </button>
                     <button
                       className="btn btn-red"
                       onClick={() => openDeletePopup(product._id)}
@@ -262,15 +263,12 @@ const Products = () => {
             ))}
           </div>
 
-          {/* Sidebar (if needed) */}
           <div className="col-span-3">
             <Sidebar categories={categories} />
           </div>
         </div>
       )}
 
-      {/* Modal for Adding/Editing Product */}
-      {/* Modal for Adding/Editing Product */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mx-4">
@@ -348,7 +346,6 @@ const Products = () => {
                 >
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
-                  {/* Add more currencies as needed */}
                 </select>
               </div>
               <div className="mb-4">
@@ -409,7 +406,6 @@ const Products = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Popup */}
       {showDeletePopup && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm mx-4">

@@ -162,8 +162,9 @@ const ProfileSettings = () => {
     }
 
     // If password is provided, check if it matches confirmPassword
-    if (password) {
-      if (password !== confirmPassword) {
+    console.log("NEW PASSWORD", newpassword, "Confirm Password", confirmPassword)
+    if (newpassword) {
+      if (newpassword !== confirmPassword) {
         setErrorMessage("Passwords do not match.");
         return;
       }
@@ -191,6 +192,12 @@ const ProfileSettings = () => {
 
     // Append password if provided
     if (password) {
+      console.log(
+        "PASSWORD",
+        password,
+        "New Password",
+        newpassword
+      );
       submitData.append("password", password);
       submitData.append("newPassword", newpassword);
     }
@@ -218,6 +225,7 @@ console.log("FORM TO SUBMIT: ", submitData);
       setFormData((prevData) => ({
         ...prevData,
         password: "",
+        newpassword:"",
         confirmPassword: "",
       }));
     } catch (error) {
@@ -445,8 +453,8 @@ console.log("FORM TO SUBMIT: ", submitData);
             <label className="block text-gray-700">New Password</label>
             <input
               type="password"
-              name="newPassword"
-              value={formData.newPassword}
+              name="newpassword"
+              value={formData.newpassword}
               onChange={handleInputChange}
               className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
               placeholder="Enter a new password"

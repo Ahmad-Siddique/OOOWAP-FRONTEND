@@ -31,7 +31,7 @@ const LoginPage = () => {
      });
    }
 
-   if (isSuccess || loginInfo?.token) {
+   if (isSuccess && loginInfo && loginInfo.token) {
      // Ensure localStorage logic runs only on the client side
      if (typeof window !== "undefined") {
        localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
@@ -135,6 +135,14 @@ const LoginPage = () => {
             >
               Submit
             </button>
+            <p style={{ marginTop: "1rem", textAlign: "center" }}>
+              <Link
+                href="/forgot-password" // Update this link to the forgot password page
+                style={{ color: "#0070f3", textDecoration: "underline" }}
+              >
+                Forgot Password?
+              </Link>
+            </p>
             <p style={{ marginTop: "1rem", textAlign: "center" }}>
               Not a member?{" "}
               <Link

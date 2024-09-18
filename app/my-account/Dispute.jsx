@@ -70,7 +70,7 @@ const Dispute = () => {
       {/* Disputes List */}
       {disputes.length > 0 ? (
         <div className="space-y-4">
-          {disputes.map((dispute) => (
+          {disputes && disputes.map((dispute) => (
             <div key={dispute._id} className="bg-white shadow p-4 rounded-md">
               <p>
                 <strong>Trade:</strong> {dispute.trade.offererProduct.name} vs{" "}
