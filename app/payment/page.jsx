@@ -6,9 +6,9 @@ import "daisyui";
 
 const Payment = () => {
      const searchParams = useSearchParams();
-    
-    const [status, setStatus] = useState(searchParams.get("checkout_status"));
-    const [value, setvalue] = useState(searchParams.get("checkout_value"));
+    const status = searchParams.get("checkout_status");
+    const value = searchParams.get("checkout_value");
+  
     console.log("CHECKOUT STATUS: ",status)
 //     useEffect(() => {
 //       console.log("Router Query1:", router);
@@ -36,22 +36,22 @@ const Payment = () => {
         {status ? (
           <div className="text-center">
             {status === "success" ? (
-              <div>
+              <>
                 <FiCheckCircle className="text-green-500 mx-auto text-6xl" />
                 <h2 className="text-2xl font-bold mt-4">Payment Successful!</h2>
                 <p className="mt-2 text-lg text-gray-600">
                   You have successfully paid{" "}
                   <span className="font-semibold">${value}</span>.
                 </p>
-              </div>
+              </>
             ) : (
-              <div>
+              <>
                 <FiXCircle className="text-red-500 mx-auto text-6xl" />
                 <h2 className="text-2xl font-bold mt-4">Payment Failed</h2>
                 <p className="mt-2 text-lg text-gray-600">
                   The payment was unsuccessful or canceled. Please try again.
                 </p>
-              </div>
+              </>
             )}
           </div>
         ) : (
