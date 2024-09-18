@@ -1,34 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi"; // For success and failure icons
 import "daisyui";
 
-const Payment = () => {
-     const searchParams = useSearchParams();
-    const status = searchParams.get("checkout_status");
-    const value = searchParams.get("checkout_value");
-  
-    console.log("CHECKOUT STATUS: ",status)
-//     useEffect(() => {
-//       console.log("Router Query1:", router);
-//     if (router.isReady) {
-//       // Debug: Check the entire query object
-//       console.log("Router Query:", router.query);
-
-//       const { checkout_Id, checkout_status, checkout_value } = router.query;
-
-//       // Handle the case where parameters might be undefined or not present
-//       if (checkout_status && checkout_value) {
-//         setStatus({
-//           status: checkout_status,
-//           value: checkout_value,
-//         });
-//       } else {
-//         console.error("Missing query parameters");
-//       }
-//     }
-//   }, [router.isReady, router.query]);
+const PaymentStatus = () => {
+  const searchParams = useSearchParams();
+  const status = searchParams.get("checkout_status");
+  const value = searchParams.get("checkout_value");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -62,6 +42,14 @@ const Payment = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const Payment = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaymentStatus />
+    </Suspense>
   );
 };
 
