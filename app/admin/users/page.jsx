@@ -1,3 +1,4 @@
+"use client"
 import AdminLayout from "../../../components/AdminLayout";
 import { useState, useEffect } from "react";
 import axios from "axios";
