@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import LoadingIcon from "./LoadingIcon"; // Adjust the path if necessary
 
 const Dispute = () => {
   const [trades, setTrades] = useState([]);
@@ -12,31 +15,34 @@ const Dispute = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchTradesAndDisputes = async () => {
-      try {
-        const token = JSON.parse(localStorage.getItem("loginInfo")).token;
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-
-        // Fetch trades
-        const { data: tradeData } = await axios.get(
-          process.env.NEXT_PUBLIC_API_URL + "/trade/history",
-          config
-        );
-        setTrades(tradeData.data);
-
-        // Fetch disputes
-        const { data: disputeData } = await axios.get(
-          process.env.NEXT_PUBLIC_API_URL + "/dispute",
-          config
-        );
-        setDisputes(disputeData.data);
-      } catch (error) {
-        setError("Failed to load data");
-      }
-    };
-
     fetchTradesAndDisputes();
   }, []);
+
+  const fetchTradesAndDisputes = async () => {
+    setLoading(true);
+    try {
+      const token = JSON.parse(localStorage.getItem("loginInfo")).token;
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+
+      // Fetch trades
+      const { data: tradeData } = await axios.get(
+        process.env.NEXT_PUBLIC_API_URL + "/trade/history",
+        config
+      );
+      setTrades(tradeData.data);
+
+      // Fetch disputes
+      const { data: disputeData } = await axios.get(
+        process.env.NEXT_PUBLIC_API_URL + "/dispute",
+        config
+      );
+      setDisputes(disputeData.data);
+    } catch (error) {
+      setError("Failed to load data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,13 +61,19 @@ const Dispute = () => {
 
       setSuccess("Dispute created successfully");
       setIsModalOpen(false); // Close the modal after submitting
-      setDisputes([...disputes, data.data]); // Update disputes
+      setReason(""); // Clear the reason field
+      setSelectedTrade(""); // Clear the selected trade field
+
+      // Fetch updated disputes
+      await fetchTradesAndDisputes(); // Get updated disputes
     } catch (error) {
       setError("Failed to create dispute");
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) return <LoadingIcon />;
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -70,7 +82,7 @@ const Dispute = () => {
       {/* Disputes List */}
       {disputes.length > 0 ? (
         <div className="space-y-4">
-          {disputes && disputes.map((dispute) => (
+          {disputes.map((dispute) => (
             <div key={dispute._id} className="bg-white shadow p-4 rounded-md">
               <p>
                 <strong>Trade:</strong> {dispute.trade.offererProduct.name} vs{" "}
@@ -103,8 +115,16 @@ const Dispute = () => {
           <div className="bg-white p-6 rounded-md w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">Raise a Dispute</h2>
 
-            {error && <p className="text-red-500">{error}</p>}
-            {success && <p className="text-green-500">{success}</p>}
+            {error && (
+              <p className="text-red-500" aria-live="assertive">
+                {error}
+              </p>
+            )}
+            {success && (
+              <p className="text-green-500" aria-live="assertive">
+                {success}
+              </p>
+            )}
 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">

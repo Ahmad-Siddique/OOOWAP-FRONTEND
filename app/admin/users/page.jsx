@@ -1,51 +1,135 @@
-"use client"
-import AdminLayout from "../../components/AdminLayout";
-import { useState, useEffect } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaTrash, FaEdit } from "react-icons/fa";
+import AdminLayout from "../../components/AdminLayout"; // Adjust the path if necessary
 
-const Users = () => {
+const UserPanel = () => {
   const [users, setUsers] = useState([]);
-
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newRole, setNewRole] = useState("user");
+const fetchUsers = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/users`
+    );
+    setUsers(response.data);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
   useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await axios.get("/api/users");
-      setUsers(res.data);
-    };
+    
+
     fetchUsers();
   }, []);
 
+  const handleRoleChange = async () => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${selectedUser._id}`,
+        { role: newRole }
+      );
+      setIsModalOpen(false);
+      setSelectedUser(null);
+      // Re-fetch users after updating the role
+      fetchUsers();
+    } catch (error) {
+      console.error("Error updating user role:", error);
+    }
+  };
+
+  const openModal = (user) => {
+    setSelectedUser(user);
+    setNewRole(user.role);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleDelete = async (userId) => {
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`
+      );
+      // Re-fetch users after deletion
+      fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
   return (
     <AdminLayout>
-      <h1 className="text-3xl font-bold mb-4">Users</h1>
-      <table className="w-full border-collapse border border-gray-200">
+      <h2 className="text-2xl font-bold mb-4">User Management</h2>
+      <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead>
-          <tr>
-            <th className="border border-gray-300 p-2">First Name</th>
-            <th className="border border-gray-300 p-2">Last Name</th>
-            <th className="border border-gray-300 p-2">Email</th>
-            <th className="border border-gray-300 p-2">Actions</th>
+          <tr className="bg-[#C79B44] text-white">
+            <th className="py-2 px-4">Name</th>
+            <th className="py-2 px-4">Email</th>
+            <th className="py-2 px-4">Role</th>
+            <th className="py-2 px-4">Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user._id}>
-              <td className="border border-gray-300 p-2">{user.firstName}</td>
-              <td className="border border-gray-300 p-2">{user.lastName}</td>
-              <td className="border border-gray-300 p-2">{user.email}</td>
-              <td className="border border-gray-300 p-2">
-                <button className="btn btn-sm bg-black text-white rounded-sm mr-2">
-                  Edit
+            <tr key={user._id} className="border-b">
+              <td className="text-center py-2 px-4">{user.firstName}</td>
+              <td className="text-center py-2 px-4">{user.email}</td>
+              <td className="text-center py-2 px-4">{user.role}</td>
+              <td className="text-center justify-center py-2 px-4 flex space-x-2">
+                <button
+                  onClick={() => openModal(user)}
+                  className="text-blue-500 hover:underline"
+                >
+                  <FaEdit />
                 </button>
-                <button className="btn btn-sm bg-red-600 text-white rounded-sm">
-                  Delete
+                <button
+                  onClick={() => handleDelete(user._id)}
+                  className="text-red-500 hover:underline"
+                >
+                  <FaTrash />
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* DaisyUI Modal */}
+      {isModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h2 className="text-xl font-bold mb-4">Edit User Role</h2>
+            <label className="block mb-2">
+              Role:
+              <select
+                value={newRole}
+                onChange={(e) => setNewRole(e.target.value)}
+                className="select select-bordered w-full mt-2"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </label>
+            <div className="flex space-x-4">
+              <button onClick={handleRoleChange} className="btn btn-primary">
+                Save
+              </button>
+              <button onClick={closeModal} className="btn">
+                Cancel
+              </button>
+            </div>
+          </div>
+          <div className="modal-backdrop" onClick={closeModal}></div>
+        </div>
+      )}
     </AdminLayout>
   );
 };
 
-export default Users;
+export default UserPanel;

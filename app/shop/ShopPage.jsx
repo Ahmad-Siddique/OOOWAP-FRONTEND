@@ -1,16 +1,16 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import classNames from "classnames"; // For conditional class application
-import CarousalLogos from "./CarousalLogos"
-
+import CarousalLogos from "./CarousalLogos";
 
 const ShopPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(null);
+  const [isMounted, setIsMounted] = useState(false); // Prevents rendering before hydration
   const [notification, setNotification] = useState({
     show: false,
     message: "",
@@ -19,9 +19,14 @@ const ShopPage = () => {
 
   const { loginInfo } = useSelector((state) => state.auth);
 
-  // Fetch products from backend
+  // Set isMounted to true after component mounts to avoid hydration errors
   useEffect(() => {
-    if (loginInfo && loginInfo.token) {
+    setIsMounted(true);
+  }, []);
+
+  // Fetch products from backend after component has mounted and loginInfo is available
+  useEffect(() => {
+    if (isMounted && loginInfo && loginInfo.token) {
       let config = {
         headers: {
           Authorization: `Bearer ${loginInfo.token}`,
@@ -43,10 +48,10 @@ const ShopPage = () => {
           console.error("Error fetching products:", error);
           setIsLoading(false);
         });
-    } else {
+    } else if (!loginInfo) {
       console.warn("Token is not available");
     }
-  }, [filter, loginInfo]);
+  }, [filter, loginInfo, isMounted]);
 
   // Handle filter change
   const handleFilterChange = (newFilter) => {
@@ -92,6 +97,11 @@ const ShopPage = () => {
     }
   };
 
+  // Avoid rendering until after hydration
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <div className="shop-page bg-gray-100 text-black min-h-screen p-5">
       {/* Notification Popup */}
@@ -116,76 +126,19 @@ const ShopPage = () => {
         </h1>
       </div>
 
-      {/* Carousel of Logos (Optional, replace with your implementation) */}
+      {/* Carousel of Logos */}
       <div className="flex justify-center overflow-hidden">
-      
         <div className="flex space-x-6 animate-marquee">
-         {/* Replace these with actual logo images */}
-          
+          {/* Replace these with actual logo images */}
           <img
             src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
             alt="Logo 1"
             className="w-48 h-48"
           />
-          
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-          
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-          
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-          
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-          
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-          
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-          
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-         
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-         
-          <img
-            src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
-            alt="Logo 1"
-            className="w-48 h-48"
-          />
-         
+          {/* Additional logos here */}
         </div>
-      
       </div>
-      {/* <CarousalLogos /> */}
+
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filter Section */}

@@ -1,20 +1,20 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const PendingItems = () => {
   const [pendingTrades, setPendingTrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { loginInfo } = useSelector((state) => state.auth);
+
   // Fetch pending trades from backend API
   useEffect(() => {
     const fetchPendingTrades = async () => {
       try {
-        const token = localStorage.getItem("loginInfo")
-          ? JSON.parse(localStorage.getItem("loginInfo")).token
-          : null;
+        const token = loginInfo ? loginInfo.token : null;
 
         const config = {
           headers: {
@@ -22,7 +22,10 @@ const PendingItems = () => {
           },
         };
 
-        const { data } = await axios.get(process.env.NEXT_PUBLIC_API_URL+"/trade/pending", config);
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/trade/pending`,
+          config
+        );
         setPendingTrades(data.data);
       } catch (error) {
         setError(error.response?.data?.message || "Error fetching trades");
@@ -32,7 +35,7 @@ const PendingItems = () => {
     };
 
     fetchPendingTrades();
-  }, []);
+  }, [loginInfo]);
 
   const handleAcceptTrade = async (tradeId) => {
     try {
@@ -44,8 +47,8 @@ const PendingItems = () => {
         },
       };
 
-      const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL+"/trade/accept",
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/trade/accept`,
         { tradeId },
         config
       );
@@ -53,18 +56,15 @@ const PendingItems = () => {
       // Remove accepted trade from the pending list
       setPendingTrades(pendingTrades.filter((trade) => trade._id !== tradeId));
 
-      alert("Trade Accepted");
+      toast.success("Trade Accepted");
     } catch (error) {
-      console.log(error)
-      alert(error.response?.data?.message || "Failed to accept trade");
+      toast.error(error.response?.data?.message || "Failed to accept trade");
     }
   };
 
   const handleRejectTrade = async (tradeId) => {
     try {
-      const token = localStorage.getItem("loginInfo")
-        ? JSON.parse(localStorage.getItem("loginInfo")).token
-        : null;
+      const token = loginInfo ? loginInfo.token : null;
 
       const config = {
         headers: {
@@ -72,8 +72,8 @@ const PendingItems = () => {
         },
       };
 
-      const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + "/trade/reject",
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/trade/reject`,
         { tradeId },
         config
       );
@@ -81,14 +81,14 @@ const PendingItems = () => {
       // Remove rejected trade from the pending list
       setPendingTrades(pendingTrades.filter((trade) => trade._id !== tradeId));
 
-      alert("Trade Rejected");
+      toast.success("Trade Rejected");
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to reject trade");
+      toast.error(error.response?.data?.message || "Failed to reject trade");
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="text-center">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -97,20 +97,20 @@ const PendingItems = () => {
         {pendingTrades.map((trade) => (
           <div
             key={trade._id}
-            className="bg-white shadow-lg p-6 flex items-center justify-between"
+            className="bg-white shadow-lg p-4 md:p-6 flex flex-col md:flex-row items-center justify-between rounded-md"
           >
             {/* Left Section: Two Product Images */}
-            <div className="flex space-x-4">
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full">
               {/* User's Product */}
-              <div className="flex items-center">
+              <div className="flex items-center w-full md:w-1/2">
                 <img
-                  src={trade.offererProduct.imageUrl} // Assuming imageUrl field in Product model
+                  src={trade.offererProduct.imageUrl}
                   alt="Offerer's Product"
                   className="w-32 h-32 object-cover rounded-md"
                 />
                 <div className="ml-4">
-                  <h2>Offerer Product</h2>
-                  <h4 className="text-lg font-semibold">
+                  <h2 className="text-lg font-semibold">Offerer Product</h2>
+                  <h4 className="text-xl font-semibold">
                     {trade.offererProduct.name}
                   </h4>
                   <p className="text-gray-600">
@@ -120,15 +120,15 @@ const PendingItems = () => {
               </div>
 
               {/* Receiver's Product */}
-              <div className="flex items-center">
+              <div className="flex items-center w-full md:w-1/2">
                 <img
-                  src={trade.receiverProduct.imageUrl} // Assuming imageUrl field in Product model
+                  src={trade.receiverProduct.imageUrl}
                   alt="Receiver's Product"
                   className="w-32 h-32 object-cover rounded-md"
                 />
                 <div className="ml-4">
-                  <h2>Your Product</h2>
-                  <h4 className="text-lg font-semibold">
+                  <h2 className="text-lg font-semibold">Your Product</h2>
+                  <h4 className="text-xl font-semibold">
                     {trade.receiverProduct.name}
                   </h4>
                   <p className="text-gray-600">
@@ -139,16 +139,16 @@ const PendingItems = () => {
             </div>
 
             {/* Right Section: Start Trade and Reject Trade Buttons */}
-            <div className="flex space-x-4">
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
               <button
                 onClick={() => handleAcceptTrade(trade._id)}
-                className="bg-yellow-400 text-white py-2 px-4 rounded-lg"
+                className="bg-yellow-400 text-white py-2 px-4 rounded-lg hover:bg-yellow-500 transition w-full md:w-auto"
               >
                 Start Trade
               </button>
               <button
                 onClick={() => handleRejectTrade(trade._id)}
-                className="bg-red-500 text-white py-2 px-4 rounded-lg"
+                className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition w-full md:w-auto"
               >
                 Reject Trade
               </button>

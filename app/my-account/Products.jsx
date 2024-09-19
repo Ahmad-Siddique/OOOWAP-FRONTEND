@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Sidebar from "./Sidebar";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
@@ -23,11 +22,27 @@ const Products = () => {
   const [editProduct, setEditProduct] = useState(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   const config = {
     headers: {
       Authorization: `Bearer ${loginInfo.token}`,
     },
+  };
+
+  const fetchProducts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
+        config
+      );
+      setProducts(response.data.data);
+    } catch (error) {
+      toast.error("Error fetching products!");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -46,32 +61,19 @@ const Products = () => {
       }
     };
 
-    const fetchProducts = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
-          config
-        );
-        setProducts(response.data);
-      } catch (error) {
-        toast.error("Error fetching products!");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchCategories();
     fetchProducts();
   }, [loginInfo.token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
+    const file = e.target.files[0];
+    setFormData((prevData) => ({ ...prevData, image: file }));
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
@@ -100,11 +102,7 @@ const Products = () => {
       }
 
       setShowModal(false);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
-        config
-      );
-      setProducts(response.data);
+      fetchProducts(); // Refetch products after add/update
     } catch (error) {
       toast.error("Error adding/updating product!");
     }
@@ -117,11 +115,7 @@ const Products = () => {
         config
       );
       toast.success("Product deleted successfully!");
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
-        config
-      );
-      setProducts(response.data);
+      fetchProducts(); // Refetch products after deletion
       setShowDeletePopup(false);
     } catch (error) {
       toast.error("Error deleting product!");
@@ -140,6 +134,7 @@ const Products = () => {
       condition: product.condition,
       image: null,
     });
+    setImagePreview(product.imageUrl); // Set image preview to existing product image
     setShowModal(true);
   };
 
@@ -152,7 +147,6 @@ const Products = () => {
     handleDelete(productToDelete);
   };
 
-  // Feature product handler
   const handleFeature = async (productId) => {
     try {
       await axios.put(
@@ -161,11 +155,9 @@ const Products = () => {
         config
       );
       toast.success("Product featured successfully!");
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
-        config
-      );
-      setProducts(response.data);
+
+      // Refetch products after featuring a product
+      fetchProducts(); // Call fetchProducts to refresh the product list
     } catch (error) {
       toast.error("Error featuring product!");
     }
@@ -173,7 +165,7 @@ const Products = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Products</h1>
         <button
           className="btn btn-green"
@@ -189,6 +181,7 @@ const Products = () => {
               condition: "",
               image: null,
             });
+            setImagePreview("");
             setShowModal(true);
           }}
         >
@@ -201,123 +194,79 @@ const Products = () => {
           <div className="loader">Loading...</div>
         </div>
       ) : (
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-9">
-            {products.map((product, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-lg p-4 mb-6 flex items-center"
-              >
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-32 h-32 object-cover rounded-lg mr-4"
-                />
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold">
-                    {product.name} ({product.price})
-                  </h2>
-                  <p className="text-gray-600">
-                    No. of Trades: {product.trades}
-                  </p>
-                  <div className="mt-2 space-x-2">
-                    <button
-                      className="btn btn-blue"
-                      onClick={() => handleEdit(product)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-yellow"
-                      onClick={() => handleFeature(product._id)}
-                    >
-                      Feature
-                    </button>
-                    <button
-                      className="btn btn-red"
-                      onClick={() => openDeletePopup(product._id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                  <div className="flex items-center mt-4">
-                    <div className="flex">
-                      {[...Array(5)].map((star, i) => (
-                        <svg
-                          key={i}
-                          className={`w-5 h-5 ${
-                            i < Math.floor(product.rating)
-                              ? "text-yellow-500"
-                              : "text-gray-300"
-                          }`}
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.887 5.833h6.042c.969 0 1.371 1.24.588 1.81l-4.9 3.553 1.888 5.833c.3.922-.755 1.688-1.54 1.117L10 14.347l-4.916 3.556c-.785.571-1.84-.195-1.54-1.117l1.888-5.833-4.9-3.553c-.784-.57-.38-1.81.588-1.81h6.042l1.887-5.833z" />
-                        </svg>
-                      ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            {products &&
+              products.map((product) => (
+                <div
+                  key={product._id}
+                  className="bg-white shadow-lg p-4 mb-6 flex flex-col md:flex-row items-center"
+                >
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="w-full md:w-32 h-32 object-cover rounded-lg mb-4 md:mb-0 md:mr-4"
+                  />
+                  <div className="flex-1">
+                    <h2 className="text-xl font-semibold">
+                      {product.name} ({product.price})
+                    </h2>
+                    <p className="text-gray-600">
+                      No. of Trades: {product.tradesCount}
+                    </p>
+                    <div className="mt-2 space-x-2">
+                      <button
+                        className="btn btn-blue"
+                        onClick={() => handleEdit(product)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-yellow"
+                        onClick={() => handleFeature(product._id)}
+                      >
+                        Feature
+                      </button>
+                      <button
+                        className="btn btn-red"
+                        onClick={() => openDeletePopup(product._id)}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="col-span-3">
-            <Sidebar categories={categories} />
+              ))}
           </div>
         </div>
       )}
 
       {showModal && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold">
-                {editProduct ? "Edit Product" : "Add Product"}
-              </h2>
-              <button
-                className="text-gray-500 hover:text-gray-800"
-                onClick={() => setShowModal(false)}
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 className="text-2xl font-semibold mb-4">
+              {editProduct ? "Edit Product" : "Add Product"}
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
+                <label className="block text-gray-700 mb-2">Name</label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  required
+                  className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Category</label>
+                <label className="block text-gray-700 mb-2">Category</label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  required
+                  className="form-select w-full border-b-2 border-gray-300"
                 >
-                  <option value="">Select a category</option>
+                  <option value="">Select Category</option>
                   {categories.map((category) => (
                     <option key={category._id} value={category._id}>
                       {category.name}
@@ -326,79 +275,78 @@ const Products = () => {
                 </select>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Price</label>
+                <label className="block text-gray-700 mb-2">Price</label>
                 <input
                   type="number"
                   name="price"
                   value={formData.price}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  required
+                  className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Currency</label>
+                <label className="block text-gray-700 mb-2">Currency</label>
                 <select
                   name="currency"
                   value={formData.currency}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="form-select w-full border-b-2 border-gray-300"
                 >
                   <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
+                  {/* Add more currencies as needed */}
                 </select>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Size</label>
+                <label className="block text-gray-700 mb-2">Size</label>
                 <input
                   type="text"
                   name="size"
                   value={formData.size}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Description</label>
+                <label className="block text-gray-700 mb-2">Description</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                />
+                  className="form-textarea w-full border-b-2 border-gray-300"
+                  rows="4"
+                ></textarea>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Condition</label>
+                <label className="block text-gray-700 mb-2">Condition</label>
                 <input
                   type="text"
                   name="condition"
                   value={formData.condition}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Image</label>
+                <label className="block text-gray-700 mb-2">Image</label>
                 <input
                   type="file"
-                  name="image"
                   onChange={handleFileChange}
-                  className="mt-1 block w-full"
+                  className="form-input w-full border-b-2 border-gray-300"
                 />
+                {imagePreview && (
+                  <img src={imagePreview} alt="Preview" className="mt-4" />
+                )}
               </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
+              <div className="flex justify-between">
+                <button type="submit" className="btn btn-blue">
+                  {editProduct ? "Update" : "Add"}
                 </button>
                 <button
-                  type="submit"
-                  className="bg-green-500 text-white px-4 py-2 rounded-md"
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="btn btn-gray"
                 >
-                  {editProduct ? "Update Product" : "Add Product"}
+                  Cancel
                 </button>
               </div>
             </form>
@@ -407,18 +355,17 @@ const Products = () => {
       )}
 
       {showDeletePopup && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm mx-4">
-            <h2 className="text-xl font-semibold mb-4">
-              Are you sure you want to delete this product?
-            </h2>
-            <div className="flex justify-between">
-              <button className="btn btn-red" onClick={() => confirmDelete()}>
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-4">Confirm Deletion</h2>
+            <p>Are you sure you want to delete this product?</p>
+            <div className="flex justify-between mt-4">
+              <button onClick={confirmDelete} className="btn btn-red">
                 Yes, Delete
               </button>
               <button
-                className="btn btn-gray"
                 onClick={() => setShowDeletePopup(false)}
+                className="btn btn-gray"
               >
                 Cancel
               </button>

@@ -3,16 +3,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import toast styles
+import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const Featured = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [wishlistLoading, setWishlistLoading] = useState(false); // State for wishlist loading
-  const { loginInfo } = useSelector((state) => state.auth); // Access login info for authentication
-const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const { loginInfo } = useSelector((state) => state.auth);
+  const router = useRouter();
+
   const config = {
     headers: {
       Authorization: `Bearer ${loginInfo?.token}`,
@@ -27,17 +28,19 @@ const router = useRouter();
       setProducts(response.data.featuredProducts);
     } catch (error) {
       console.error("Error fetching featured products:", error);
+      toast.error("Failed to fetch products. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false after fetching
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (loginInfo == null) {
-      router.push("/login")
+    if (!loginInfo) {
+      router.push("/login");
+    } else {
+      fetchFeaturedProducts();
     }
-    fetchFeaturedProducts();
-  }, []);
+  }, [loginInfo, router]);
 
   const addToWishList = async (productId) => {
     setWishlistLoading(true);
@@ -115,9 +118,6 @@ const router = useRouter();
                   <p className="text-sm font-bold">${product.price}</p>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-4 sm:mt-0">
-                  {/* <button className="btn btn-sm bg-black text-white rounded-sm">
-                    Trade
-                  </button> */}
                   <button className="btn btn-sm bg-black text-white rounded-sm">
                     <Link href={`/shop/${product._id}`} passHref>
                       Details

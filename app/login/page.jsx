@@ -1,4 +1,6 @@
-import LoginPage from "./LoginPage"; // Adjust the import path as needed
+import dynamic from "next/dynamic";
+
+const LoginPage = dynamic(() => import("./LoginPage"), { ssr: false });
 
 const Page = () => {
   return <LoginPage />;

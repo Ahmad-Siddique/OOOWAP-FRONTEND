@@ -26,25 +26,45 @@ const HowItWorksPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             {
-              icon: <FaExchangeAlt className="text-4xl text-[#F5BA41]" />,
+              icon: (
+                <FaExchangeAlt
+                  className="text-4xl text-[#F5BA41]"
+                  aria-label="Upload an Item"
+                />
+              ),
               title: "Upload an Item",
               description:
                 "Start by uploading an item you want to exchange. Make sure it’s in good condition and matches our guidelines.",
             },
             {
-              icon: <FaShippingFast className="text-4xl text-[#F5BA41]" />,
+              icon: (
+                <FaShippingFast
+                  className="text-4xl text-[#F5BA41]"
+                  aria-label="Browse & Choose"
+                />
+              ),
               title: "Browse & Choose",
               description:
                 "Browse through the available items and choose what you desire. Each item is priced similarly for a smooth exchange.",
             },
             {
-              icon: <FaMoneyBillWave className="text-4xl text-[#F5BA41]" />,
+              icon: (
+                <FaMoneyBillWave
+                  className="text-4xl text-[#F5BA41]"
+                  aria-label="Pay Shipping Fee"
+                />
+              ),
               title: "Pay Shipping Fee",
               description:
                 "Pay a small shipping fee to process your exchange. This fee is for handling and delivery of the items.",
             },
             {
-              icon: <FaHandshake className="text-4xl text-[#F5BA41]" />,
+              icon: (
+                <FaHandshake
+                  className="text-4xl text-[#F5BA41]"
+                  aria-label="Receive & Exchange"
+                />
+              ),
               title: "Receive & Exchange",
               description:
                 "Receive your new item and once the exchange is complete, the shipping fee is refunded to your wallet.",

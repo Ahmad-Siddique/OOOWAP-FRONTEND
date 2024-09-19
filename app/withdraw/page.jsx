@@ -29,12 +29,14 @@ const RefundPage = () => {
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">Refund Money</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center text-black">
+          Refund Money
+        </h1>
         <form onSubmit={handleRefund}>
           <div className="mb-4">
             <label
               htmlFor="refundAmount"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-black"
             >
               Refund Amount
             </label>
@@ -45,13 +47,13 @@ const RefundPage = () => {
               value={refundAmount}
               onChange={(e) => setRefundAmount(e.target.value)}
               required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+              className="mt-1 block w-full p-2 border border-[#D5B868] rounded-md"
             />
           </div>
           <button
             type="submit"
-            className={`w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-md ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
+            className={`w-full py-2 px-4 bg-[#D5B868] text-white font-semibold rounded-md ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-500"
             }`}
             disabled={loading}
           >

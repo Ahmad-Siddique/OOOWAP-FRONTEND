@@ -34,7 +34,9 @@ const ShopDetailPage = ({ params }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
         config
       );
-      setUserProducts(response.data);
+      console.log("User products", response.data)
+      // Ensure response.data is an array
+      setUserProducts(response.data.data);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching user products:", error);
@@ -53,7 +55,7 @@ const ShopDetailPage = ({ params }) => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/product/productpageproducts`,
-        { id: params.id},
+        { id: params.id },
         config
       );
       setSimilarProducts(response.data.filteredProducts); // Set similar products
@@ -99,10 +101,9 @@ const ShopDetailPage = ({ params }) => {
 
     const body = {
       receiverProduct: id,
-      offererProduct:selectedUserProduct,
+      offererProduct: selectedUserProduct,
       startDate,
       endDate,
-      
     };
 
     axios
@@ -118,7 +119,10 @@ const ShopDetailPage = ({ params }) => {
       .catch((error) => {
         console.error("Error making trade request:", error);
         setTradeMessage("Failed to submit trade request. Please try again.");
-        toast.error("Failed to submit trade request. Please try again.");
+        toast.error(
+          error.response.data.message ||
+            "Failed to submit trade request. Please try again."
+        );
       });
   };
 
@@ -188,7 +192,7 @@ const ShopDetailPage = ({ params }) => {
               </div>
             </div>
 
-            {/* Description Collapse with DaisyUI */}
+            {/* Condition Collapse with DaisyUI */}
             <div
               tabIndex={0}
               className="collapse collapse-plus border-base-300 bg-base-200 border"
@@ -201,7 +205,7 @@ const ShopDetailPage = ({ params }) => {
               </div>
             </div>
 
-            {/* Description Collapse with DaisyUI */}
+            {/* Size Collapse with DaisyUI */}
             <div
               tabIndex={0}
               className="collapse collapse-plus border-base-300 bg-base-200 border"
@@ -247,11 +251,12 @@ const ShopDetailPage = ({ params }) => {
                 onChange={(e) => setSelectedUserProduct(e.target.value)}
               >
                 <option value="">Select one of your products</option>
-                {userProducts.map((userProduct) => (
-                  <option key={userProduct._id} value={userProduct._id}>
-                    {userProduct.name} (${userProduct.price})
-                  </option>
-                ))}
+                {Array.isArray(userProducts) &&
+                  userProducts.map((userProduct) => (
+                    <option key={userProduct._id} value={userProduct._id}>
+                      {userProduct.name} (${userProduct.price})
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -276,47 +281,27 @@ const ShopDetailPage = ({ params }) => {
 
       {/* Similar Products Section */}
       <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Similar Products
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {similarProducts && similarProducts.length != 0 ? (
-            similarProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white p-6 rounded-lg shadow-lg"
-              >
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded mb-4"
-                />
-                <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                <p className="text-sm text-gray-500 mb-2">
-                  Owner: {product.userId.firstName}
-                </p>
-                <p className="text-lg text-yellow-500 mb-4">${product.price}</p>
-                <div className="flex space-x-4">
-                  {/* Using Link for navigation */}
-                  <Link
-                    className="btn btn-primary"
-                    href={`/shop/${product._id}`}
-                  >
-                    Details
-                  </Link>
-                  <button
-                    disabled={isLoading}
-                    onClick={() => addToWishList(product._id)}
-                    className="btn btn-secondary"
-                  >
-                    Add to Wishlist
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div>No products available</div>
-          )}
+        <h2 className="text-2xl font-bold mb-4">Similar Products</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {similarProducts.map((similarProduct) => (
+            <div
+              key={similarProduct._id}
+              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+            >
+              <img
+                src={similarProduct.imageUrl}
+                alt={similarProduct.name}
+                className="w-full h-48 object-cover rounded-md"
+              />
+              <h3 className="mt-2 text-lg font-semibold">
+                {similarProduct.name}
+              </h3>
+              <p className="text-gray-600">${similarProduct.price}</p>
+              <Link href={`/shop/${similarProduct._id}`}>
+                <button className="btn btn-primary mt-2">View Details</button>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
 

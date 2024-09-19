@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import Profile from "./Profile";
 import Products from "./Products";
 import ProfileSettings from "./ProfileSettings";
@@ -7,54 +9,39 @@ import PendingItems from "./PendingItems";
 import Reviews from "./Reviews";
 import TradeHistory from "./TradeHistory";
 import Dispute from "./Dispute";
+import AcceptedTrades from "./AcceptedTrades";
 
 export default function UserTabs() {
   const [activeTab, setActiveTab] = useState("Profile");
+  const router = useRouter();
+
+  const { loginInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (!loginInfo || !loginInfo.token) {
+      router.push("/login"); // Redirect to login page if not authenticated
+    }
+  }, [loginInfo, router]);
 
   const renderContent = () => {
     switch (activeTab) {
       case "Profile":
-        return (
-          <div className="p-4">
-            <Profile />
-          </div>
-        );
+        return <Profile />;
       case "Products":
-        return (
-          <div className="p-4">
-            <Products />
-          </div>
-        );
+        return <Products />;
       case "Profile Settings":
-        return (
-          <div className="p-4">
-            <ProfileSettings />
-          </div>
-        );
+        return <ProfileSettings />;
       case "Pending Items":
-        return (
-          <div className="p-4">
-            <PendingItems />
-          </div>
-        );
+        return <PendingItems />;
+      case "Accpted/Completed Trades":
+        return <AcceptedTrades />
+
       case "Reviews":
-        return (
-          <div className="p-4">
-            <Reviews />
-          </div>
-        );
+        return <Reviews />;
       case "Trade History":
-        return (
-          <div className="p-4">
-            <TradeHistory />
-          </div>
-        );
+        return <TradeHistory />;
       case "Dispute":
-        return (
-          <div className="p-4">
-            <Dispute />
-          </div>
-        );
+        return <Dispute />;
       default:
         return null;
     }
@@ -63,68 +50,36 @@ export default function UserTabs() {
   return (
     <div className="w-full">
       {/* Tabs */}
-      <div className="tabs flex justify-center space-x-1">
-        <a
-          className={`tab tab-bordered ${
-            activeTab === "Profile" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("Profile")}
-        >
-          Profile
-        </a>
-        <a
-          className={`tab tab-bordered ${
-            activeTab === "Products" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("Products")}
-        >
-          Products
-        </a>
-        <a
-          className={`tab tab-bordered ${
-            activeTab === "Profile Settings" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("Profile Settings")}
-        >
-          Profile Settings
-        </a>
-        <a
-          className={`tab tab-bordered ${
-            activeTab === "Pending Items" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("Pending Items")}
-        >
-          Pending Items
-        </a>
-        <a
-          className={`tab tab-bordered ${
-            activeTab === "Reviews" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("Reviews")}
-        >
-          Reviews
-        </a>
-        <a
-          className={`tab tab-bordered ${
-            activeTab === "Trade History" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("Trade History")}
-        >
-          Trade History
-        </a>
-
-        <a
-          className={`tab tab-bordered ${
-            activeTab === "Dispute" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("Dispute")}
-        >
-          Dispute
-        </a>
+      <div className="tabs flex flex-col md:flex-row justify-center space-x-0 md:space-x-1 space-y-1 md:space-y-0">
+        {[
+          "Profile",
+          "Products",
+          "Profile Settings",
+          "Pending Items",
+          "Accpted/Completed Trades",
+          "Reviews",
+          "Trade History",
+          "Dispute",
+        ].map((tab) => (
+          <a
+            key={tab}
+            role="tab"
+            aria-current={activeTab === tab ? "true" : "false"}
+            className={`tab tab-bordered w-full md:w-auto ${
+              activeTab === tab ? "tab-active" : ""
+            }`}
+            onClick={() => setActiveTab(tab)}
+            tabIndex={0} // Make the tab focusable
+          >
+            {tab}
+          </a>
+        ))}
       </div>
 
-      {/* Tab Content - Ensure content is beneath the tabs */}
-      <div className="mt-2 w-full border-t-2 pt-4">{renderContent()}</div>
+      {/* Tab Content */}
+      <div className="mt-4 md:mt-2 w-full border-t-2 pt-4">
+        {renderContent()}
+      </div>
     </div>
   );
 }

@@ -1,9 +1,43 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import "daisyui/dist/full.css"; // Ensure DaisyUI's styles are imported
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ContactUsPage = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Replace with your API endpoint
+      await axios.post("/api/contact", formData);
+      toast.success("Message sent successfully!");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      toast.error("Failed to send message.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4">
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
@@ -54,7 +88,7 @@ const ContactUsPage = () => {
         {/* Right Column */}
         <div className="flex flex-col justify-center px-6 lg:px-12 py-8 bg-white shadow-lg rounded-lg">
           <h2 className="text-3xl font-bold text-black mb-6">Contact Form</h2>
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
                 htmlFor="name"
@@ -66,6 +100,8 @@ const ContactUsPage = () => {
                 type="text"
                 id="name"
                 name="name"
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F5BA41] transition duration-150 ease-in-out"
                 placeholder="Your Name"
                 required
@@ -82,6 +118,8 @@ const ContactUsPage = () => {
                 type="email"
                 id="email"
                 name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F5BA41] transition duration-150 ease-in-out"
                 placeholder="Your Email"
                 required
@@ -98,6 +136,8 @@ const ContactUsPage = () => {
                 id="message"
                 name="message"
                 rows="5"
+                value={formData.message}
+                onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F5BA41] transition duration-150 ease-in-out"
                 placeholder="Your Message"
                 required
@@ -106,12 +146,14 @@ const ContactUsPage = () => {
             <button
               type="submit"
               className="w-full bg-[#F5BA41] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-[#F5BA41] transition duration-150 ease-in-out"
+              disabled={loading}
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

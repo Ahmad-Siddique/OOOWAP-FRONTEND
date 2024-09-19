@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -10,19 +11,21 @@ const TradeHistory = () => {
 
   useEffect(() => {
     const fetchTradeHistory = async () => {
-      try {
-        const token = loginInfo
-          ? loginInfo.token
-          : null;
+      if (!loginInfo?.token) {
+        setError("User not authenticated");
+        setLoading(false);
+        return;
+      }
 
+      try {
         const config = {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${loginInfo.token}`,
           },
         };
 
         const { data } = await axios.get(
-          process.env.NEXT_PUBLIC_API_URL + "/trade/history",
+          `${process.env.NEXT_PUBLIC_API_URL}/trade/history`,
           config
         );
 
@@ -37,11 +40,11 @@ const TradeHistory = () => {
     };
 
     fetchTradeHistory();
-  }, []);
+  }, [loginInfo]);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center min-h-screen">
         <svg
           className="animate-spin h-8 w-8 text-yellow-500"
           xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +71,7 @@ const TradeHistory = () => {
   }
 
   if (error) {
-    return <p className="text-red-600">{error}</p>;
+    return <p className="text-red-600 text-center">{error}</p>;
   }
 
   return (
@@ -79,18 +82,20 @@ const TradeHistory = () => {
           tradeHistory.map((trade) => (
             <div
               key={trade._id}
-              className="bg-white shadow-lg p-6 flex items-center justify-between"
+              className="bg-white shadow-lg p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between"
             >
               {/* Left Section: Two Product Images */}
-              <div className="flex space-x-4">
+              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
                 {/* Offerer's Product */}
-                <div className="flex items-center">
+                <div className="flex items-center space-x-4">
                   <img
                     src={trade.offererProduct?.imageUrl || "/placeholder.png"}
-                    alt="Offerer's Product"
-                    className="w-32 h-32 object-cover rounded-md"
+                    alt={`Offerer's Product: ${
+                      trade.offererProduct?.name || "Unknown"
+                    }`}
+                    className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md"
                   />
-                  <div className="ml-4">
+                  <div>
                     <h4 className="text-lg font-semibold">
                       {trade.offererProduct?.name || "Unknown Product"}
                     </h4>
@@ -99,7 +104,7 @@ const TradeHistory = () => {
                     </p>
                     <p className="text-gray-500">
                       Offerer:{" "}
-                      {trade.offererProduct.userId == loginInfo.user.id
+                      {trade.offererProduct.userId === loginInfo.user.id
                         ? "You"
                         : "Other User"}
                     </p>
@@ -107,13 +112,15 @@ const TradeHistory = () => {
                 </div>
 
                 {/* Receiver's Product */}
-                <div className="flex items-center">
+                <div className="flex items-center space-x-4">
                   <img
                     src={trade.receiverProduct?.imageUrl || "/placeholder.png"}
-                    alt="Receiver's Product"
-                    className="w-32 h-32 object-cover rounded-md"
+                    alt={`Receiver's Product: ${
+                      trade.receiverProduct?.name || "Unknown"
+                    }`}
+                    className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md"
                   />
-                  <div className="ml-4">
+                  <div>
                     <h4 className="text-lg font-semibold">
                       {trade.receiverProduct?.name || "Unknown Product"}
                     </h4>
@@ -122,7 +129,7 @@ const TradeHistory = () => {
                     </p>
                     <p className="text-gray-500">
                       Receiver:{" "}
-                      {trade.receiverProduct.userId == loginInfo.user.id
+                      {trade.receiverProduct.userId === loginInfo.user.id
                         ? "You"
                         : "Other User"}
                     </p>
@@ -131,7 +138,7 @@ const TradeHistory = () => {
               </div>
 
               {/* Right Section: Trade Details */}
-              <div className="text-right">
+              <div className="text-right mt-4 sm:mt-0">
                 <p className="text-gray-600">
                   Trade Status:{" "}
                   <span className="font-bold capitalize">{trade.status}</span>
@@ -152,7 +159,7 @@ const TradeHistory = () => {
             </div>
           ))
         ) : (
-          <p>No trade history found.</p>
+          <p className="text-center">No trade history found.</p>
         )}
       </div>
     </div>
