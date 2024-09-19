@@ -1,8 +1,8 @@
-"use client"; // Ensures this component is rendered only on the client
+"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { FiCheckCircle, FiXCircle } from "react-icons/fi"; // For success and failure icons
+import { FiCheckCircle, FiXCircle } from "react-icons/fi"; // Success and failure icons
 
 const PaymentStatus = () => {
   const searchParams = useSearchParams();
@@ -10,7 +10,6 @@ const PaymentStatus = () => {
   const [value, setValue] = useState(null);
 
   useEffect(() => {
-    // This effect runs only on the client
     const statusParam = searchParams.get("checkout_status");
     const valueParam = searchParams.get("checkout_value");
 
@@ -55,4 +54,20 @@ const PaymentStatus = () => {
   );
 };
 
-export default PaymentStatus;
+// Use Suspense for client-side hooks that need to wait for data
+export default function PaymentStatusPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+          <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full text-center">
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+            <p className="text-lg font-medium mt-4">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <PaymentStatus />
+    </Suspense>
+  );
+}
