@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { logout as logoutAction } from "../GlobalRedux/features/auth/authSlice";
+import { HeartIcon } from "@heroicons/react/outline"; // Import Heroicons HeartIcon
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -66,6 +67,10 @@ const Header = () => {
       <div className="navbar-end">
         {loginInfo ? (
           <div className="flex items-center space-x-4">
+            {/* Heart Icon for Wishlist */}
+            <Link href="/wishlist" className="text-gray-700 hover:text-primary">
+              <HeartIcon className="h-6 w-6" />
+            </Link>
             <div className="flex flex-col items-start">
               <span className="text-lg font-semibold text-black">
                 {loginInfo.user.firstName}

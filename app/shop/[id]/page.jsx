@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -19,10 +20,15 @@ const ShopDetailPage = ({ params }) => {
   const [endDate, setEndDate] = useState(""); // End Date State
   const [tradeMessage, setTradeMessage] = useState(""); // Trade success or error message
   const { loginInfo } = useSelector((state) => state.auth);
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
 
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo.token}`,
+      Authorization: `Bearer ${loginInfo?.token}`,
     },
   };
 
@@ -34,7 +40,7 @@ const ShopDetailPage = ({ params }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
         config
       );
-      console.log("User products", response.data)
+      console.log("User products", response.data);
       // Ensure response.data is an array
       setUserProducts(response.data.data);
       setIsLoading(false);
@@ -63,6 +69,37 @@ const ShopDetailPage = ({ params }) => {
     } catch (error) {
       console.error("Error fetching similar products:", error);
       setIsLoading(false);
+    }
+  };
+
+  // Add to Wishlist with loading state and error handling
+  const addToWishList = async (productId) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL + "/wishlist/add",
+        { productId },
+        config
+      );
+      toast.success("Item added to wishlist!");
+      setNotification({
+        show: true,
+        message: "Item added to wishlist!",
+        type: "success",
+      });
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+      setNotification({
+        show: true,
+        message: "Error adding item to wishlist. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
+      // Hide notification after 3 seconds
+      setTimeout(() => {
+        setNotification({ show: false, message: "", type: "" });
+      }, 3000);
     }
   };
 
@@ -273,7 +310,12 @@ const ShopDetailPage = ({ params }) => {
               >
                 Trade
               </button>
-              <button className="btn btn-secondary">Add to Wishlist</button>
+              <button
+                onClick={() => addToWishList(product._id)}
+                className="btn btn-secondary"
+              >
+                Add to Wishlist
+              </button>
             </div>
           </div>
         </div>

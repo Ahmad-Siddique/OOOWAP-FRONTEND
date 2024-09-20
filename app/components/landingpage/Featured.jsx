@@ -19,11 +19,13 @@ const Featured = () => {
       Authorization: `Bearer ${loginInfo?.token}`,
     },
   };
-
+  console.log("LOGIN INFO",loginInfo)
   const fetchFeaturedProducts = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/featured-products`
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/featured-products`, {
+          userId: loginInfo?.user.id
+        }
       );
       setProducts(response.data.featuredProducts);
     } catch (error) {
@@ -35,11 +37,9 @@ const Featured = () => {
   };
 
   useEffect(() => {
-    if (!loginInfo) {
-      router.push("/login");
-    } else {
+    
       fetchFeaturedProducts();
-    }
+   
   }, [loginInfo, router]);
 
   const addToWishList = async (productId) => {
