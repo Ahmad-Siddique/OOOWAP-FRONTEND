@@ -89,6 +89,7 @@ export const updateuserprofilecheck = createAsyncThunk("auth/userprofilecheck", 
      
     gg.user.image = user.zz.image;
     gg.user.email = user.zz.email;
+    gg.user.balance = user.zz?.balance || gg.user.balance
     console.log("NOOOOB1");
   
     return gg;

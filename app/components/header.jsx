@@ -71,7 +71,7 @@ const Header = () => {
                 {loginInfo.user.firstName}
               </span>
               <span className="text-md text-gray-600">
-                Balance: ${loginInfo.user.balance.toFixed(2)}
+                Balance: ${loginInfo.user.balance?.toFixed(2)}
               </span>
             </div>
             <div className="dropdown dropdown-end">

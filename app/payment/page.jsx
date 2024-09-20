@@ -3,19 +3,63 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi"; // Success and failure icons
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { updateuserprofilecheck } from "../GlobalRedux/features/auth/authSlice";
 
 const PaymentStatus = () => {
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
+
   const [status, setStatus] = useState(null);
   const [value, setValue] = useState(null);
 
+  // Getting loginInfo from Redux state
+  const loginInfo = useSelector((state) => state.auth.loginInfo);
+
   useEffect(() => {
+    // Fetching checkout status and value from URL
     const statusParam = searchParams.get("checkout_status");
     const valueParam = searchParams.get("checkout_value");
 
     setStatus(statusParam);
     setValue(valueParam);
-  }, [searchParams]);
+
+    // Making API call to fetch user info
+    const fetchUserData = async () => {
+      try {
+        const token = loginInfo ? loginInfo.token : null;
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios.get(
+          process.env.NEXT_PUBLIC_API_URL + "/auth/getMe",
+          config
+        );
+
+        // Dispatching both the API response and loginInfo to update user profile
+        dispatch(
+          updateuserprofilecheck({
+            zz: {
+              firstName: response.data.data.firstName,
+              lastName: response.data.data.lastName,
+              balance: response.data.data.balance,
+              email: response.data.data.email,
+              image:response.data.data.photoURL
+            }, // API response data
+            gg: loginInfo, // loginInfo from Redux
+          })
+        );
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   if (status === null) {
     return (
