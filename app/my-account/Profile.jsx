@@ -11,7 +11,7 @@ const Profile = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo?.token}`,
+      Authorization: `Bearer ${loginInfo && loginInfo?.token}`,
     },
   };
 

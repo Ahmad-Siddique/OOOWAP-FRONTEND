@@ -20,7 +20,7 @@ console.log("ZOOOOOOOOOOOOOOOOOOOOOO1");
     console.log("ZOOOOOOOOOOOOOOOOOOOOOO")
     const fetchMetrics = async () => {
       try {
-        const token = loginInfo ? loginInfo.token : null;
+        const token = loginInfo ? loginInfo?.token : null;
 
         const config = {
           headers: {
