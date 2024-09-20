@@ -4,10 +4,12 @@ import { useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import axios from "axios"; // Import axios
+import { useRouter } from "next/navigation";
 
 export default function UserProfile() {
   const { loginInfo } = useSelector((state) => state.auth);
   console.log("Login info", loginInfo);
+  const router = useRouter();
 
   const [metrics, setMetrics] = useState({
     creationDate: "",
@@ -17,6 +19,9 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
 console.log("ZOOOOOOOOOOOOOOOOOOOOOO1");
   useEffect(() => {
+    if (!loginInfo) {
+      router.push("/login")
+    }
     console.log("ZOOOOOOOOOOOOOOOOOOOOOO")
     const fetchMetrics = async () => {
       try {
