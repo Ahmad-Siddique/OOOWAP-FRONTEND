@@ -38,7 +38,7 @@ const router = useRouter();
       router.push("/login")
     }
     fetchUserData();
-  }, []);
+  }, [loginInfo]);
 
   return (
     <div className="container mx-auto py-8 px-4">

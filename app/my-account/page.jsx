@@ -47,7 +47,7 @@ console.log("ZOOOOOOOOOOOOOOOOOOOOOO1");
     };
 
     fetchMetrics();
-  }, []);
+  }, [loginInfo]);
 
   return (
     <div className="w-screen">
