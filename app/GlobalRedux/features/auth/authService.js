@@ -18,9 +18,20 @@ const login = async (userData) => {
 
 // Get User Info
 const getMe = async (token) => {
-  const response = await axios.get(API_URL+"getMe", {
-    headers: { Authorization: `Bearer ${token}` },
+  const response = await axios.get(API_URL + "getMe", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
+
+  if (response.data) {
+    localStorage.setItem("loginInfo", JSON.stringify(response.data));
+    // localStorage.setItem(
+    //   "planSelected",
+    //   JSON.stringify(response.data.data.planSelected)
+    // );
+  }
+
   return response.data;
 };
 

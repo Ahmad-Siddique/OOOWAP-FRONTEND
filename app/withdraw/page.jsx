@@ -1,23 +1,80 @@
 "use client";
+
 import React, { useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { updateuserprofilecheck } from "../GlobalRedux/features/auth/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 
 const RefundPage = () => {
   const [refundAmount, setRefundAmount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  // Getting loginInfo from Redux state
+  const loginInfo = useSelector((state) => state.auth.loginInfo);
 
   const handleRefund = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/payment/refund", {
+      const token = loginInfo ? loginInfo.token : null;
+      console.log("TOKEN",token)
+       const config = {
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       };
+      // Send the refund request to the API
+      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL+"/stripe/refund", {
         amount: refundAmount,
-      });
+      }, config);
 
-      toast.success("Refund request successful!");
+      if (response.data.success) {
+        toast.success("Refund request successful!");
+
+        // After refund is processed, fetch the updated user profile
+        const fetchUserData = async () => {
+          try {
+            const token = loginInfo ? loginInfo.token : null;
+
+            const config = {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            };
+
+            // Fetch the updated user profile after refund
+            const response = await axios.get(
+              process.env.NEXT_PUBLIC_API_URL + "/auth/getMe",
+              config
+            );
+
+            // Dispatch the action to update both Redux store and localStorage
+            dispatch(
+              updateuserprofilecheck({
+                zz: {
+                  firstName: response.data.data.firstName,
+                  lastName: response.data.data.lastName,
+                  balance: response.data.data.balance, // Updated balance after refund
+                  email: response.data.data.email,
+                  image: response.data.data.photoURL,
+                },
+                gg: loginInfo,
+              })
+            );
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+
+        // Fetch updated user data after refund
+        await fetchUserData();
+      } else {
+        throw new Error("Failed to process refund");
+      }
     } catch (error) {
       console.error("Error processing refund", error);
       toast.error("Failed to process refund.");

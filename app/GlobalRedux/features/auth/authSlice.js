@@ -75,32 +75,41 @@ export const updateUserProfile = createAsyncThunk(
 );
 
 // Login user
-export const updateuserprofilecheck = createAsyncThunk("auth/userprofilecheck", async (user, thunkAPI) => {
-  
-  try {
-    console.log("NOOOOB")
-    
-    let gg = JSON.parse(JSON.stringify(user.gg));;
-    console.log("LOGIN DATA", user)
-    console.log(gg.user.firstName)
-    console.log(user.zz.firstName)
-    gg.user.firstName = user.zz.firstName
-    gg.user.lastName = user.zz.lastName;
-     
-    gg.user.image = user.zz.image;
-    gg.user.email = user.zz.email;
-    gg.user.balance = user.zz?.balance || gg.user.balance
-    console.log("NOOOOB1");
-  
-    return gg;
+export const updateuserprofilecheck = createAsyncThunk(
+  "auth/userprofilecheck",
+  async (user, thunkAPI) => {
+    try {
+      console.log("NOOOOB2");
 
-  } catch (error) {
-    const message =
-      error.response?.data?.message || error.message || error.toString();
-    console.log(error)
-    return thunkAPI.rejectWithValue(message);
+      // Create a deep copy of the gg object
+      let gg = JSON.parse(JSON.stringify(user.gg));
+      console.log("LOGIN DATA1", user);
+       console.log("GG");
+      console.log(gg.user.firstName);
+      console.log(user.zz.firstName);
+
+      // Update the gg object with the new user profile data
+      gg.user.firstName = user.zz.firstName;
+      gg.user.lastName = user.zz.lastName;
+      gg.user.image = user.zz.image;
+      gg.user.email = user.zz.email;
+      gg.user.balance = user.zz.balance
+     
+      console.log("NOOOOB1");
+
+      // Update the localStorage with the new gg object
+      localStorage.setItem("loginInfo", JSON.stringify(gg));
+
+      return gg;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      console.log(error);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
+
 
 
 // Logout
