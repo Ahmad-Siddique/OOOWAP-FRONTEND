@@ -14,7 +14,7 @@ const Sidebar = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/auth/getusermetrics`,
           {
             headers: {
-              Authorization: `Bearer ${loginInfo.token}`,
+              Authorization: `Bearer ${loginInfo?.token}`,
             },
           }
         );
@@ -25,7 +25,7 @@ const Sidebar = () => {
     };
 
     fetchMetrics();
-  }, [loginInfo.token]);
+  }, [loginInfo?.token]);
 
   return (
     <div className="bg-white shadow-lg p-6 text-center rounded-lg max-w-xs mx-auto sm:max-w-sm md:max-w-md lg:max-w-lg">
@@ -33,7 +33,7 @@ const Sidebar = () => {
       {loginInfo?.user?.image ? (
         <img
           src={loginInfo.user.image}
-          alt={`Profile picture of ${loginInfo.user.name || "User"}`}
+          alt={`Profile picture of ${loginInfo?.user.name || "User"}`}
           className="rounded-full w-24 h-24 mb-4 mx-auto object-cover sm:w-32 sm:h-32"
         />
       ) : (

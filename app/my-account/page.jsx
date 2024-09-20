@@ -69,14 +69,14 @@ console.log("ZOOOOOOOOOOOOOOOOOOOOOO1");
               <img
                 className="w-32 h-32 md:w-24 md:h-24 rounded-full"
                 src={
-                  loginInfo.user.image ||
+                  loginInfo?.user.image ||
                   "https://plus.unsplash.com/premium_photo-1671656349218-5218444643d8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 }
                 alt="User Pic"
               />
               <div className="flex flex-col items-center md:items-start">
                 <h2 className="text-xl font-bold">
-                  {loginInfo.user.firstName} {loginInfo.user.lastName}
+                  {loginInfo?.user.firstName} {loginInfo?.user.lastName}
                 </h2>
                 <p className="text-sm">
                   Member since{" "}
