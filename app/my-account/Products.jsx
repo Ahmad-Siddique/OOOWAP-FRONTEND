@@ -11,18 +11,21 @@ const Products = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    category: "",
+    categories: "",
     price: "",
     currency: "USD",
     size: "",
     description: "",
     condition: "",
     image: null,
+    imageUrl1: null,
+    imageUrl2: null,
   });
   const [editProduct, setEditProduct] = useState(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
+  const [imagePreview, setImagePreview] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false); // State for locking buttons
 
   const config = {
     headers: {
@@ -70,16 +73,28 @@ const Products = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, field) => {
     const file = e.target.files[0];
-    setFormData((prevData) => ({ ...prevData, image: file }));
-    setImagePreview(URL.createObjectURL(file));
+    setFormData((prevData) => ({ ...prevData, [field]: file }));
+
+    const newImagePreview =
+      field === "image"
+        ? [URL.createObjectURL(file), ...imagePreview.slice(1)]
+        : [
+            ...imagePreview.slice(0, field === "imageUrl1" ? 1 : 2),
+            URL.createObjectURL(file),
+          ];
+
+    setImagePreview(newImagePreview);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); // Lock buttons during submission
 
     try {
+     
+      console.log("Categories",formData.categories)
       const formDataToSubmit = new FormData();
       Object.keys(formData).forEach((key) => {
         formDataToSubmit.append(key, formData[key]);
@@ -105,6 +120,8 @@ const Products = () => {
       fetchProducts(); // Refetch products after add/update
     } catch (error) {
       toast.error("Error adding/updating product!");
+    } finally {
+      setIsSubmitting(false); // Unlock buttons after submission
     }
   };
 
@@ -126,15 +143,17 @@ const Products = () => {
     setEditProduct(product);
     setFormData({
       name: product.name,
-      category: product.category,
+      categories: product.categories,
       price: product.price,
       currency: product.currency,
       size: product.size,
       description: product.description,
       condition: product.condition,
       image: null,
+      imageUrl1: null,
+      imageUrl2: null,
     });
-    setImagePreview(product.imageUrl); // Set image preview to existing product image
+    setImagePreview([product.imageUrl, product.imageUrl1, product.imageUrl2]);
     setShowModal(true);
   };
 
@@ -155,9 +174,7 @@ const Products = () => {
         config
       );
       toast.success("Product featured successfully!");
-
-      // Refetch products after featuring a product
-      fetchProducts(); // Call fetchProducts to refresh the product list
+      fetchProducts(); // Refresh the product list
     } catch (error) {
       toast.error("Error featuring product!");
     }
@@ -173,15 +190,17 @@ const Products = () => {
             setEditProduct(null);
             setFormData({
               name: "",
-              category: "",
+              categories: "",
               price: "",
               currency: "USD",
               size: "",
               description: "",
               condition: "",
               image: null,
+              imageUrl1: null,
+              imageUrl2: null,
             });
-            setImagePreview("");
+            setImagePreview([]);
             setShowModal(true);
           }}
         >
@@ -216,19 +235,19 @@ const Products = () => {
                     </p>
                     <div className="mt-2 space-x-2">
                       <button
-                        className="btn btn-blue"
+                        className="btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300"
                         onClick={() => handleEdit(product)}
                       >
                         Edit
                       </button>
                       <button
-                        className="btn btn-yellow"
+                        className="btn bg-[#D5B868] text-black border-[#D5B868] hover:bg-black hover:text-white transition duration-300"
                         onClick={() => handleFeature(product._id)}
                       >
                         Feature
                       </button>
                       <button
-                        className="btn btn-red"
+                        className="btn bg-red-600 text-white border-red-600 hover:bg-black hover:text-white transition duration-300"
                         onClick={() => openDeletePopup(product._id)}
                       >
                         Delete
@@ -242,8 +261,16 @@ const Products = () => {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div
+            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mx-4"
+            style={{
+              maxHeight: "80vh",
+              overflowY: "auto",
+              scrollbarWidth: "thin",
+              scrollbarColor: "#D5B868 transparent",
+            }}
+          >
             <h2 className="text-2xl font-semibold mb-4">
               {editProduct ? "Edit Product" : "Add Product"}
             </h2>
@@ -261,8 +288,8 @@ const Products = () => {
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Category</label>
                 <select
-                  name="category"
-                  value={formData.category}
+                  name="categories"
+                  value={formData.categories}
                   onChange={handleInputChange}
                   className="form-select w-full border-b-2 border-gray-300"
                 >
@@ -327,24 +354,67 @@ const Products = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Image</label>
+                <label className="block text-gray-700 mb-2">Image 1</label>
                 <input
                   type="file"
-                  onChange={handleFileChange}
+                  onChange={(e) => handleFileChange(e, "image")}
                   className="form-input w-full border-b-2 border-gray-300"
                 />
-                {imagePreview && (
-                  <img src={imagePreview} alt="Preview" className="mt-4" />
+                {imagePreview[0] && (
+                  <img
+                    src={imagePreview[0]}
+                    alt="Preview"
+                    className="mt-4 w-20 h-20 object-cover"
+                  />
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Image 2</label>
+                <input
+                  type="file"
+                  onChange={(e) => handleFileChange(e, "imageUrl1")}
+                  className="form-input w-full border-b-2 border-gray-300"
+                />
+                {imagePreview[1] && (
+                  <img
+                    src={imagePreview[1]}
+                    alt="Preview"
+                    className="mt-4 w-20 h-20 object-cover"
+                  />
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Image 3</label>
+                <input
+                  type="file"
+                  onChange={(e) => handleFileChange(e, "imageUrl2")}
+                  className="form-input w-full border-b-2 border-gray-300"
+                />
+                {imagePreview[2] && (
+                  <img
+                    src={imagePreview[2]}
+                    alt="Preview"
+                    className="mt-4 w-20 h-20 object-cover"
+                  />
                 )}
               </div>
               <div className="flex justify-between">
-                <button type="submit" className="btn btn-blue">
+                <button
+                  type="submit"
+                  className={`btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 ${
+                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={isSubmitting} // Disable button when submitting
+                >
                   {editProduct ? "Update" : "Add"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="btn btn-gray"
+                  className={`btn bg-[#D5B868] text-black border-[#D5B868] hover:bg-black hover:text-white transition duration-300 ${
+                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={isSubmitting} // Disable button when submitting
                 >
                   Cancel
                 </button>

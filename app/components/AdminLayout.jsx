@@ -88,6 +88,19 @@ const AdminLayout = ({ children }) => {
               <FaExclamationTriangle className="mr-3" /> Categories
             </Link>
           </li>
+
+          <li>
+            <Link
+              href="/admin/contact"
+              className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
+                currentPath.includes("/admin/contact")
+                  ? "bg-[#D5B868] text-black"
+                  : "hover:bg-[#D5B868] hover:text-black"
+              }`}
+            >
+              <FaExclamationTriangle className="mr-3" /> Contact Us
+            </Link>
+          </li>
         </ul>
       </aside>
 

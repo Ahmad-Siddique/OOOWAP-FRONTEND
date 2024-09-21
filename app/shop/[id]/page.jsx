@@ -11,14 +11,14 @@ import Link from "next/link";
 const ShopDetailPage = ({ params }) => {
   const router = useRouter();
   const [product, setProduct] = useState(null);
-  const [similarProducts, setSimilarProducts] = useState([]); // State for similar products
-  const [userProducts, setUserProducts] = useState([]); // User's products
-  const [selectedUserProduct, setSelectedUserProduct] = useState(""); // Selected user product from dropdown
+  const [similarProducts, setSimilarProducts] = useState([]);
+  const [userProducts, setUserProducts] = useState([]);
+  const [selectedUserProduct, setSelectedUserProduct] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [startDate, setStartDate] = useState(""); // Start Date State
-  const [endDate, setEndDate] = useState(""); // End Date State
-  const [tradeMessage, setTradeMessage] = useState(""); // Trade success or error message
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [tradeMessage, setTradeMessage] = useState("");
   const { loginInfo } = useSelector((state) => state.auth);
   const [notification, setNotification] = useState({
     show: false,
@@ -26,13 +26,15 @@ const ShopDetailPage = ({ params }) => {
     type: "",
   });
 
+  // State to manage current image index
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const config = {
     headers: {
       Authorization: `Bearer ${loginInfo?.token}`,
     },
   };
 
-  // Fetch logged-in user's products
   const fetchUserProducts = async () => {
     setIsLoading(true);
     try {
@@ -40,8 +42,6 @@ const ShopDetailPage = ({ params }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
         config
       );
-      console.log("User products", response.data);
-      // Ensure response.data is an array
       setUserProducts(response.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -51,20 +51,15 @@ const ShopDetailPage = ({ params }) => {
     }
   };
 
-  // Fetch similar products based on the current product
   const fetchSimilarProducts = async () => {
     setIsLoading(true);
-    const filter = {
-      category: product?.category, // Example filter based on product category
-    };
-
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/product/productpageproducts`,
         { id: params.id },
         config
       );
-      setSimilarProducts(response.data.filteredProducts); // Set similar products
+      setSimilarProducts(response.data.filteredProducts);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching similar products:", error);
@@ -72,7 +67,6 @@ const ShopDetailPage = ({ params }) => {
     }
   };
 
-  // Add to Wishlist with loading state and error handling
   const addToWishList = async (productId) => {
     try {
       setIsLoading(true);
@@ -96,7 +90,6 @@ const ShopDetailPage = ({ params }) => {
       });
     } finally {
       setIsLoading(false);
-      // Hide notification after 3 seconds
       setTimeout(() => {
         setNotification({ show: false, message: "", type: "" });
       }, 3000);
@@ -110,7 +103,7 @@ const ShopDetailPage = ({ params }) => {
       .then((response) => {
         if (response.data) {
           setProduct(response.data);
-          fetchSimilarProducts(); // Fetch similar products after fetching the main product
+          fetchSimilarProducts();
         } else {
           setError(true);
         }
@@ -122,10 +115,9 @@ const ShopDetailPage = ({ params }) => {
         setIsLoading(false);
       });
 
-    fetchUserProducts(); // Fetch user's products on component mount
+    fetchUserProducts();
   }, [params.id]);
 
-  // Handle trade request
   const handleTrade = (receiverid) => {
     const id = params.id;
 
@@ -150,17 +142,35 @@ const ShopDetailPage = ({ params }) => {
         config
       )
       .then(() => {
-        setTradeMessage("Trade request was successful!");
+        setTradeMessage("");
         toast.success("Trade request was successful!");
       })
       .catch((error) => {
         console.error("Error making trade request:", error);
-        setTradeMessage("Failed to submit trade request. Please try again.");
+        setTradeMessage("");
         toast.error(
           error.response.data.message ||
             "Failed to submit trade request. Please try again."
         );
       });
+  };
+
+  const handleNextImage = () => {
+    if (product) {
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % (product.imageUrl1 ? 3 : 2)
+      );
+    }
+  };
+
+  const handlePrevImage = () => {
+    if (product) {
+      setCurrentImageIndex(
+        (prevIndex) =>
+          (prevIndex - 1 + (product.imageUrl1 ? 3 : 2)) %
+          (product.imageUrl1 ? 3 : 2)
+      );
+    }
   };
 
   if (isLoading) {
@@ -203,12 +213,45 @@ const ShopDetailPage = ({ params }) => {
     <div className="bg-gray-50 p-8 min-h-screen">
       <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="flex flex-col lg:flex-row">
-          <div className="lg:w-1/2 overflow-hidden">
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
-            />
+          <div className="lg:w-1/2 relative">
+            <div className="carousel w-full">
+              <div className="carousel-item relative w-full">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-full h-[800px] object-cover transform transition-transform duration-300 hover:scale-110"
+                />
+              </div>
+              {product.imageUrl1 && (
+                <div className="carousel-item relative w-full">
+                  <img
+                    src={product.imageUrl1}
+                    alt={product.name}
+                    className="w-full h-[800px] object-cover transform transition-transform duration-300 hover:scale-110"
+                  />
+                </div>
+              )}
+              {product.imageUrl2 && (
+                <div className="carousel-item relative w-full">
+                  <img
+                    src={product.imageUrl2}
+                    alt={product.name}
+                    className="w-full h-[800px] object-cover transform transition-transform duration-300 hover:scale-110"
+                  />
+                </div>
+              )}
+            </div>
+            {/* Navigation Buttons */}
+            <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
+              <button className="btn btn-circle" onClick={handlePrevImage}>
+                &#10094;
+              </button>
+            </div>
+            <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
+              <button className="btn btn-circle" onClick={handleNextImage}>
+                &#10095;
+              </button>
+            </div>
           </div>
           <div className="lg:w-1/2 p-8">
             <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
@@ -216,7 +259,6 @@ const ShopDetailPage = ({ params }) => {
               ${product.price}
             </p>
 
-            {/* Description Collapse with DaisyUI */}
             <div
               tabIndex={0}
               className="collapse collapse-plus border-base-300 bg-base-200 border"
@@ -229,7 +271,6 @@ const ShopDetailPage = ({ params }) => {
               </div>
             </div>
 
-            {/* Condition Collapse with DaisyUI */}
             <div
               tabIndex={0}
               className="collapse collapse-plus border-base-300 bg-base-200 border"
@@ -242,7 +283,6 @@ const ShopDetailPage = ({ params }) => {
               </div>
             </div>
 
-            {/* Size Collapse with DaisyUI */}
             <div
               tabIndex={0}
               className="collapse collapse-plus border-base-300 bg-base-200 border"
@@ -253,7 +293,6 @@ const ShopDetailPage = ({ params }) => {
               </div>
             </div>
 
-            {/* Date and User Product Fields */}
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700">
                 Start Date
@@ -305,14 +344,14 @@ const ShopDetailPage = ({ params }) => {
 
             <div className="flex space-x-4 mt-6">
               <button
-                className="btn btn-primary"
+                className="bg-black text-white py-2 px-4 rounded hover:bg-[#D5B868] transition duration-300"
                 onClick={() => handleTrade(product.userId)}
               >
                 Trade
               </button>
               <button
                 onClick={() => addToWishList(product._id)}
-                className="btn btn-secondary"
+                className="bg-black text-white py-2 px-4 rounded hover:bg-[#D5B868] transition duration-300"
               >
                 Add to Wishlist
               </button>
@@ -321,26 +360,30 @@ const ShopDetailPage = ({ params }) => {
         </div>
       </div>
 
-      {/* Similar Products Section */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-4">Similar Products</h2>
+      <div className="mt-20">
+        <h2 className="text-3xl font-extrabold mb-4 text-center">
+          Similar Products
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {similarProducts.map((similarProduct) => (
             <div
               key={similarProduct._id}
               className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              style={{ width: "90%", height: "450px" }}
             >
               <img
                 src={similarProduct.imageUrl}
                 alt={similarProduct.name}
-                className="w-full h-48 object-cover rounded-md"
+                className="w-full h-72 object-cover rounded-md"
               />
               <h3 className="mt-2 text-lg font-semibold">
                 {similarProduct.name}
               </h3>
               <p className="text-gray-600">${similarProduct.price}</p>
               <Link href={`/shop/${similarProduct._id}`}>
-                <button className="btn btn-primary mt-2">View Details</button>
+                <button className="btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 mt-2">
+                  View Details
+                </button>
               </Link>
             </div>
           ))}

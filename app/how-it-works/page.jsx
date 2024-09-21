@@ -75,7 +75,7 @@ const HowItWorksPage = () => {
               className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105"
             >
               <div className="mb-4">{step.icon}</div>
-              <h2 className="text-xl font-semibold text-black mb-2">
+              <h2 className="text-xl text-center font-semibold text-black mb-2">
                 {step.title}
               </h2>
               <p className="text-gray-600 text-center">{step.description}</p>

@@ -83,7 +83,8 @@ const DisputePanel = () => {
             {disputes.map((dispute) => (
               <tr key={dispute._id} className="border-b">
                 <td className="text-center py-2 px-4">
-                  {dispute.trade?.toString()}
+                  {dispute.trade?.offerer.firstName} vs{" "}
+                  {dispute.trade?.receiver.firstName}
                 </td>
                 <td className="text-center py-2 px-4">
                   {dispute.user?.firstName}
@@ -93,7 +94,7 @@ const DisputePanel = () => {
                 <td className="text-center justify-center py-2 px-4 flex space-x-2">
                   <button
                     onClick={() => openModal(dispute)}
-                    className="btn btn-primary flex items-center space-x-1"
+                    className="btn bg-[#D5B868] flex items-center space-x-1"
                   >
                     <FaEye /> <span>View</span>
                   </button>
@@ -130,7 +131,7 @@ const DisputePanel = () => {
             <label className="modal-box relative" htmlFor="">
               <h2 className="text-xl font-bold mb-4">Dispute Details</h2>
               <p>
-                <strong>Trade ID:</strong> {selectedDispute.trade?.toString()}
+                <strong>Trade ID:</strong> {selectedDispute.trade?._id.toString()}
               </p>
               <p>
                 <strong>User:</strong> {selectedDispute.user?.firstName}

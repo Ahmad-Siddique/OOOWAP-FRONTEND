@@ -4,13 +4,12 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import classNames from "classnames"; // For conditional class application
-import CarousalLogos from "./CarousalLogos";
 
 const ShopPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(null);
-  const [isMounted, setIsMounted] = useState(false); // Prevents rendering before hydration
+  const [isMounted, setIsMounted] = useState(false);
   const [notification, setNotification] = useState({
     show: false,
     message: "",
@@ -19,12 +18,10 @@ const ShopPage = () => {
 
   const { loginInfo } = useSelector((state) => state.auth);
 
-  // Set isMounted to true after component mounts to avoid hydration errors
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Fetch products from backend after component has mounted and loginInfo is available
   useEffect(() => {
     if (isMounted && loginInfo && loginInfo.token) {
       let config = {
@@ -48,17 +45,13 @@ const ShopPage = () => {
           console.error("Error fetching products:", error);
           setIsLoading(false);
         });
-    } else if (!loginInfo) {
-      console.warn("Token is not available");
     }
   }, [filter, loginInfo, isMounted]);
 
-  // Handle filter change
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
   };
 
-  // Add to Wishlist with loading state and error handling
   const addToWishList = async (productId) => {
     try {
       setIsLoading(true);
@@ -69,7 +62,7 @@ const ShopPage = () => {
         },
       };
 
-      const response = await axios.post(
+      await axios.post(
         process.env.NEXT_PUBLIC_API_URL + "/wishlist/add",
         { productId },
         config
@@ -89,22 +82,18 @@ const ShopPage = () => {
       });
     } finally {
       setIsLoading(false);
-
-      // Hide notification after 3 seconds
       setTimeout(() => {
         setNotification({ show: false, message: "", type: "" });
       }, 3000);
     }
   };
 
-  // Avoid rendering until after hydration
   if (!isMounted) {
     return null;
   }
 
   return (
     <div className="shop-page bg-gray-100 text-black min-h-screen p-5">
-      {/* Notification Popup */}
       {notification.show && (
         <div
           className={classNames(
@@ -119,73 +108,49 @@ const ShopPage = () => {
         </div>
       )}
 
-      {/* Shop Title */}
-      <div className="shop-title mb-10">
-        <h1 className="text-4xl font-extrabold text-center">
+      <div className="shop-title mb-10 text-center">
+        <h1 className="text-4xl font-extrabold text-[#D5B868]">
           WAP Featured Running Brands
         </h1>
       </div>
 
-      {/* Carousel of Logos */}
-      <div className="flex justify-center overflow-hidden">
+      <div className="flex justify-center overflow-hidden mb-8">
         <div className="flex space-x-6 animate-marquee">
-          {/* Replace these with actual logo images */}
           <img
             src="https://dcassetcdn.com/design_img/3695365/637978/21978809/mvr5cgdykk3rtc2674z5h4kq8b_thumbnail.png"
             alt="Logo 1"
             className="w-48 h-48"
           />
-          {/* Additional logos here */}
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filter Section */}
-        <div className="filter-section col-span-1 bg-white p-6 rounded shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Filters</h2>
-          <ul>
-            <li>
-              <button
-                onClick={() => handleFilterChange(100)}
-                className="btn btn-block btn-outline mb-2"
-              >
-                Under $100
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleFilterChange(200)}
-                className="btn btn-block btn-outline mb-2"
-              >
-                Under $200
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleFilterChange(300)}
-                className="btn btn-block btn-outline mb-2"
-              >
-                Under $300
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleFilterChange(400)}
-                className="btn btn-block btn-outline mb-2"
-              >
-                Under $400
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleFilterChange(500)}
-                className="btn btn-block btn-outline"
-              >
-                Under $500
-              </button>
-            </li>
+        <div className="filter-section col-span-1 bg-white p-6 rounded-lg shadow-lg border border-gray-300">
+          <h2 className="text-3xl font-bold mb-6 text-[#D5B868] text-center">
+            Filters
+          </h2>
+          <ul className="space-y-4">
+            {[100, 200, 300, 400, 500].map((amount) => (
+              <li key={amount}>
+                <button
+                  onClick={() => handleFilterChange(amount)}
+                  className="w-full text-left p-4 rounded-lg transition duration-200 ease-in-out 
+            bg-gray-50 hover:bg-[#D5B868] text-black hover:text-white 
+            border border-gray-300 shadow-md hover:shadow-lg"
+                >
+                  <span className="font-medium"> { "<"} ${amount}</span>
+                </button>
+              </li>
+            ))}
           </ul>
+          <button
+            onClick={() => handleFilterChange(null)} // Clear filter button
+            className="mt-6 w-full bg-red-500 text-white p-2 rounded-lg transition duration-200 
+      hover:bg-red-600 focus:outline-none"
+          >
+            Clear Filters
+          </button>
         </div>
 
         {/* Products Section */}
@@ -193,7 +158,7 @@ const ShopPage = () => {
           {isLoading ? (
             <div className="flex justify-center items-center">
               <svg
-                className="animate-spin h-8 w-8 text-yellow-500"
+                className="animate-spin h-8 w-8 text-[#D5B868]"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -216,16 +181,16 @@ const ShopPage = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products && products.length != 0 ? (
+              {products && products.length !== 0 ? (
                 products.map((product) => (
                   <div
                     key={product.id}
-                    className="bg-white p-6 rounded-lg shadow-lg"
+                    className="bg-white p-6 rounded-lg shadow-lg transition duration-300 ease-in-out hover:shadow-xl"
                   >
                     <img
                       src={product.imageUrl}
                       alt={product.name}
-                      className="w-full h-48 object-cover rounded mb-4"
+                      className="w-full h-64 object-cover rounded mb-4" // Increased height
                     />
                     <h3 className="text-xl font-semibold mb-2">
                       {product.name}
@@ -233,13 +198,12 @@ const ShopPage = () => {
                     <p className="text-sm text-gray-500 mb-2">
                       Owner: {product.userId.firstName}
                     </p>
-                    <p className="text-lg text-yellow-500 mb-4">
+                    <p className="text-lg text-black mb-4">
                       ${product.price}
                     </p>
                     <div className="flex space-x-4">
-                      {/* Using Link for navigation */}
                       <Link
-                        className="btn btn-primary"
+                        className="btn bg-black text-white hover:bg-[#D5B868] hover:text-black px-4 py-2"
                         href={`/shop/${product._id}`}
                       >
                         Details
@@ -247,7 +211,7 @@ const ShopPage = () => {
                       <button
                         disabled={isLoading}
                         onClick={() => addToWishList(product._id)}
-                        className="btn btn-secondary"
+                        className="btn bg-black text-white hover:bg-[#D5B868] hover:text-black px-4 py-2"
                       >
                         Add to Wishlist
                       </button>
@@ -255,7 +219,7 @@ const ShopPage = () => {
                   </div>
                 ))
               ) : (
-                <div>No products available</div>
+                <div className="text-center text-lg">No products available</div>
               )}
             </div>
           )}

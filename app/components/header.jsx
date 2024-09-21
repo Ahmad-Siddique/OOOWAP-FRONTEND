@@ -24,8 +24,8 @@ const Header = () => {
   return (
     <div className="navbar bg-base-100 px-6">
       <div className="navbar-start">
-        <Link href="/" className="btn btn-ghost text-xl hover:text-primary">
-          daisyUI
+        <Link href="/" className="btn btn-ghost">
+          <img src="/images/logo.png" alt="Logo" className="h-12 w-auto" />
         </Link>
       </div>
 

@@ -69,7 +69,7 @@ const ProductPanel = () => {
               <td className="text-center justify-center py-2 px-4 flex space-x-2">
                 <button
                   onClick={() => openModal(product)}
-                  className="btn btn-primary"
+                  className="btn bg-[#D5B868]"
                 >
                   View
                 </button>

@@ -4,8 +4,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Featured = () => {
   const [products, setProducts] = useState([]);
@@ -19,12 +19,13 @@ const Featured = () => {
       Authorization: `Bearer ${loginInfo?.token}`,
     },
   };
-  console.log("LOGIN INFO",loginInfo)
+
   const fetchFeaturedProducts = async () => {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/featured-products`, {
-          userId: loginInfo?.user.id
+        `${process.env.NEXT_PUBLIC_API_URL}/product/featured-products`,
+        {
+          userId: loginInfo?.user.id,
         }
       );
       setProducts(response.data.featuredProducts);
@@ -37,9 +38,7 @@ const Featured = () => {
   };
 
   useEffect(() => {
-    
-      fetchFeaturedProducts();
-   
+    fetchFeaturedProducts();
   }, [loginInfo, router]);
 
   const addToWishList = async (productId) => {
@@ -61,7 +60,7 @@ const Featured = () => {
 
   if (loading) {
     return (
-      <div className="bg-black w-full py-16">
+      <div className="bg-white w-full py-16">
         <div className="container mx-auto flex justify-center items-center">
           <svg
             className="animate-spin h-8 w-8 text-yellow-500"
@@ -90,49 +89,67 @@ const Featured = () => {
   }
 
   return (
-    <div className="bg-black w-full py-16 px-4">
+    <div className="bg-white w-full py-16 px-4">
       <div className="container mx-auto">
-        <h2 className="text-3xl text-[#D8BA5D] text-center mb-8 double-underline">
-          Featured Pieces
+        <h2 className="text-5xl text-gray-900 text-center mb-12">
+          <span className="font-light">Featured</span>{" "}
+          <span className="font-bold">Products</span>
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {products.map((product) => (
-            <div
-              key={product._id}
-              className="bg-white rounded-2xl p-6 flex flex-col"
-            >
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-t-2xl mb-4"
-              />
-              <h3 className="text-xl font-bold">{product.name}</h3>
-              <p className="text-sm text-gray-500">
-                Owner: {product.userId.firstName} {product.userId.lastName}
-              </p>
+            <Link href={`/shop/${product._id}`} passHref key={product._id}>
+              <div className="cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-full h-72 object-cover"
+                />
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Owner: {product.userId.firstName} {product.userId.lastName}
+                  </p>
 
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4">
-                <div>
-                  <p className="text-sm">Trades: {product.trades}</p>
-                  <p className="text-sm font-bold">${product.price}</p>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-4 sm:mt-0">
-                  <button className="btn btn-sm bg-black text-white rounded-sm">
-                    <Link href={`/shop/${product._id}`} passHref>
-                      Details
-                    </Link>
-                  </button>
-                  <button
-                    disabled={wishlistLoading}
-                    onClick={() => addToWishList(product._id)}
-                    className="btn btn-sm bg-black text-white rounded-sm"
-                  >
-                    {wishlistLoading ? "Adding..." : "Wishlist"}
-                  </button>
+                  <p className="text-md text-gray-900 font-bold mb-4">
+                    ${product.price}
+                  </p>
+                  <div className="flex  items-center mt-4">
+                    {" "}
+                    {/* justify-between */}
+                    <button
+                      className="btn btn-lg bg-black text-white rounded-lg py-2 px-4 mr-2 transition-colors duration-300"
+                      style={{ transition: "background-color 0.3s ease" }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#D5B868")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "black")
+                      }
+                    >
+                      Trade
+                    </button>
+                    <button
+                      disabled={wishlistLoading}
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent Link from triggering
+                        addToWishList(product._id);
+                      }}
+                      className="btn btn-lg bg-black text-white rounded-lg py-2 px-4 transition-colors duration-300"
+                      style={{ transition: "background-color 0.3s ease" }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#D5B868")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "black")
+                      }
+                    >
+                      {wishlistLoading ? "Adding..." : "Wishlist"}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

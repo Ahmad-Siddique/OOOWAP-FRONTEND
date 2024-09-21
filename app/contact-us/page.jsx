@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import "daisyui/dist/full.css"; // Ensure DaisyUI's styles are imported
 import axios from "axios";
@@ -14,6 +14,15 @@ const ContactUsPage = () => {
   });
   const [loading, setLoading] = useState(false);
 
+  // Set initial state only on the client side
+  useEffect(() => {
+    setFormData({
+      name: "",
+      email: "",
+      message: "",
+    });
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -27,8 +36,7 @@ const ContactUsPage = () => {
     setLoading(true);
 
     try {
-      // Replace with your API endpoint
-      await axios.post("/api/contact", formData);
+      await axios.post(process.env.NEXT_PUBLIC_API_URL + "/contact", formData);
       toast.success("Message sent successfully!");
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {

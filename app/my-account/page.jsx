@@ -90,7 +90,9 @@ console.log("ZOOOOOOOOOOOOOOOOOOOOOO1");
                       }
                     )}
                 </p>
-                <button className="btn btn-primary mt-2">Products</button>
+                <button className="btn bg-black border-black text-white mt-2 hover:bg-white hover:text-black hover:border-black transition duration-300">
+                  Products
+                </button>
               </div>
             </div>
           )}

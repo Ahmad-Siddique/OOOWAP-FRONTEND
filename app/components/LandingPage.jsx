@@ -3,6 +3,7 @@ import React from "react";
 import HERO from "./landingpage/HERO";
 import Featured from "./landingpage/Featured";
 import Carousal from "./landingpage/Carousal";
+import Tiers from "./landingpage/Tiers";
 
 const LandingPage = () => {
   return (
@@ -15,6 +16,8 @@ const LandingPage = () => {
 
       {/* Full-Bleed Carousel Section */}
       <Carousal />
+
+      <Tiers />
     </div>
   );
 };

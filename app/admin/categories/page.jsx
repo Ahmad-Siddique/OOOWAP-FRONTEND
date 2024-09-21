@@ -77,15 +77,15 @@ const CategoryPanel = () => {
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">Category Management</h2>
-      <button className="btn btn-primary mb-4" onClick={() => openModal()}>
+      <button className="btn bg-[#D5B868] mb-4" onClick={() => openModal()}>
         Create New Category
       </button>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead>
             <tr className="bg-[#D5B868] text-black">
-              <th className="py-2 px-4 text-left">Category Name</th>
-              <th className="py-2 px-4 text-left">Actions</th>
+              <th className="py-2 px-4 text-center">Category Name</th>
+              <th className="py-2 px-4 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>

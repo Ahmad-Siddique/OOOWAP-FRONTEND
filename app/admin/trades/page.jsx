@@ -74,13 +74,13 @@ const TradePanel = () => {
               <td className="text-center justify-center py-2 px-4 flex space-x-2">
                 <button
                   onClick={() => openModal(trade)}
-                  className="btn btn-primary flex items-center space-x-1"
+                  className="btn bg-[#D5B868] flex items-center space-x-1"
                 >
                   <FaEye /> <span>View</span>
                 </button>
                 <button
                   onClick={() => handleDelete(trade._id)}
-                  className="btn btn-danger flex items-center space-x-1"
+                  className="btn bg-[red] flex items-center space-x-1"
                 >
                   <FaTrash /> <span>Delete</span>
                 </button>
