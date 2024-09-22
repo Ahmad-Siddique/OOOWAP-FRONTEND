@@ -17,12 +17,12 @@ export default function UserProfile() {
     averageRating: 0,
   });
   const [loading, setLoading] = useState(true);
-console.log("ZOOOOOOOOOOOOOOOOOOOOOO1");
+
   useEffect(() => {
     if (!loginInfo) {
       router.push("/login")
     }
-    console.log("ZOOOOOOOOOOOOOOOOOOOOOO")
+   
     const fetchMetrics = async () => {
       try {
         const token = loginInfo ? loginInfo?.token : null;

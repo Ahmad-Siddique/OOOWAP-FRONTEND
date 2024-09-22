@@ -18,6 +18,7 @@ const Products = () => {
     description: "",
     condition: "",
     image: null,
+    brand:"",
     imageUrl1: null,
     imageUrl2: null,
   });
@@ -149,6 +150,7 @@ const Products = () => {
       size: product.size,
       description: product.description,
       condition: product.condition,
+      brand:product.brand,
       image: null,
       imageUrl1: null,
       imageUrl2: null,
@@ -275,6 +277,7 @@ const Products = () => {
               {editProduct ? "Edit Product" : "Add Product"}
             </h2>
             <form onSubmit={handleSubmit}>
+              {/* Name field */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Name</label>
                 <input
@@ -285,6 +288,8 @@ const Products = () => {
                   className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
+
+              {/* Category field */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Category</label>
                 <select
@@ -301,6 +306,48 @@ const Products = () => {
                   ))}
                 </select>
               </div>
+
+              {/* Brand field */}
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Brand</label>
+                <select
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleInputChange}
+                  className="form-select w-full border-b-2 border-gray-300"
+                >
+                  <option value="">Select Brand</option>
+                  {[
+                    "Nike",
+                    "Adidas",
+                    "Puma",
+                    "Gucci",
+                    "Louis Vuitton",
+                    "Versace",
+                    "Chanel",
+                    "Prada",
+                    "Balenciaga",
+                    "Hermes",
+                    "Other",
+                  ].map((brand) => (
+                    <option key={brand} value={brand}>
+                      {brand}
+                    </option>
+                  ))}
+                </select>
+                {formData.brand === "Other" && (
+                  <input
+                    type="text"
+                    name="customBrand"
+                    value={formData.customBrand}
+                    onChange={handleInputChange}
+                    placeholder="Enter brand name"
+                    className="form-input w-full border-b-2 border-gray-300 mt-2"
+                  />
+                )}
+              </div>
+
+              {/* Price field */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Price</label>
                 <input
@@ -311,6 +358,8 @@ const Products = () => {
                   className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
+
+              {/* Currency field */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Currency</label>
                 <select
@@ -323,6 +372,8 @@ const Products = () => {
                   {/* Add more currencies as needed */}
                 </select>
               </div>
+
+              {/* Size field */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Size</label>
                 <input
@@ -333,6 +384,8 @@ const Products = () => {
                   className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
+
+              {/* Description field */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Description</label>
                 <textarea
@@ -343,6 +396,8 @@ const Products = () => {
                   rows="4"
                 ></textarea>
               </div>
+
+              {/* Condition field */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Condition</label>
                 <input
@@ -353,6 +408,8 @@ const Products = () => {
                   className="form-input w-full border-b-2 border-gray-300"
                 />
               </div>
+
+              {/* Image 1 */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Image 1</label>
                 <input
@@ -368,6 +425,8 @@ const Products = () => {
                   />
                 )}
               </div>
+
+              {/* Image 2 */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Image 2</label>
                 <input
@@ -383,6 +442,8 @@ const Products = () => {
                   />
                 )}
               </div>
+
+              {/* Image 3 */}
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2">Image 3</label>
                 <input
@@ -398,13 +459,15 @@ const Products = () => {
                   />
                 )}
               </div>
+
+              {/* Submit buttons */}
               <div className="flex justify-between">
                 <button
                   type="submit"
                   className={`btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 ${
                     isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                   }`}
-                  disabled={isSubmitting} // Disable button when submitting
+                  disabled={isSubmitting}
                 >
                   {editProduct ? "Update" : "Add"}
                 </button>
@@ -414,7 +477,7 @@ const Products = () => {
                   className={`btn bg-[#D5B868] text-black border-[#D5B868] hover:bg-black hover:text-white transition duration-300 ${
                     isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                   }`}
-                  disabled={isSubmitting} // Disable button when submitting
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </button>
