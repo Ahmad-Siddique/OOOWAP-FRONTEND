@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/components/SignupPage.jsx"
-, "app/login/LoginPage.jsx", "app/GlobalRedux/Provider.jsx", "app/components/header.jsx", "app/components/footer.jsx", "app/admin/page.jsx", "app/layout.jsx", "app/page.jsx", "app/shop/page.jsx", "app/signup/page.jsx", "app/login/page.jsx", "app/my-account/page.jsx"  ],
+, "app/login/LoginPage.jsx", "app/GlobalRedux/Provider.jsx", "app/components/header.jsx", "app/components/footer.jsx", "app/home/admin/page.jsx", "app/layout.jsx", "app/page.jsx", "app/home/shop/page.jsx", "app/signup/page.jsx", "app/login/page.jsx", "app/home/my-account/page.jsx"  ],
   "exclude": ["node_modules"]
 }

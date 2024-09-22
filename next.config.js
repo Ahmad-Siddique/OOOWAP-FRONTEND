@@ -9,7 +9,12 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["images.unsplash.com", "pbs.twimg.com", "source.unsplash.com"], // Add the domain of the external image
+    domains: [
+      "images.unsplash.com",
+      "pbs.twimg.com",
+      "source.unsplash.com",
+      "res.cloudinary.com",
+    ], // Add the domain of the external image
   },
   eslint: {
     // This option disables ESLint during production builds
@@ -17,4 +22,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig
+module.exports = nextConfig;
