@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import "daisyui/dist/full.css"; // Ensure DaisyUI's styles are imported
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

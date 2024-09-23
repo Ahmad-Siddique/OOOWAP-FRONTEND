@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import "daisyui/dist/full.css"; // Ensure DaisyUI's styles are imported
 
 const FAQsPage = () => {
   const [openIndex, setOpenIndex] = useState(null);

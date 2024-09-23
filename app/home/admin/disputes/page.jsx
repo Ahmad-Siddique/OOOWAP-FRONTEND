@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEye, FaCheck, FaTrash } from "react-icons/fa";
-import AdminLayout from "../../../components/AdminLayout"; // Adjust the path if necessary
+import AdminLayout from "@/components/AdminLayout"; // Adjust the path if necessary
 
 const DisputePanel = () => {
   const [disputes, setDisputes] = useState([]);

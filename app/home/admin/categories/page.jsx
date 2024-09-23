@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import AdminLayout from "../../AdminLayout"; // Adjust the path if necessary
+import AdminLayout from "@/components/AdminLayout"; // Adjust the path if necessary
 
 const CategoryPanel = () => {
   const [categories, setCategories] = useState([]);

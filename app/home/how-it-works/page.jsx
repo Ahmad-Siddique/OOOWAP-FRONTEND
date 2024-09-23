@@ -6,7 +6,6 @@ import {
   FaMoneyBillWave,
   FaHandshake,
 } from "react-icons/fa";
-import "daisyui/dist/full.css"; // Ensure DaisyUI styles are imported
 
 const HowItWorksPage = () => {
   return (

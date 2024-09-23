@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTrash, FaEye } from "react-icons/fa";
-import AdminLayout from "../../../components/AdminLayout"; // Adjust the path if necessary
+import AdminLayout from "@/components/AdminLayout"; // Adjust the path if necessary
 
 const TradePanel = () => {
   const [trades, setTrades] = useState([]);
