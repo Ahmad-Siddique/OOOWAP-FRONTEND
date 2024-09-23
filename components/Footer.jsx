@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 import {
   FaFacebookF,
   FaInstagram,
@@ -8,24 +8,24 @@ import {
 
 const Footer = () => {
   return (
-    <div className="bg-white text-black">
+    <div className="bg-white border-t border-black text-black">
       {/* First Row */}
       <div className="px-8 py-12 md:flex md:justify-between md:items-start">
         {/* Column 1 */}
         <div className="mb-8 md:mb-0 w-full md:w-1/3 md:pl-4">
           {" "}
           {/* Added left padding */}
-          <h2 className="text-2xl font-bold mb-4">EARLY ACCESS</h2>
-          <p className="text-lg mb-4">
+          <h2 className="font-bold mb-6">EARLY ACCESS</h2>
+          <p className="text-lg mb-6">
             Sign up to our newsletter to receive exclusive offers.
           </p>
-          <div className="flex">
+          <div className="flex border border-black/10 pl-3">
             <input
               type="email"
               placeholder="Enter your email"
-              className="input input-bordered w-full md:w-3/4 mr-2 text-lg"
+              className="focus:outline-none py-2 w-full md:w-3/4 mr-2 text-lg"
             />
-            <button className="btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 text-lg">
+            <button className="h-full bg-black py-2 px-5 text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 text-lg">
               Subscribe
             </button>
           </div>
@@ -33,44 +33,44 @@ const Footer = () => {
 
         {/* Column 2 */}
         <div className="mb-8 md:mb-0 w-full md:w-1/3 text-center">
-          <h2 className="text-2xl font-bold mb-4">Menu</h2>
-          <ul className="space-y-2 text-lg">
+          <h2 className="font-medium uppercase mb-6">Menu</h2>
+          <ul className="space-y-2">
             <li>
-              <a
-                href="#"
-                className="hover:underline hover:text-[#D5B868] transition duration-300"
+              <Link
+                href="/home/about"
+                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
               >
                 About
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="hover:underline hover:text-[#D5B868] transition duration-300"
+              <Link
+                href="/home/contact"
+                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
               >
                 Contact
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="hover:underline hover:text-[#D5B868] transition duration-300"
+              <Link
+                href="/home/policy"
+                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
               >
                 Policy
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="hover:underline hover:text-[#D5B868] transition duration-300"
+              <Link
+                href="/home/terms-of-service"
+                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
               >
                 Terms of Service
-              </a>
+              </Link>
             </li>
             <li>
               <a
                 href="#"
-                className="hover:underline hover:text-[#D5B868] transition duration-300"
+                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
               >
                 FAQ
               </a>
@@ -79,12 +79,12 @@ const Footer = () => {
         </div>
 
         {/* Column 3 */}
-        <div className="w-full md:w-1/3 justify-center">
-          <h2 className="text-2xl font-bold mb-4">About</h2>
-          <p className="text-lg mb-4">
+        <div className="w-full md:w-1/3 h-full justify-center">
+          <h2 className="uppercase font-medium mb-6">About</h2>
+          <p className="font-extralight mb-4">
             Learn more about our mission and values.
           </p>
-          <div className="flex justify-start space-x-4 mt-4">
+          <div className="flex justify-start self-end space-x-4 mt-4">
             <a href="#" className="text-xl hover:text-gray-700">
               <FaFacebookF />
             </a>
@@ -102,8 +102,8 @@ const Footer = () => {
       </div>
 
       {/* Second Row */}
-      <div className="border-t border-gray-300 text-center py-4">
-        <p className="text-lg">&copy; 2024 – OOOWAP</p>
+      <div className="border-t border-gray-300 text-center py-8">
+        <p className="text-sm font-extralight">&copy; 2024 – OOOWAP</p>
       </div>
     </div>
   );
