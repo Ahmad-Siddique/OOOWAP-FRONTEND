@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { updateuserprofilecheck } from "../../redux/features/auth/authSlice";
 
-const ProfileSettings = () => {
+const ProfileSettings = ({ loginInfo }) => {
   // State to manage form data
   const [formData, setFormData] = useState({
     firstName: "",
@@ -22,7 +20,6 @@ const ProfileSettings = () => {
     confirmPassword: "",
   });
 
-  const dispatch = useDispatch();
   // State to manage image preview
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -32,9 +29,6 @@ const ProfileSettings = () => {
   // State to manage success and error messages
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Get user login info from Redux state
-  const { loginInfo } = useSelector((state) => state.auth);
 
   // Set Axios configuration with token for authorization
   const config = {
@@ -214,7 +208,7 @@ const ProfileSettings = () => {
       setSuccessMessage("Profile updated successfully!");
       setIsLoading(false);
       console.log("Response data", response.data);
-      dispatch(updateuserprofilecheck({ zz: response.data, gg: loginInfo }));
+      // dispatch(updateuserprofilecheck({ zz: response.data, gg: loginInfo }));
       // Optionally, update preview image with the new image URL returned from the backend
       if (response.data.imageUrl) {
         setPreviewImage(response.data.imageUrl);

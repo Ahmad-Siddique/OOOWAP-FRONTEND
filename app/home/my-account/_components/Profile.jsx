@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { useRouter } from "next/navigation";
 
-const Profile = () => {
-  const { loginInfo } = useSelector((state) => state.auth);
+const Profile = ({ loginInfo }) => {
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-const router = useRouter();
+  const router = useRouter();
   const config = {
     headers: {
       Authorization: `Bearer ${loginInfo && loginInfo?.token}`,
@@ -35,7 +33,7 @@ const router = useRouter();
 
   useEffect(() => {
     if (!loginInfo) {
-      router.push("/login")
+      router.push("/login");
     }
     fetchUserData();
   }, [loginInfo]);
@@ -127,7 +125,7 @@ const router = useRouter();
 
         {/* Sidebar Column */}
         <div className="hidden md:block">
-          <Sidebar />
+          <Sidebar loginInfo={loginInfo} />
         </div>
       </div>
     </div>

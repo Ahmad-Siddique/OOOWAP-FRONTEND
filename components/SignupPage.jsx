@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { register } from "../redux/features/auth/authSlice"; // Import your register slice
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
 
@@ -20,9 +18,11 @@ const SignupPage = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [profilePicPreview, setProfilePicPreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [message, setMessage] = useState("");
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { isLoading, isSuccess, message } = useSelector((state) => state.auth);
+  // const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +69,7 @@ const SignupPage = () => {
     }
 
     // Dispatch register action
-    dispatch(register(formDataToSubmit));
+    // dispatch(register(formDataToSubmit));
   };
 
   // Check if registration is successful and navigate to login page

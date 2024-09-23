@@ -1,14 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-const PendingItems = () => {
+const PendingItems = ({ loginInfo }) => {
   const [pendingTrades, setPendingTrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { loginInfo } = useSelector((state) => state.auth);
 
   // Fetch pending trades from backend API
   useEffect(() => {

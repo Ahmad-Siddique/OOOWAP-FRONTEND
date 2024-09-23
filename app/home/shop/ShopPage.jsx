@@ -1,11 +1,11 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import Link from "next/link";
 import classNames from "classnames"; // For conditional class application
 
-const ShopPage = () => {
+const ShopPage = ({ loginInfo }) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(null);
@@ -15,8 +15,6 @@ const ShopPage = () => {
     message: "",
     type: "",
   });
-
-  const { loginInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     setIsMounted(true);
@@ -139,7 +137,10 @@ const ShopPage = () => {
             bg-gray-50 hover:bg-[#D5B868] text-black hover:text-white 
             border border-gray-300 shadow-md hover:shadow-lg"
                 >
-                  <span className="font-medium"> { "<"} ${amount}</span>
+                  <span className="font-medium">
+                    {" "}
+                    {"<"} ${amount}
+                  </span>
                 </button>
               </li>
             ))}
@@ -198,9 +199,7 @@ const ShopPage = () => {
                     <p className="text-sm text-gray-500 mb-2">
                       Owner: {product.userId.firstName}
                     </p>
-                    <p className="text-lg text-black mb-4">
-                      ${product.price}
-                    </p>
+                    <p className="text-lg text-black mb-4">${product.price}</p>
                     <div className="flex space-x-4">
                       <Link
                         className="btn bg-black text-white hover:bg-[#D5B868] hover:text-black px-4 py-2"

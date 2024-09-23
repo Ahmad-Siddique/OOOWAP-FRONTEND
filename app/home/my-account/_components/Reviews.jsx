@@ -1,14 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
-const Reviews = () => {
+const Reviews = ({ loginInfo }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { loginInfo } = useSelector((state) => state.auth);
 
   // Fetch reviews from backend API
   const fetchReviews = async () => {

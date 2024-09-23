@@ -1,10 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
-const TradeHistory = () => {
-  const { loginInfo } = useSelector((state) => state.auth);
+const TradeHistory = ({ loginInfo }) => {
   const [tradeHistory, setTradeHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

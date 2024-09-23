@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Profile from "./Profile";
 import Products from "./Products";
@@ -11,11 +10,9 @@ import TradeHistory from "./TradeHistory";
 import Dispute from "./Dispute";
 import AcceptedTrades from "./AcceptedTrades";
 
-export default function UserTabs() {
+export default function UserTabs({ loginInfo }) {
   const [activeTab, setActiveTab] = useState("Profile");
   const router = useRouter();
-
-  const { loginInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (!loginInfo || !loginInfo.token) {
@@ -26,20 +23,20 @@ export default function UserTabs() {
   const renderContent = () => {
     switch (activeTab) {
       case "Profile":
-        return <Profile />;
+        return <Profile loginInfo={loginInfo} />;
       case "Products":
-        return <Products />;
+        return <Products loginInfo={loginInfo} />;
       case "Profile Settings":
-        return <ProfileSettings />;
+        return <ProfileSettings loginInfo={loginInfo} />;
       case "Pending Items":
-        return <PendingItems />;
+        return <PendingItems loginInfo={loginInfo} />;
       case "Accpted/Completed Trades":
-        return <AcceptedTrades />
+        return <AcceptedTrades loginInfo={loginInfo} />;
 
       case "Reviews":
-        return <Reviews />;
+        return <Reviews loginInfo={loginInfo} />;
       case "Trade History":
-        return <TradeHistory />;
+        return <TradeHistory loginInfo={loginInfo} />;
       case "Dispute":
         return <Dispute />;
       default:

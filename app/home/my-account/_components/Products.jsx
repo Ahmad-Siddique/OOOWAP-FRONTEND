@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 
-const Products = () => {
-  const { loginInfo } = useSelector((state) => state.auth);
+const Products = ({ loginInfo }) => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +16,7 @@ const Products = () => {
     description: "",
     condition: "",
     image: null,
-    brand:"",
+    brand: "",
     imageUrl1: null,
     imageUrl2: null,
   });
@@ -94,8 +92,7 @@ const Products = () => {
     setIsSubmitting(true); // Lock buttons during submission
 
     try {
-     
-      console.log("Categories",formData.categories)
+      console.log("Categories", formData.categories);
       const formDataToSubmit = new FormData();
       Object.keys(formData).forEach((key) => {
         formDataToSubmit.append(key, formData[key]);
@@ -150,7 +147,7 @@ const Products = () => {
       size: product.size,
       description: product.description,
       condition: product.condition,
-      brand:product.brand,
+      brand: product.brand,
       image: null,
       imageUrl1: null,
       imageUrl2: null,

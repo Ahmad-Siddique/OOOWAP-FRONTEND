@@ -64,7 +64,7 @@ const TiersPage = () => {
 
             {/* Enroll Button */}
             <Link
-              href="/deposit"
+              href="/home/deposit"
               className="text-white border border-white py-2 px-4 rounded-lg hover:bg-white hover:text-black transition-all duration-300 text-lg w-36 h-16 flex items-center justify-center"
             >
               Enroll

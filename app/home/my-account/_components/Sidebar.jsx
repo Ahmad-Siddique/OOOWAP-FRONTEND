@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const Sidebar = () => {
-  const { loginInfo } = useSelector((state) => state.auth);
+const Sidebar = ({ loginInfo }) => {
   const [metrics, setMetrics] = useState({ trades: 0, reviews: 0 });
 
   useEffect(() => {

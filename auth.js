@@ -9,7 +9,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL + "/auth/";
 async function getUser(email, password) {
   try {
     const user = await axios.post(API_URL + "login", { email, password });
-    console.log("AUTHTHTH", user.data);
+    // console.log("User:", user.data);
     return user.data;
   } catch (error) {
     throw new Error("Failed to fetch user.");
@@ -27,6 +27,7 @@ export const { auth, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const userDB = await getUser(email, password);
+          // console.log("USER IN AUTH:", userDB);
           if (!userDB.success) return null;
           const user = {
             id: userDB.user.id,
@@ -36,7 +37,9 @@ export const { auth, signIn, signOut } = NextAuth({
             role: userDB.user.role,
             image: userDB.user.image,
             balance: userDB.user.balance,
+            token: userDB.token,
           };
+          // console.log("USERRR", user);
           return user;
         }
         return null;

@@ -9,7 +9,7 @@ import {
 } from "../ui/dropdown-menu";
 import Link from "next/link";
 
-const HeaderDropdown = ({ loginInfo, logOut }) => {
+const ProfileDropdown = ({ loginInfo, logOut }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="w-10 h-10">
@@ -31,10 +31,10 @@ const HeaderDropdown = ({ loginInfo, logOut }) => {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuItem>
-          <Link href="/deposit">Deposit Money</Link>
+          <Link href="/home/deposit">Deposit Money</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href="/withdraw">Withdraw Money</Link>
+          <Link href="/home/withdraw">Withdraw Money</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <button onClick={() => logOut()}>Logout</button>
@@ -44,4 +44,4 @@ const HeaderDropdown = ({ loginInfo, logOut }) => {
   );
 };
 
-export default HeaderDropdown;
+export default ProfileDropdown;

@@ -1,18 +1,17 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
 
-const AcceptedTrades = () => {
+const AcceptedTrades = ({ loginInfo }) => {
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showReviewPopup, setShowReviewPopup] = useState(false);
   const [selectedTrade, setSelectedTrade] = useState(null);
   const [reviewStars, setReviewStars] = useState(0);
-  const { loginInfo } = useSelector((state) => state.auth);
 
   // Fetch accepted/completed trades from backend API
   const fetchTrades = async () => {
@@ -45,18 +44,17 @@ const AcceptedTrades = () => {
     const reviewingFor =
       loginInfo?.user.id === selectedTrade.offerer._id.toString()
         ? "offerer"
-              : "receiver"; // Determine who to review
-      
-      
+        : "receiver"; // Determine who to review
+
     try {
       const token = loginInfo ? loginInfo.token : null;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        };
-        
-        console.log(config)
+      };
+
+      console.log(config);
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/trade/review`,
@@ -96,18 +94,24 @@ const AcceptedTrades = () => {
             const isCompletedOrExpired =
               trade.status === "completed" || endDate < currentDate;
 
-            const isOfferer = loginInfo?.user.id === trade.offerer._id.toString();
+            const isOfferer =
+              loginInfo?.user.id === trade.offerer._id.toString();
             const isReceiver =
               loginInfo?.user.id === trade.receiver._id.toString();
 
             const offererReviewExists = trade.offererReview;
-              const receiverReviewExists = trade.receiverReview;
-              console.log(offererReviewExists, receiverReviewExists, isOfferer, isReceiver);
+            const receiverReviewExists = trade.receiverReview;
+            console.log(
+              offererReviewExists,
+              receiverReviewExists,
+              isOfferer,
+              isReceiver
+            );
             const showReviewButton =
               (isOfferer && !offererReviewExists) ||
               (isReceiver && !receiverReviewExists);
 
-            console.log(showReviewButton)
+            console.log(showReviewButton);
             return (
               <div
                 key={trade._id}
@@ -121,7 +125,11 @@ const AcceptedTrades = () => {
                       className="w-32 h-32 object-cover rounded-md"
                     />
                     <div className="ml-4">
-                                <h2 className="text-lg font-semibold">{trade.offerer._id == loginInfo?.user.id ? "Offerer Product" : "Your Product"}</h2>
+                      <h2 className="text-lg font-semibold">
+                        {trade.offerer._id == loginInfo?.user.id
+                          ? "Offerer Product"
+                          : "Your Product"}
+                      </h2>
                       <h4 className="text-xl font-semibold">
                         {trade.offererProduct.name}
                       </h4>
@@ -138,7 +146,11 @@ const AcceptedTrades = () => {
                       className="w-32 h-32 object-cover rounded-md"
                     />
                     <div className="ml-4">
-                      <h2 className="text-lg font-semibold">{trade.receiver._id == loginInfo?.user.id ? "Offerer Product" : "Your Product"}</h2>
+                      <h2 className="text-lg font-semibold">
+                        {trade.receiver._id == loginInfo?.user.id
+                          ? "Offerer Product"
+                          : "Your Product"}
+                      </h2>
                       <h4 className="text-xl font-semibold">
                         {trade.receiverProduct.name}
                       </h4>

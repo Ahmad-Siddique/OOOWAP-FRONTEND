@@ -1,17 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const Featured = () => {
+const Featured = ({ loginInfo }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [wishlistLoading, setWishlistLoading] = useState(false);
-  const { loginInfo } = useSelector((state) => state.auth);
   const router = useRouter();
 
   const config = {
@@ -98,7 +96,7 @@ const Featured = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {products.map((product) => (
-            <Link href={`/shop/${product._id}`} passHref key={product._id}>
+            <Link href={`/home/shop/${product._id}`} passHref key={product._id}>
               <div className="cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
                 <img
                   src={product.imageUrl}
