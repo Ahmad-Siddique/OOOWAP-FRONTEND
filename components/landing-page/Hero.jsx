@@ -39,8 +39,8 @@ const Hero = () => {
           <div className="w-full h-[450px] rounded-md overflow-hidden">
             {/* Slide 1 */}
             <div
-              className={`relative w-full h-full ${
-                currentSlide === 1 ? "block" : "hidden"
+              className={`relative w-full h-full transition-all ease-in duration-100 ${
+                currentSlide === 1 ? "opacity-100" : "opacity-0"
               }`}
             >
               <Image
@@ -54,8 +54,8 @@ const Hero = () => {
 
             {/* Slide 2 */}
             <div
-              className={`relative w-full h-full ${
-                currentSlide === 2 ? "block" : "hidden"
+              className={`relative w-full h-full transition-all ease-in duration-100 ${
+                currentSlide === 2 ? "opacity-100" : "opacity-0"
               }`}
             >
               <Image
@@ -69,8 +69,8 @@ const Hero = () => {
 
             {/* Slide 3 */}
             <div
-              className={`relative w-full h-full ${
-                currentSlide === 3 ? "block" : "hidden"
+              className={`relative w-full h-full transition-all ease-in duration-100 ${
+                currentSlide === 3 ? "opacity-100" : "opacity-0"
               }`}
             >
               <Image
@@ -84,8 +84,8 @@ const Hero = () => {
 
             {/* Slide 4 */}
             <div
-              className={`relative w-full h-full ${
-                currentSlide === 4 ? "block" : "hidden"
+              className={`relative w-full h-full transition-all ease-in duration-100 ${
+                currentSlide === 4 ? "opacity-100" : "opacity-0"
               }`}
             >
               <Image
