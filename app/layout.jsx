@@ -1,11 +1,13 @@
 import "./globals.css";
 
-import { Inter } from "next/font/google";
-import { Providers } from "../redux/Provider";
-import Header from "../components/header/Header";
-import Footer from "../components/Footer";
+import { Roboto } from "next/font/google";
+import Header from "@/components/header/Header";
+import Footer from "@/components/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = Roboto({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
+});
 
 export const metadata = {
   title: "OOOWAP | Exchange your goods",
@@ -16,7 +18,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={font.className}>
         <Header />
         {children}
         <Footer />

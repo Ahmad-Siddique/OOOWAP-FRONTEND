@@ -16,7 +16,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="bg-[#D5B868] w-full py-16">
+    <div className="bg-secondary w-full py-16">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Text Section */}
         <div className="flex flex-col justify-center items-start space-y-4 p-4 md:p-8">
