@@ -7,7 +7,6 @@ import { auth, signOut } from "@/auth";
 
 const Header = async () => {
   const session = await auth();
-  console.log("SESSION", session);
   const logOut = async () => {
     "use server";
     await signOut();

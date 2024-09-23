@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import ProductCard from "@/components/cards/ProductCard";
 
 const Featured = ({ loginInfo }) => {
   const [products, setProducts] = useState([]);
@@ -37,6 +37,7 @@ const Featured = ({ loginInfo }) => {
 
   useEffect(() => {
     fetchFeaturedProducts();
+    console.log("PRODUCTS", products);
   }, [loginInfo, router]);
 
   const addToWishList = async (productId) => {
@@ -86,72 +87,31 @@ const Featured = ({ loginInfo }) => {
     );
   }
 
+  const isProductinWishlist = (productId) => {
+    return true;
+  };
+
   return (
     <div className="bg-white w-full py-16 px-4">
-      <div className="container mx-auto">
-        <h2 className="text-5xl text-gray-900 text-center mb-12">
-          <span className="font-light">Featured</span>{" "}
-          <span className="font-bold">Products</span>
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <div className="container mx-auto flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center gap-2 mb-12 justify-center">
+          <h2 className="text-4xl uppercase text-gray-900 text-center">
+            <span className="font-extralight">Featured</span>{" "}
+            <span className="font-bold">Products</span>
+          </h2>
+          <div className="bg-primary h-0.5 w-32"></div>
+        </div>
+        <div className="grid grid-cols-1 w-full max-w-5xl sm:grid-cols-2 md:grid-cols-3 gap-10">
           {products.map((product) => (
-            <Link href={`/home/shop/${product._id}`} passHref key={product._id}>
-              <div className="cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-72 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-                  <p className="text-sm text-gray-600 mb-2">
-                    Owner: {product.userId.firstName} {product.userId.lastName}
-                  </p>
-
-                  <p className="text-md text-gray-900 font-bold mb-4">
-                    ${product.price}
-                  </p>
-                  <div className="flex  items-center mt-4">
-                    {" "}
-                    {/* justify-between */}
-                    <button
-                      className="btn btn-lg bg-black text-white rounded-lg py-2 px-4 mr-2 transition-colors duration-300"
-                      style={{ transition: "background-color 0.3s ease" }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.backgroundColor = "#D5B868")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = "black")
-                      }
-                    >
-                      Trade
-                    </button>
-                    <button
-                      disabled={wishlistLoading}
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent Link from triggering
-                        addToWishList(product._id);
-                      }}
-                      className="btn btn-lg bg-black text-white rounded-lg py-2 px-4 transition-colors duration-300"
-                      style={{ transition: "background-color 0.3s ease" }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.backgroundColor = "#D5B868")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = "black")
-                      }
-                    >
-                      {wishlistLoading ? "Adding..." : "Wishlist"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </Link>
+            <ProductCard
+              key={product._id}
+              product={product}
+              addToWishList={addToWishList}
+              isProductinWishlist={isProductinWishlist}
+            />
           ))}
         </div>
       </div>
-
       <ToastContainer />
     </div>
   );
