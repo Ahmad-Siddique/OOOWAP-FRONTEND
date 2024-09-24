@@ -3,7 +3,7 @@ import Image from "next/image";
 const Carousal = () => {
   return (
     <div className="bg-[#FAFAFA] flex items-center justify-center w-full py-16 px-4">
-      <div className="grid grid-cols-1 max-w-6xl w-full sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 max-w-7xl w-full sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
         <div className="relative h-150">
           <Image
             height={700}
