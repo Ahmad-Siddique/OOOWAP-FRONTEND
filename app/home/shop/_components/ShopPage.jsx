@@ -55,7 +55,7 @@ const ShopPage = ({ loginInfo }) => {
         brands,
         tiers,
         popularity, price,
-        // userId:loginInfo?.user.id
+        userId:loginInfo?.user.id
        })
       .then((response) => {
         console.log("{PRODUCTS}", response.data);
