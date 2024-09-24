@@ -9,12 +9,13 @@ import ProductCard from "@/components/cards/ProductCard";
 const Featured = ({ loginInfo }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [wishlistproduct, setwishlistproduct] = useState([]);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const router = useRouter();
-
+  console.log(loginInfo,"GG")
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo?.token}`,
+      Authorization: `Bearer ${loginInfo?.user.token}`,
     },
   };
 
@@ -35,23 +36,41 @@ const Featured = ({ loginInfo }) => {
     }
   };
 
+
+  const fetchWishlistProduct = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/wishlist/product`,
+        config
+      );
+      setwishlistproduct(response.data.products);
+    } catch (error) {
+      console.error("Error fetching featured products:", error);
+      // toast.error("Failed to fetch products. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchFeaturedProducts();
+    fetchWishlistProduct();
     console.log("PRODUCTS", products);
   }, [loginInfo, router]);
 
   const addToWishList = async (productId) => {
     setWishlistLoading(true);
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/wishlist/add`,
+      const data = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/wishlist/toggle`,
         { productId },
         config
       );
+      setwishlistproduct(data.data.products)
       toast.success("Added to wishlist!");
     } catch (error) {
       console.error("Error adding to wishlist:", error);
-      toast.error("Failed to add to wishlist. Please try again.");
+      toast.error("Please login to add products to wishlist");
     } finally {
       setWishlistLoading(false);
     }
@@ -88,7 +107,13 @@ const Featured = ({ loginInfo }) => {
   }
 
   const isProductinWishlist = (productId) => {
-    return true;
+    if (wishlistproduct.includes(productId)) {
+      console.log("TRUEEE")
+      return true;
+    }
+    else {
+      return false;
+    }
   };
 
   return (

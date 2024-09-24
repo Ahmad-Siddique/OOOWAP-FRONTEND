@@ -18,7 +18,7 @@ const TradeHistory = ({ loginInfo }) => {
       try {
         const config = {
           headers: {
-            Authorization: `Bearer ${loginInfo.user.token}`,
+            Authorization: `Bearer ${loginInfo?.user.token}`,
           },
         };
 

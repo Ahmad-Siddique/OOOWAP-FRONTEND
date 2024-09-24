@@ -29,26 +29,24 @@ const ShopPage = ({ loginInfo }) => {
   });
 
   useEffect(() => {
+   
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    if (isMounted && loginInfo && loginInfo.user.token) {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${loginInfo.user.token}`,
-        },
-      };
 
+    if (isMounted ) {
+     
+     
       setIsLoading(true);
       axios
         .post(
           process.env.NEXT_PUBLIC_API_URL + "/product/filtered",
           { filter },
-          config
+         
         )
         .then((response) => {
-          setProducts(response.data.filteredProducts);
+          setProducts(response.data.results);
           setIsLoading(false);
         })
         .catch((error) => {
@@ -56,7 +54,7 @@ const ShopPage = ({ loginInfo }) => {
           setIsLoading(false);
         });
     }
-  }, [filter, loginInfo, isMounted]);
+  }, [isMounted]);
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -68,7 +66,7 @@ const ShopPage = ({ loginInfo }) => {
 
       const config = {
         headers: {
-          Authorization: `Bearer ${loginInfo.user.token}`,
+          Authorization: `Bearer ${loginInfo?.user.token}`,
         },
       };
 
@@ -134,12 +132,52 @@ const ShopPage = ({ loginInfo }) => {
                     <Label htmlFor="option-one">Brands</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="option-two" id="option-two" />
-                    <Label htmlFor="option-two">Chanel</Label>
+                    <RadioGroupItem value="Chanel" id="option-two" />
+                    <Label htmlFor="Chanel">Chanel</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="option-three" id="option-three" />
-                    <Label htmlFor="option-three">Celine</Label>
+                    <RadioGroupItem value="Celine" id="Celine" />
+                    <Label htmlFor="Celine">Celine</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Nike" id="Nike" />
+                    <Label htmlFor="Nike">Nike</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Adidas" id="Adidas" />
+                    <Label htmlFor="Adidas">Adidas</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Puma" id="Puma" />
+                    <Label htmlFor="Puma">Puma</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Gucci" id="Gucci" />
+                    <Label htmlFor="Gucci">Gucci</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Louis Vuitton" id="Louis Vuitton" />
+                    <Label htmlFor="Louis Vuitton">Louis Vuitton</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Versace" id="Versace" />
+                    <Label htmlFor="Versace">Versace</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Prada" id="Prada" />
+                    <Label htmlFor="Prada">Prada</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Balenciaga" id="Balenciaga" />
+                    <Label htmlFor="Balenciaga">Balenciaga</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Hermes" id="Hermes" />
+                    <Label htmlFor="Hermes">Hermes</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="Other" id="Other" />
+                    <Label htmlFor="Other">Other</Label>
                   </div>
                 </RadioGroup>
               </AccordionContent>
@@ -155,12 +193,16 @@ const ShopPage = ({ loginInfo }) => {
                     <Label htmlFor="option-one">Tiers</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="option-two" id="option-two" />
-                    <Label htmlFor="option-two">200-500</Label>
+                    <RadioGroupItem value="0-200" id="0-200" />
+                    <Label htmlFor="0-200">0-200</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="option-three" id="option-three" />
-                    <Label htmlFor="option-three">501-above</Label>
+                    <RadioGroupItem value="201-500" id="201-500" />
+                    <Label htmlFor="201-500">201-500</Label>
+                  </div>
+                  <div className="flex items-center gap-2 pl-3">
+                    <RadioGroupItem value="501-above" id="501-above" />
+                    <Label htmlFor="501-above">501-above</Label>
                   </div>
                 </RadioGroup>
               </AccordionContent>

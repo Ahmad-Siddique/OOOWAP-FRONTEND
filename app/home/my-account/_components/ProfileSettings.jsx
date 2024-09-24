@@ -35,7 +35,7 @@ const ProfileSettings = ({ loginInfo }) => {
   // Set Axios configuration with token for authorization
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo.user.token}`,
+      Authorization: `Bearer ${loginInfo?.user.token}`,
     },
   };
 

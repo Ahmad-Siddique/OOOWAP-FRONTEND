@@ -29,9 +29,9 @@ const AdminLayout = ({ children }) => {
         <ul className="space-y-4">
           <li>
             <Link
-              href="/admin/users"
+              href="/home/admin/users"
               className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-                currentPath.includes("/admin/users")
+                currentPath.includes("/home/admin/users")
                   ? "bg-[#D5B868] text-black"
                   : "hover:bg-[#D5B868] hover:text-black"
               }`}
@@ -41,9 +41,9 @@ const AdminLayout = ({ children }) => {
           </li>
           <li>
             <Link
-              href="/admin/products"
+              href="/home/admin/products"
               className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-                currentPath.includes("/admin/products")
+                currentPath.includes("/home/admin/products")
                   ? "bg-[#D5B868] text-black"
                   : "hover:bg-[#D5B868] hover:text-black"
               }`}
@@ -53,9 +53,9 @@ const AdminLayout = ({ children }) => {
           </li>
           <li>
             <Link
-              href="/admin/trades"
+              href="/home/admin/trades"
               className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-                currentPath.includes("/admin/trades")
+                currentPath.includes("/home/admin/trades")
                   ? "bg-[#D5B868] text-black"
                   : "hover:bg-[#D5B868] hover:text-black"
               }`}
@@ -65,9 +65,9 @@ const AdminLayout = ({ children }) => {
           </li>
           <li>
             <Link
-              href="/admin/disputes"
+              href="/home/admin/disputes"
               className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-                currentPath.includes("/admin/disputes")
+                currentPath.includes("/home/admin/disputes")
                   ? "bg-[#D5B868] text-black"
                   : "hover:bg-[#D5B868] hover:text-black"
               }`}
@@ -78,9 +78,9 @@ const AdminLayout = ({ children }) => {
 
           <li>
             <Link
-              href="/admin/categories"
+              href="/home/admin/categories"
               className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-                currentPath.includes("/admin/categories")
+                currentPath.includes("/home/admin/categories")
                   ? "bg-[#D5B868] text-black"
                   : "hover:bg-[#D5B868] hover:text-black"
               }`}
@@ -91,9 +91,9 @@ const AdminLayout = ({ children }) => {
 
           <li>
             <Link
-              href="/admin/contact"
+              href="/home/admin/contact"
               className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-                currentPath.includes("/admin/contact")
+                currentPath.includes("/home/admin/contact")
                   ? "bg-[#D5B868] text-black"
                   : "hover:bg-[#D5B868] hover:text-black"
               }`}
