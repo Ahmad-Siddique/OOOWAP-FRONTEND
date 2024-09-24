@@ -1,12 +1,24 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import Link from "next/link";
+import { ChevronRightIcon, HeartFilledIcon } from "@radix-ui/react-icons";
+import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import ProductCard from "@/components/cards/ProductCard";
 
 const ShopDetailPage = ({ params, loginInfo }) => {
+  const [selectedImage, setSelectedImage] = useState(0);
+
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [userProducts, setUserProducts] = useState([]);
@@ -207,55 +219,63 @@ const ShopDetailPage = ({ params, loginInfo }) => {
 
   return (
     <div className="bg-gray-50 p-8 min-h-screen">
-      <div className="max-w-6xl mx-auto bg-white overflow-hidden">
-        <div className="flex flex-col gap-10 lg:flex-row">
+      <div className="max-w-6xl mx-auto overflow-hidden">
+        <div className="flex flex-col gap-5 lg:flex-row">
           <div className="lg:w-1/2 relative">
-            <div className="w-full">
-              <div className="relative w-full">
+            <div className="flex flex-col overflow-hidden w-full">
+              <div className="w-full z-10">
+                <img
+                  src={
+                    selectedImage === 0
+                      ? product.imageUrl
+                      : selectedImage === 1
+                      ? product.imageUrl1
+                      : product.imageUrl2
+                  }
+                  alt={product.name}
+                  className="w-full h-[700px] object-cover transform transition-transform duration-300 hover:scale-110"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-4 gap-4 py-5">
+              <button onClick={() => setSelectedImage(0)}>
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  className="w-full h-[800px] object-cover transform transition-transform duration-300 hover:scale-110"
+                  className="w-full h-[150px] object-cover transform transition-transform duration-300 hover:scale-110"
                 />
-              </div>
+              </button>
               {product.imageUrl1 && (
-                <div className="relative w-full">
+                <button onClick={() => setSelectedImage(1)}>
                   <img
                     src={product.imageUrl1}
                     alt={product.name}
-                    className="w-full h-[800px] object-cover transform transition-transform duration-300 hover:scale-110"
+                    className="w-full h-[150px] object-cover transform transition-transform duration-300 hover:scale-110"
                   />
-                </div>
+                </button>
               )}
               {product.imageUrl2 && (
-                <div className="relative w-full">
+                <button onClick={() => setSelectedImage(2)}>
                   <img
                     src={product.imageUrl2}
                     alt={product.name}
-                    className="w-full h-[800px] object-cover transform transition-transform duration-300 hover:scale-110"
+                    className="w-full h-[150px] object-cover transform transition-transform duration-300 hover:scale-110"
                   />
-                </div>
+                </button>
               )}
             </div>
-            {/* Navigation Buttons */}
-            <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
-              <button className="btn btn-circle" onClick={handlePrevImage}>
-                &#10094;
-              </button>
-            </div>
-            <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
-              <button className="btn btn-circle" onClick={handleNextImage}>
-                &#10095;
-              </button>
-            </div>
           </div>
-          <div className="lg:w-1/2 p-8">
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            <p className="text-xl font-semibold text-gray-700 mb-4">
-              ${product.price}
+          <div className="flex flex-col pt-20 lg:w-1/2 p-5">
+            <h5 className="text-sm font-bold">{product.brand}</h5>
+            <h1 className="text-xl font-light ">{product.name}</h1>
+            <p className="font-light text-gray-700 mb-2">${product.price}</p>
+            <p className="text-sm">
+              By:{" "}
+              <span className="font-light">
+                {product.userId.firstName} {product.userId.lastName}
+              </span>
             </p>
-
-            <div
+            {/* <div
               tabIndex={0}
               className="collapse collapse-plus border-base-300 bg-base-200 border"
             >
@@ -287,15 +307,15 @@ const ShopDetailPage = ({ params, loginInfo }) => {
               <div className="collapse-content">
                 <p>{product.size}</p>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mt-4">
+            <div className="mt-20">
               <label className="block text-sm font-medium text-gray-700">
                 Start Date
               </label>
               <input
                 type="date"
-                className="input input-bordered w-full mt-2"
+                className="bg-transparent w-full mt-2"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
@@ -307,29 +327,10 @@ const ShopDetailPage = ({ params, loginInfo }) => {
               </label>
               <input
                 type="date"
-                className="input input-bordered w-full mt-2"
+                className="bg-transparent w-full mt-2"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Your Products
-              </label>
-              <select
-                className="select select-bordered w-full mt-2"
-                value={selectedUserProduct}
-                onChange={(e) => setSelectedUserProduct(e.target.value)}
-              >
-                <option value="">Select one of your products</option>
-                {Array.isArray(userProducts) &&
-                  userProducts.map((userProduct) => (
-                    <option key={userProduct._id} value={userProduct._id}>
-                      {userProduct.name} (${userProduct.price})
-                    </option>
-                  ))}
-              </select>
             </div>
 
             {tradeMessage && (
@@ -338,8 +339,32 @@ const ShopDetailPage = ({ params, loginInfo }) => {
               </div>
             )}
 
-            <div className="flex space-x-4 mt-6">
+            <div className="flex gap-5 flex-col mt-10">
               <button
+                onClick={() => handleTrade(product.userId)}
+                className="w-fit flex rounded-full uppercase items-center gap-1 bg-gray-400 group text-white py-4 pl-5 pr-4"
+              >
+                Book Now
+                <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+              </button>
+              <button
+                onClick={() => addToWishList(product._id)}
+                className="w-fit uppercase flex rounded-full  items-center gap-1 bg-black group text-white py-4 pl-5 pr-4"
+              >
+                Add to wishlist
+                <HeartFilledIcon className="h-5 w-5 text-gray-300 ml-2" />
+                <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+              </button>
+              <button className="w-fit text-xl flex items-center gap-1 border-2 border-blue-400 group text-blue-400 py-4 pl-5 pr-4">
+                Make an offer
+                <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+              </button>
+              <button className="w-fit flex items-center gap-1 bg-black group text-gray-300 py-2 pl-5 pr-4">
+                <QuestionMarkCircleIcon className="h-5 w-5" />
+                Ask a question
+                <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+              </button>
+              {/* <button
                 className="bg-black text-white py-2 px-4 rounded hover:bg-[#D5B868] transition duration-300"
                 onClick={() => handleTrade(product.userId)}
               >
@@ -350,42 +375,59 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 className="bg-black text-white py-2 px-4 rounded hover:bg-[#D5B868] transition duration-300"
               >
                 Add to Wishlist
-              </button>
+              </button> */}
+            </div>
+            <div className="flex flex-col mt-10">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="text-base ml-4 font-normal">
+                    Description
+                  </AccordionTrigger>
+                  <AccordionContent className="ml-4">
+                    Yes. It adheres to the WAI-ARIA design pattern.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger className="text-base ml-4 font-normal">
+                    Size
+                  </AccordionTrigger>
+                  <AccordionContent className="ml-4">
+                    Yes. It comes with default styles that matches the other
+                    components&apos; aesthetic.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3">
+                  <AccordionTrigger className="text-base ml-4 font-normal">
+                    Condition
+                  </AccordionTrigger>
+                  <AccordionContent className="ml-4">
+                    Yes. It&apos;s animated by default, but you can disable it
+                    if you prefer.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+            <div className="flex flex-col gap-2 mt-10">
+              <span className="text-sm font-light">
+                {product.brand} is a registered trademark.
+              </span>
+              <span className="text-sm font-light">
+                Ooowap is not affiliated with {product.brand}.
+              </span>
             </div>
           </div>
         </div>
       </div>
-
       <div className="mt-20">
-        <h2 className="text-3xl font-extrabold mb-4 text-center">
-          Similar Products
+        <h2 className="text-3xl font-light italic mb-4 text-center">
+          You'll Also Love These
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {similarProducts.map((similarProduct) => (
-            <div
-              key={similarProduct._id}
-              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-              style={{ width: "90%", height: "450px" }}
-            >
-              <img
-                src={similarProduct.imageUrl}
-                alt={similarProduct.name}
-                className="w-full h-72 object-cover rounded-md"
-              />
-              <h3 className="mt-2 text-lg font-semibold">
-                {similarProduct.name}
-              </h3>
-              <p className="text-gray-600">${similarProduct.price}</p>
-              <Link href={`/home/shop/${similarProduct._id}`}>
-                <button className="btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 mt-2">
-                  View Details
-                </button>
-              </Link>
-            </div>
+            <ProductCard key={similarProduct._id} product={similarProduct} />
           ))}
         </div>
       </div>
-
       <ToastContainer />
     </div>
   );
