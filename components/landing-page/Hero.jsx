@@ -26,7 +26,7 @@ const Hero = () => {
             Borrow all your <span className="font-bold">Favourites</span>
           </h1>
           <Link
-            href="/shop"
+            href="/home/shop"
             className="flex gap-2 items-center bg-black text-white px-8 py-1.5 text-lg hover:bg-white hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105"
           >
             <FaBitbucket />

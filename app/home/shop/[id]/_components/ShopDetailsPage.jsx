@@ -376,7 +376,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 {similarProduct.name}
               </h3>
               <p className="text-gray-600">${similarProduct.price}</p>
-              <Link href={`/shop/${similarProduct._id}`}>
+              <Link href={`/home/shop/${similarProduct._id}`}>
                 <button className="btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 mt-2">
                   View Details
                 </button>
