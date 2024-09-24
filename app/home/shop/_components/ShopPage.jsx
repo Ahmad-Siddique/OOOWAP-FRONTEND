@@ -37,6 +37,12 @@ const ShopPage = ({ loginInfo }) => {
     type: "",
   });
 
+  // -----------FILTERS----------------
+  const [brands, setBrands] = useState("All");
+  const [tiers, setTiers] = useState("All");
+  const [popularity, setPopularity] = useState("Default");
+  const [price, setPrice] = useState([33]);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -129,55 +135,120 @@ const ShopPage = ({ loginInfo }) => {
               <AccordionContent>
                 <RadioGroup defaultValue="option-one">
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="option-one" id="option-one" />
+                    <RadioGroupItem
+                      checked={brands === "All"}
+                      onClick={() => setBrands("All")}
+                      value="option-one"
+                      id="option-one"
+                    />
                     <Label htmlFor="option-one">Brands</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Chanel" id="option-two" />
+                    <RadioGroupItem
+                      checked={brands === "Chanel"}
+                      onClick={() => setBrands("Chanel")}
+                      value="Chanel"
+                      id="option-two"
+                    />
                     <Label htmlFor="Chanel">Chanel</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Celine" id="Celine" />
+                    <RadioGroupItem
+                      checked={brands === "Celine"}
+                      onClick={() => setBrands("Celine")}
+                      value="Celine"
+                      id="Celine"
+                    />
                     <Label htmlFor="Celine">Celine</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Nike" id="Nike" />
+                    <RadioGroupItem
+                      checked={brands === "Nike"}
+                      onClick={() => setBrands("Nike")}
+                      value="Nike"
+                      id="Nike"
+                    />
                     <Label htmlFor="Nike">Nike</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Adidas" id="Adidas" />
+                    <RadioGroupItem
+                      checked={brands === "Adidas"}
+                      onClick={() => setBrands("Adidas")}
+                      value="Adidas"
+                      id="Adidas"
+                    />
                     <Label htmlFor="Adidas">Adidas</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Puma" id="Puma" />
+                    <RadioGroupItem
+                      checked={brands === "Puma"}
+                      onClick={() => setBrands("Puma")}
+                      value="Puma"
+                      id="Puma"
+                    />
                     <Label htmlFor="Puma">Puma</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Gucci" id="Gucci" />
+                    <RadioGroupItem
+                      checked={brands === "Gucci"}
+                      onClick={() => setBrands("Gucci")}
+                      value="Gucci"
+                      id="Gucci"
+                    />
                     <Label htmlFor="Gucci">Gucci</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Louis Vuitton" id="Louis Vuitton" />
+                    <RadioGroupItem
+                      checked={brands === "Louis Vuitton"}
+                      onClick={() => setBrands("Louis Vuitton")}
+                      value="Louis Vuitton"
+                      id="Louis Vuitton"
+                    />
                     <Label htmlFor="Louis Vuitton">Louis Vuitton</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Versace" id="Versace" />
+                    <RadioGroupItem
+                      checked={brands === "Versace"}
+                      onClick={() => setBrands("Versace")}
+                      value="Versace"
+                      id="Versace"
+                    />
                     <Label htmlFor="Versace">Versace</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Prada" id="Prada" />
+                    <RadioGroupItem
+                      checked={brands === "Prada"}
+                      onClick={() => setBrands("Prada")}
+                      value="Prada"
+                      id="Prada"
+                    />
                     <Label htmlFor="Prada">Prada</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Balenciaga" id="Balenciaga" />
+                    <RadioGroupItem
+                      checked={brands === "Balenciaga"}
+                      onClick={() => setBrands("Balenciaga")}
+                      value="Balenciaga"
+                      id="Balenciaga"
+                    />
                     <Label htmlFor="Balenciaga">Balenciaga</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Hermes" id="Hermes" />
+                    <RadioGroupItem
+                      checked={brands === "Hermes"}
+                      onClick={() => setBrands("Hermes")}
+                      value="Hermes"
+                      id="Hermes"
+                    />
                     <Label htmlFor="Hermes">Hermes</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="Other" id="Other" />
+                    <RadioGroupItem
+                      checked={brands === "Other"}
+                      onClick={() => setBrands("Other")}
+                      value="Other"
+                      id="Other"
+                    />
                     <Label htmlFor="Other">Other</Label>
                   </div>
                 </RadioGroup>
@@ -190,19 +261,39 @@ const ShopPage = ({ loginInfo }) => {
               <AccordionContent>
                 <RadioGroup defaultValue="option-one">
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="option-one" id="option-one" />
+                    <RadioGroupItem
+                      checked={tiers === "All"}
+                      onClick={() => setTiers("All")}
+                      value="option-one"
+                      id="option-one"
+                    />
                     <Label htmlFor="option-one">Tiers</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="0-200" id="0-200" />
+                    <RadioGroupItem
+                      checked={tiers === "0-200"}
+                      onClick={() => setTiers("0-200")}
+                      value="0-200"
+                      id="0-200"
+                    />
                     <Label htmlFor="0-200">0-200</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="201-500" id="201-500" />
+                    <RadioGroupItem
+                      checked={tiers === "201-500"}
+                      onClick={() => setTiers("201-500")}
+                      value="201-500"
+                      id="201-500"
+                    />
                     <Label htmlFor="201-500">201-500</Label>
                   </div>
                   <div className="flex items-center gap-2 pl-3">
-                    <RadioGroupItem value="501-above" id="501-above" />
+                    <RadioGroupItem
+                      checked={tiers === "501-above"}
+                      onClick={() => setTiers("501-above")}
+                      value="501-above"
+                      id="501-above"
+                    />
                     <Label htmlFor="501-above">501-above</Label>
                   </div>
                 </RadioGroup>
@@ -215,11 +306,21 @@ const ShopPage = ({ loginInfo }) => {
               <AccordionContent>
                 <RadioGroup defaultValue="option-one">
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="option-one" id="option-one" />
+                    <RadioGroupItem
+                      checked={popularity === "Default"}
+                      onClick={() => setPopularity("Default")}
+                      value="option-one"
+                      id="option-one"
+                    />
                     <Label htmlFor="option-one">Default</Label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <RadioGroupItem value="option-two" id="option-two" />
+                    <RadioGroupItem
+                      checked={popularity === "Popular"}
+                      onClick={() => setPopularity("Popular")}
+                      value="option-two"
+                      id="option-two"
+                    />
                     <Label htmlFor="option-two">Popular</Label>
                   </div>
                 </RadioGroup>
@@ -232,7 +333,9 @@ const ShopPage = ({ loginInfo }) => {
               <AccordionContent className="flex flex-col gap-5">
                 <Slider
                   className="mt-3"
-                  defaultValue={[33]}
+                  value={price}
+                  onValueChange={(value) => setPrice(value)}
+                  min={0}
                   max={100}
                   step={1}
                 />
@@ -266,8 +369,8 @@ const ShopPage = ({ loginInfo }) => {
               of{" "}
               {products &&
                 products.pagination &&
-                products.pagination.totalDocuments} results
-             
+                products.pagination.totalDocuments}{" "}
+              results
             </span>
             {isLoading ? (
               <div className="flex justify-center items-center">
