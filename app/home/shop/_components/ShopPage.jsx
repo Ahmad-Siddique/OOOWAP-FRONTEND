@@ -47,21 +47,32 @@ const ShopPage = ({ loginInfo }) => {
     setIsMounted(true);
   }, []);
 
+  const filteredProducts = async () => {
+    console.log("ZUZU")
+    console.log(brands,tiers,popularity,price)
+    axios
+      .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", {
+        brands,
+        tiers,
+        popularity, price,
+        // userId:loginInfo?.user.id
+       })
+      .then((response) => {
+        console.log("{PRODUCTS}", response.data);
+        setProducts(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        setIsLoading(false);
+      });
+  }
+
   useEffect(() => {
     if (isMounted) {
       setIsLoading(true);
-      axios
-        .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", { filter })
-        .then((response) => {
-          console.log("{PRODUCTS}", response.data); 
-          setProducts(response.data);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching products:", error);
-          setIsLoading(false);
-        });
-       
+      
+      filteredProducts();
     }
   }, [isMounted]);
 
@@ -346,7 +357,10 @@ const ShopPage = ({ loginInfo }) => {
             </AccordionItem>
           </Accordion>
           <div className="flex items-center w-full justify-between gap-1">
-            <button className="w-full justify-center flex items-center gap-1 bg-secondary group text-black font-bold py-2 text-lg pl-5 pr-4">
+            <button
+              onClick={() => filteredProducts()}
+              className="w-full justify-center flex items-center gap-1 bg-secondary group text-black font-bold py-2 text-lg pl-5 pr-4"
+            >
               Filter
               <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
             </button>
