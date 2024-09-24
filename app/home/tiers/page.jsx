@@ -5,35 +5,24 @@ import TierCard from "@/components/cards/TierCard";
 const tiers = [
   {
     title: "Tier 1",
-    price: "$0 - $100",
+    price: "$0 - $200",
     description:
-      "Perfect for entry-level users. Start small and enjoy the basics.",
+      "Perfect for entry-level users. Start small and enjoy basics.",
     icon: <FaTrophy className="text-6xl text-[#F5BA41]" />,
   },
   {
     title: "Tier 2",
-    price: "$101 - $200",
+    price: "$201 - $500",
     description: "Step up to unlock additional features and benefits.",
     icon: <FaStar className="text-6xl text-[#F5BA41]" />,
   },
   {
     title: "Tier 3",
-    price: "$201 - $300",
+    price: "$501 - above",
     description: "A solid choice for those looking for more advanced options.",
     icon: <FaAward className="text-6xl text-[#F5BA41]" />,
   },
-  {
-    title: "Tier 4",
-    price: "$301 - $400",
-    description: "Experience premium features and exclusive benefits.",
-    icon: <FaMedal className="text-6xl text-[#F5BA41]" />,
-  },
-  {
-    title: "Tier 5",
-    price: "$401 and above",
-    description: "The ultimate tier with top-tier benefits and perks.",
-    icon: <FaCrown className="text-6xl text-[#F5BA41]" />,
-  },
+  
 ];
 
 const TiersPage = () => {

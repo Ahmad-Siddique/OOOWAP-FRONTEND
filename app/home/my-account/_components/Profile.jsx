@@ -45,7 +45,7 @@ const Profile = ({ loginInfo }) => {
               {loginInfo && (
                 <div className="flex flex-col">
                   <img
-                    src={loginInfo.user.image}
+                    src={loginInfo?.user.image}
                     alt="User"
                     className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
                   />

@@ -30,7 +30,7 @@ const Products = ({ loginInfo }) => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo.user.token}`,
+      Authorization: `Bearer ${loginInfo?.user.token}`,
     },
   };
 
@@ -67,7 +67,7 @@ const Products = ({ loginInfo }) => {
 
     fetchCategories();
     fetchProducts();
-  }, [loginInfo.user.token]);
+  }, [loginInfo?.user.token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

@@ -15,7 +15,7 @@ export default function UserProfile({ loginInfo }) {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const token = loginInfo.user.token;
+        const token = loginInfo?.user.token;
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -29,7 +29,7 @@ export default function UserProfile({ loginInfo }) {
         console.log("RESPONSE: ", response.data);
         setMetrics(response.data);
       } catch (error) {
-        console.error("Error fetching user metrics:", error);
+        console.log("Error fetching user metrics:", error);
       } finally {
         setLoading(false);
       }

@@ -15,7 +15,7 @@ const ProductCard = ({
     <Link href={`/home/shop/${product._id}`} passHref key={product._id}>
       <div className="cursor-pointer flex flex-col">
         <div
-          className="h-96 relative"
+          className="h-96  relative"
           style={{
             backgroundImage: `url(${product.imageUrl})`,
             backgroundSize: "cover",
@@ -43,9 +43,9 @@ const ProductCard = ({
         <div className="flex flex-col py-2">
           <p className="text-sm font-medium">{product.brand}</p>
           <p className="text-lg font-medium mb-1">{product.name}</p>
-          <p className="text-sm font-light mb-0.5 text-gray-600">
+          <p className="text-sm font-light mb-0.5 text-gray-600 ">
             By:{" "}
-            <span className="font-extralight">
+            <span className="font-extralight ">
               {product.userId.firstName} {product.userId.lastName}
             </span>
           </p>
