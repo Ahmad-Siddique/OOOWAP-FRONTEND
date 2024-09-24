@@ -1,16 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import axios from "axios"; // Import axios
-import { useRouter } from "next/navigation";
-import UserTabs from "./UserTabs.client";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 
 export default function UserProfile({ loginInfo }) {
-  console.log("Login info", loginInfo);
-  const router = useRouter();
-
   const [metrics, setMetrics] = useState({
     creationDate: "",
     totalTrades: 0,
@@ -19,14 +13,9 @@ export default function UserProfile({ loginInfo }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // if (!loginInfo) {
-    //   router.push("/login");
-    // }
-
     const fetchMetrics = async () => {
       try {
-        const token = loginInfo.token;
-
+        const token = loginInfo.user.token;
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -117,12 +106,6 @@ export default function UserProfile({ loginInfo }) {
           </div>
         </div>
       </div>
-      <UserTabs loginInfo={loginInfo} />
     </div>
   );
 }
-
-// Import the client-side component dynamically
-// const UserTabs = dynamic(() => import("./UserTabs.client"), {
-//   ssr: false,
-// });

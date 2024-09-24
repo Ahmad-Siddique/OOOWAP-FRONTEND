@@ -21,10 +21,10 @@ const ShopPage = ({ loginInfo }) => {
   }, []);
 
   useEffect(() => {
-    if (isMounted && loginInfo && loginInfo.token) {
+    if (isMounted && loginInfo && loginInfo.user.token) {
       let config = {
         headers: {
-          Authorization: `Bearer ${loginInfo.token}`,
+          Authorization: `Bearer ${loginInfo.user.token}`,
         },
       };
 
@@ -56,7 +56,7 @@ const ShopPage = ({ loginInfo }) => {
 
       const config = {
         headers: {
-          Authorization: `Bearer ${loginInfo.token}`,
+          Authorization: `Bearer ${loginInfo.user.token}`,
         },
       };
 

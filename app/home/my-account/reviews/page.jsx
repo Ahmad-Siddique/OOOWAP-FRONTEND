@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import Profile from "./_components/Profile";
+import Reviews from "../_components/Reviews";
 
 export default async function Page() {
   const session = await auth();
-  return <Profile loginInfo={session} />;
+  return <Reviews loginInfo={session} />;
 }

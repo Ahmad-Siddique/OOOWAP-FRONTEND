@@ -10,6 +10,9 @@ const config = {
       colors: {
         primary: "#F5BA41",
         secondary: "#E4E4E4",
+        yel1: "#F5E9A6",
+        yel2: "#FDDC26",
+        yel3: "#DFAF2E",
       },
       borderRadius: {
         lg: "var(--radius)",

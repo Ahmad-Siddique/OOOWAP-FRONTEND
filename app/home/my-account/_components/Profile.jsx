@@ -1,16 +1,16 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
-import { useRouter } from "next/navigation";
 
 const Profile = ({ loginInfo }) => {
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo && loginInfo?.token}`,
+      Authorization: `Bearer ${loginInfo && loginInfo?.user?.token}`,
     },
   };
 
@@ -31,12 +31,9 @@ const Profile = ({ loginInfo }) => {
     }
   };
 
-  useEffect(() => {
-    // if (!loginInfo) {
-    //   router.push("/login");
-    // }
-    fetchUserData();
-  }, [loginInfo]);
+  // useEffect(() => {
+  //   fetchUserData();
+  // }, [loginInfo]);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -129,45 +126,40 @@ const Profile = ({ loginInfo }) => {
               vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
               nostrum sequi, quam et, eligendi sed assumenda, officiis modi
               aliquam fuga nam molestiae quae provident. Dolorum distinctio
-              numquam nostrum?
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
-              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
+              numquam nostrum? Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Nisi, ipsam perferendis. Totam quisquam est
+              exercitationem a. Culpa, voluptatibus a dolorem nulla vero quae
+              voluptates velit inventore maiores? Dolor libero, laborum,
+              distinctio suscipit officiis nisi vel quidem laboriosam, fuga
+              voluptatibus perferendis? Commodi nostrum sequi, quam et, eligendi
+              sed assumenda, officiis modi aliquam fuga nam molestiae quae
+              provident. Dolorum distinctio numquam nostrum? Lorem ipsum dolor
+              sit amet consectetur adipisicing elit. Nisi, ipsam perferendis.
+              Totam quisquam est exercitationem a. Culpa, voluptatibus a dolorem
+              nulla vero quae voluptates velit inventore maiores? Dolor libero,
+              laborum, distinctio suscipit officiis nisi vel quidem laboriosam,
+              fuga voluptatibus perferendis? Commodi nostrum sequi, quam et,
+              eligendi sed assumenda, officiis modi aliquam fuga nam molestiae
+              quae provident. Dolorum distinctio numquam nostrum? Lorem ipsum
+              dolor sit amet consectetur adipisicing elit. Nisi, ipsam
+              perferendis. Totam quisquam est exercitationem a. Culpa,
               voluptatibus a dolorem nulla vero quae voluptates velit inventore
               maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
               vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
               nostrum sequi, quam et, eligendi sed assumenda, officiis modi
               aliquam fuga nam molestiae quae provident. Dolorum distinctio
-              numquam nostrum?
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
-              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
-              voluptatibus a dolorem nulla vero quae voluptates velit inventore
-              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
-              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
-              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
-              aliquam fuga nam molestiae quae provident. Dolorum distinctio
-              numquam nostrum?
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
-              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
-              voluptatibus a dolorem nulla vero quae voluptates velit inventore
-              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
-              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
-              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
-              aliquam fuga nam molestiae quae provident. Dolorum distinctio
-              numquam nostrum?
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
-              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
-              voluptatibus a dolorem nulla vero quae voluptates velit inventore
-              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
-              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
-              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
-              aliquam fuga nam molestiae quae provident. Dolorum distinctio
-              numquam nostrum?
+              numquam nostrum? Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Nisi, ipsam perferendis. Totam quisquam est
+              exercitationem a. Culpa, voluptatibus a dolorem nulla vero quae
+              voluptates velit inventore maiores? Dolor libero, laborum,
+              distinctio suscipit officiis nisi vel quidem laboriosam, fuga
+              voluptatibus perferendis? Commodi nostrum sequi, quam et, eligendi
+              sed assumenda, officiis modi aliquam fuga nam molestiae quae
+              provident. Dolorum distinctio numquam nostrum?
             </span>
           </div>
           <div>
-            <h3 className="text-3xl font-bold mb-6">
-              Featured Items
-            </h3>
+            <h3 className="text-3xl font-bold mb-6">Featured Items</h3>
             {isLoading ? (
               <div className="flex flex-col items-center">
                 <svg

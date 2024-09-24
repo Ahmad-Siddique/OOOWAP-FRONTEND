@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
-import Profile from "./_components/Profile";
+import PendingItems from "../_components/PendingItems";
 
 export default async function Page() {
   const session = await auth();
-  return <Profile loginInfo={session} />;
+  return <PendingItems loginInfo={session} />;
 }
+

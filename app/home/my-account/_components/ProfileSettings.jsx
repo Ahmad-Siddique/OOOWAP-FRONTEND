@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -33,7 +35,7 @@ const ProfileSettings = ({ loginInfo }) => {
   // Set Axios configuration with token for authorization
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo.token}`,
+      Authorization: `Bearer ${loginInfo.user.token}`,
     },
   };
 
@@ -230,8 +232,6 @@ const ProfileSettings = ({ loginInfo }) => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
-
       {/* Display success or error messages */}
       {successMessage && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -270,209 +270,220 @@ const ProfileSettings = ({ loginInfo }) => {
           <span className="ml-2 text-gray-700">Loading...</span>
         </div>
       ) : (
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Name Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="relative p-8 flex flex-col gap-5">
+          <div className="absolute -z-0 left-3 top-3 w-full h-full bg-yel3"></div>
+          <div className="absolute -z-0 left-2 top-2 w-full h-full bg-yel2"></div>
+          <div className="absolute -z-0 left-1 top-1 w-full h-full bg-yel1"></div>
+          <div className="absolute -z-0 left-0 top-0 w-full h-full bg-white"></div>
+          <h1 className="text-2xl font-bold mb-6 z-10 static">Edit Profile</h1>
+          <form className="space-y-6 z-10 static" onSubmit={handleSubmit}>
+            {/* Name Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-gray-700">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your first name"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your last name"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Email and Phone */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-gray-700">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700">Phone</label>
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your phone number"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Address Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-gray-700">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your address"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700">Country</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your country"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-gray-700">State</label>
+                <input
+                  type="text"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your state"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
+                  placeholder="Enter your city"
+                  required
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="block text-gray-700">First Name</label>
+              <label className="block text-gray-700">Postal Code</label>
               <input
                 type="text"
-                name="firstName"
-                value={formData.firstName}
+                name="postalcode"
+                value={formData.postalcode}
                 onChange={handleInputChange}
                 className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your first name"
+                placeholder="Enter your postal code"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-gray-700">Last Name</label>
+              <label className="block text-gray-700">Description</label>
               <input
                 type="text"
-                name="lastName"
-                value={formData.lastName}
+                name="description"
+                value={formData.description}
                 onChange={handleInputChange}
                 className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your last name"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Email and Phone */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-700">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your email"
+                placeholder="Enter your description"
                 required
               />
             </div>
 
+            {/* Profile Image Upload */}
             <div>
-              <label className="block text-gray-700">Phone</label>
+              <label className="block text-gray-700">Profile Image</label>
               <input
-                type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
+                type="file"
+                onChange={handleImageChange}
                 className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your phone number"
-                required
               />
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  alt="Profile"
+                  className="mt-4 h-32 w-32 object-cover"
+                />
+              )}
             </div>
-          </div>
 
-          {/* Address Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Password Fields */}
             <div>
-              <label className="block text-gray-700">Address</label>
+              <label className="block text-gray-700">Current Password</label>
               <input
-                type="text"
-                name="address"
-                value={formData.address}
+                type="password"
+                name="password"
+                value={formData.password}
                 onChange={handleInputChange}
                 className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your address"
-                required
+                placeholder="Enter your current password (if changing password)"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700">Country</label>
+              <label className="block text-gray-700">New Password</label>
               <input
-                type="text"
-                name="country"
-                value={formData.country}
+                type="password"
+                name="newpassword"
+                value={formData.newpassword}
                 onChange={handleInputChange}
                 className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your country"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-700">State</label>
-              <input
-                type="text"
-                name="state"
-                value={formData.state}
-                onChange={handleInputChange}
-                className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your state"
-                required
+                placeholder="Enter a new password"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700">City</label>
+              <label className="block text-gray-700">
+                Confirm New Password
+              </label>
               <input
-                type="text"
-                name="city"
-                value={formData.city}
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
                 onChange={handleInputChange}
                 className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-                placeholder="Enter your city"
-                required
+                placeholder="Confirm your new password"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-gray-700">Postal Code</label>
-            <input
-              type="text"
-              name="postalcode"
-              value={formData.postalcode}
-              onChange={handleInputChange}
-              className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-              placeholder="Enter your postal code"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700">Description</label>
-            <input
-              type="text"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-              placeholder="Enter your description"
-              required
-            />
-          </div>
-
-          {/* Profile Image Upload */}
-          <div>
-            <label className="block text-gray-700">Profile Image</label>
-            <input
-              type="file"
-              onChange={handleImageChange}
-              className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-            />
-            {previewImage && (
-              <img
-                src={previewImage}
-                alt="Profile"
-                className="mt-4 h-32 w-32 object-cover"
-              />
-            )}
-          </div>
-
-          {/* Password Fields */}
-          <div>
-            <label className="block text-gray-700">Current Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-              placeholder="Enter your current password (if changing password)"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700">New Password</label>
-            <input
-              type="password"
-              name="newpassword"
-              value={formData.newpassword}
-              onChange={handleInputChange}
-              className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-              placeholder="Enter a new password"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700">Confirm New Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              className="w-full border-b-2 border-yellow-400 focus:outline-none py-1"
-              placeholder="Confirm your new password"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-yellow-400 text-white px-4 py-2 rounded"
-          >
-            Update Profile
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="bg-yellow-400 text-white px-4 py-2 rounded"
+            >
+              Update Profile
+            </button>
+          </form>
+          {/* <div className=" ">
+          </div> */}
+        </div>
       )}
     </div>
   );

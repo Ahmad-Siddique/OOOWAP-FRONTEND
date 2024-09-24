@@ -14,7 +14,7 @@ const RefundPage = ({ loginInfo }) => {
     setLoading(true);
 
     try {
-      const token = loginInfo ? loginInfo.token : null;
+      const token = loginInfo ? loginInfo.user.token : null;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,

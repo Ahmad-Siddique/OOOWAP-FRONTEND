@@ -12,7 +12,7 @@ const PendingItems = ({ loginInfo }) => {
   useEffect(() => {
     const fetchPendingTrades = async () => {
       try {
-        const token = loginInfo ? loginInfo.token : null;
+        const token = loginInfo ? loginInfo.user.token : null;
 
         const config = {
           headers: {
@@ -37,7 +37,7 @@ const PendingItems = ({ loginInfo }) => {
 
   const handleAcceptTrade = async (tradeId) => {
     try {
-      const token = loginInfo ? loginInfo.token : null;
+      const token = loginInfo ? loginInfo.user.token : null;
 
       const config = {
         headers: {
@@ -62,7 +62,7 @@ const PendingItems = ({ loginInfo }) => {
 
   const handleRejectTrade = async (tradeId) => {
     try {
-      const token = loginInfo ? loginInfo.token : null;
+      const token = loginInfo ? loginInfo.user.token : null;
 
       const config = {
         headers: {

@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import Profile from "./_components/Profile";
+import Dispute from "../_components/Dispute";
 
 export default async function Page() {
   const session = await auth();
-  return <Profile loginInfo={session} />;
+  return <Dispute loginInfo={session} />;
 }

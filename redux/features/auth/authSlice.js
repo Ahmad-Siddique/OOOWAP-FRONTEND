@@ -83,7 +83,6 @@ export const updateuserprofilecheck = createAsyncThunk(
 
       // Create a deep copy of the gg object
       let gg = JSON.parse(JSON.stringify(user.gg));
-      console.log("LOGIN DATA1", user);
        console.log("GG");
       console.log(gg.user.firstName);
       console.log(user.zz.firstName);

@@ -5,25 +5,25 @@ import { toast } from "react-toastify";
 const Sidebar = ({ loginInfo }) => {
   const [metrics, setMetrics] = useState({ trades: 0, reviews: 0 });
 
-  // useEffect(() => {
-  //   const fetchMetrics = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${process.env.NEXT_PUBLIC_API_URL}/auth/getusermetrics`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${loginInfo?.token}`,
-  //           },
-  //         }
-  //       );
-  //       setMetrics(response.data);
-  //     } catch (error) {
-  //       toast.error("Error fetching metrics!");
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/getusermetrics`,
+          {
+            headers: {
+              Authorization: `Bearer ${loginInfo?.user?.token}`,
+            },
+          }
+        );
+        setMetrics(response.data);
+      } catch (error) {
+        toast.error("Error fetching metrics!");
+      }
+    };
 
-  //   fetchMetrics();
-  // }, [loginInfo?.token]);
+    fetchMetrics();
+  }, [loginInfo?.user?.token]);
 
   return (
     <div className="relative w-full h-96">

@@ -16,7 +16,7 @@ const AcceptedTrades = ({ loginInfo }) => {
   // Fetch accepted/completed trades from backend API
   const fetchTrades = async () => {
     try {
-      const token = loginInfo ? loginInfo.token : null;
+      const token = loginInfo ? loginInfo.user.token : null;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ const AcceptedTrades = ({ loginInfo }) => {
         : "receiver"; // Determine who to review
 
     try {
-      const token = loginInfo ? loginInfo.token : null;
+      const token = loginInfo ? loginInfo.user.token : null;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,

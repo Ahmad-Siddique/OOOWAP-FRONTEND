@@ -17,7 +17,7 @@ export const addProduct = createAsyncThunk(
   "product/addProduct",
   async (productData, thunkAPI) => {
     try {
-      const token = user.loginInfo.token;
+      const token = user.loginInfo.user.token;
       return await productService.addProduct(productData, token);
     } catch (error) {
       const message =
@@ -37,7 +37,7 @@ export const getAllCategories = createAsyncThunk(
   "product/fetchCategories",
   async (_, thunkAPI) => {
       try {
-        const token = user.loginInfo.token;
+        const token = user.loginInfo.user.token;
       return await productService.getAllCategories(token);
     } catch (error) {
       const message =
@@ -56,7 +56,7 @@ export const getAllProducts = createAsyncThunk(
   "product/getAllProducts",
   async (_, thunkAPI) => {
       try {
-        const token = user.loginInfo.token;
+        const token = user.loginInfo.user.token;
       return await productService.getAllProducts(token);
     } catch (error) {
       const message =
@@ -75,7 +75,7 @@ export const getProduct = createAsyncThunk(
   "product/getProduct",
   async (productId, thunkAPI) => {
       try {
-        const token = user.loginInfo.token;
+        const token = user.loginInfo.user.token;
       return await productService.getProduct(productId,token);
     } catch (error) {
       const message =
@@ -94,7 +94,7 @@ export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async (productData, thunkAPI) => {
     try {
-      const token = user.loginInfo.token;
+      const token = user.loginInfo.user.token;
       return await productService.updateProduct(productData, token);
     } catch (error) {
       const message =
@@ -113,7 +113,7 @@ export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
   async (productId, thunkAPI) => {
     try {
-      const token = user.loginInfo.token;
+      const token = user.loginInfo.user.token;
       return await productService.deleteProduct(productId, token);
     } catch (error) {
       const message =

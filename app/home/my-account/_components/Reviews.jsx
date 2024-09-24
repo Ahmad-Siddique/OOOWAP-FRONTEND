@@ -10,7 +10,7 @@ const Reviews = ({ loginInfo }) => {
   // Fetch reviews from backend API
   const fetchReviews = async () => {
     try {
-      const token = loginInfo ? loginInfo.token : null;
+      const token = loginInfo ? loginInfo.user.token : null;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -22,7 +22,7 @@ const PaymentStatus = ({ loginInfo }) => {
     // Making API call to fetch user info
     const fetchUserData = async () => {
       try {
-        const token = loginInfo ? loginInfo.token : null;
+        const token = loginInfo ? loginInfo.user.token : null;
 
         const config = {
           headers: {

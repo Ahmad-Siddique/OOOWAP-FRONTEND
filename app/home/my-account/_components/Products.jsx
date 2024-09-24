@@ -1,12 +1,16 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import MyAccProductCard from "@/components/cards/MyAccProductCard";
+import AddEditProductModal from "@/components/modals/AddEditProductModal";
+import Sidebar from "./Sidebar";
 
 const Products = ({ loginInfo }) => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     categories: "",
@@ -21,14 +25,12 @@ const Products = ({ loginInfo }) => {
     imageUrl2: null,
   });
   const [editProduct, setEditProduct] = useState(null);
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null);
   const [imagePreview, setImagePreview] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false); // State for locking buttons
 
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo.token}`,
+      Authorization: `Bearer ${loginInfo.user.token}`,
     },
   };
 
@@ -65,7 +67,7 @@ const Products = ({ loginInfo }) => {
 
     fetchCategories();
     fetchProducts();
-  }, [loginInfo.token]);
+  }, [loginInfo.user.token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -90,7 +92,6 @@ const Products = ({ loginInfo }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true); // Lock buttons during submission
-
     try {
       console.log("Categories", formData.categories);
       const formDataToSubmit = new FormData();
@@ -113,8 +114,6 @@ const Products = ({ loginInfo }) => {
         );
         toast.success("Product added successfully!");
       }
-
-      setShowModal(false);
       fetchProducts(); // Refetch products after add/update
     } catch (error) {
       toast.error("Error adding/updating product!");
@@ -131,7 +130,6 @@ const Products = ({ loginInfo }) => {
       );
       toast.success("Product deleted successfully!");
       fetchProducts(); // Refetch products after deletion
-      setShowDeletePopup(false);
     } catch (error) {
       toast.error("Error deleting product!");
     }
@@ -153,16 +151,6 @@ const Products = ({ loginInfo }) => {
       imageUrl2: null,
     });
     setImagePreview([product.imageUrl, product.imageUrl1, product.imageUrl2]);
-    setShowModal(true);
-  };
-
-  const openDeletePopup = (productId) => {
-    setProductToDelete(productId);
-    setShowDeletePopup(true);
-  };
-
-  const confirmDelete = () => {
-    handleDelete(productToDelete);
   };
 
   const handleFeature = async (productId) => {
@@ -183,324 +171,42 @@ const Products = ({ loginInfo }) => {
     <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Products</h1>
-        <button
-          className="btn btn-green"
-          onClick={() => {
-            setEditProduct(null);
-            setFormData({
-              name: "",
-              categories: "",
-              price: "",
-              currency: "USD",
-              size: "",
-              description: "",
-              condition: "",
-              image: null,
-              imageUrl1: null,
-              imageUrl2: null,
-            });
-            setImagePreview([]);
-            setShowModal(true);
-          }}
-        >
-          Add Product
-        </button>
+        <AddEditProductModal
+          editProduct={false}
+          handleSubmit={handleSubmit}
+          formData={formData}
+          handleInputChange={handleInputChange}
+          categories={categories}
+          imagePreview={imagePreview}
+          handleFileChange={handleFileChange}
+        />
       </div>
-
       {isLoading ? (
         <div className="flex justify-center">
           <div className="loader">Loading...</div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="md:col-span-2 flex items-center flex-col gap-0.5 w-full">
             {products &&
               products.map((product) => (
-                <div
+                <MyAccProductCard
                   key={product._id}
-                  className="bg-white shadow-lg p-4 mb-6 flex flex-col md:flex-row items-center"
-                >
-                  <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full md:w-32 h-32 object-cover rounded-lg mb-4 md:mb-0 md:mr-4"
-                  />
-                  <div className="flex-1">
-                    <h2 className="text-xl font-semibold">
-                      {product.name} ({product.price})
-                    </h2>
-                    <p className="text-gray-600">
-                      No. of Trades: {product.tradesCount}
-                    </p>
-                    <div className="mt-2 space-x-2">
-                      <button
-                        className="btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300"
-                        onClick={() => handleEdit(product)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn bg-[#D5B868] text-black border-[#D5B868] hover:bg-black hover:text-white transition duration-300"
-                        onClick={() => handleFeature(product._id)}
-                      >
-                        Feature
-                      </button>
-                      <button
-                        className="btn bg-red-600 text-white border-red-600 hover:bg-black hover:text-white transition duration-300"
-                        onClick={() => openDeletePopup(product._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  product={product}
+                  fetchProducts={fetchProducts}
+                  handleEdit={handleEdit}
+                  handleFeature={handleFeature}
+                  editProduct={editProduct}
+                  handleSubmit={handleSubmit}
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                  categories={categories}
+                  imagePreview={imagePreview}
+                  handleFileChange={handleFileChange}
+                />
               ))}
           </div>
-        </div>
-      )}
-
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mx-4"
-            style={{
-              maxHeight: "80vh",
-              overflowY: "auto",
-              scrollbarWidth: "thin",
-              scrollbarColor: "#D5B868 transparent",
-            }}
-          >
-            <h2 className="text-2xl font-semibold mb-4">
-              {editProduct ? "Edit Product" : "Add Product"}
-            </h2>
-            <form onSubmit={handleSubmit}>
-              {/* Name field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="form-input w-full border-b-2 border-gray-300"
-                />
-              </div>
-
-              {/* Category field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Category</label>
-                <select
-                  name="categories"
-                  value={formData.categories}
-                  onChange={handleInputChange}
-                  className="form-select w-full border-b-2 border-gray-300"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Brand field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Brand</label>
-                <select
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleInputChange}
-                  className="form-select w-full border-b-2 border-gray-300"
-                >
-                  <option value="">Select Brand</option>
-                  {[
-                    "Nike",
-                    "Adidas",
-                    "Puma",
-                    "Gucci",
-                    "Louis Vuitton",
-                    "Versace",
-                    "Chanel",
-                    "Prada",
-                    "Balenciaga",
-                    "Hermes",
-                    "Other",
-                  ].map((brand) => (
-                    <option key={brand} value={brand}>
-                      {brand}
-                    </option>
-                  ))}
-                </select>
-                {formData.brand === "Other" && (
-                  <input
-                    type="text"
-                    name="customBrand"
-                    value={formData.customBrand}
-                    onChange={handleInputChange}
-                    placeholder="Enter brand name"
-                    className="form-input w-full border-b-2 border-gray-300 mt-2"
-                  />
-                )}
-              </div>
-
-              {/* Price field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Price</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleInputChange}
-                  className="form-input w-full border-b-2 border-gray-300"
-                />
-              </div>
-
-              {/* Currency field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Currency</label>
-                <select
-                  name="currency"
-                  value={formData.currency}
-                  onChange={handleInputChange}
-                  className="form-select w-full border-b-2 border-gray-300"
-                >
-                  <option value="USD">USD</option>
-                  {/* Add more currencies as needed */}
-                </select>
-              </div>
-
-              {/* Size field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Size</label>
-                <input
-                  type="text"
-                  name="size"
-                  value={formData.size}
-                  onChange={handleInputChange}
-                  className="form-input w-full border-b-2 border-gray-300"
-                />
-              </div>
-
-              {/* Description field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Description</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  className="form-textarea w-full border-b-2 border-gray-300"
-                  rows="4"
-                ></textarea>
-              </div>
-
-              {/* Condition field */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Condition</label>
-                <input
-                  type="text"
-                  name="condition"
-                  value={formData.condition}
-                  onChange={handleInputChange}
-                  className="form-input w-full border-b-2 border-gray-300"
-                />
-              </div>
-
-              {/* Image 1 */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Image 1</label>
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(e, "image")}
-                  className="form-input w-full border-b-2 border-gray-300"
-                />
-                {imagePreview[0] && (
-                  <img
-                    src={imagePreview[0]}
-                    alt="Preview"
-                    className="mt-4 w-20 h-20 object-cover"
-                  />
-                )}
-              </div>
-
-              {/* Image 2 */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Image 2</label>
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(e, "imageUrl1")}
-                  className="form-input w-full border-b-2 border-gray-300"
-                />
-                {imagePreview[1] && (
-                  <img
-                    src={imagePreview[1]}
-                    alt="Preview"
-                    className="mt-4 w-20 h-20 object-cover"
-                  />
-                )}
-              </div>
-
-              {/* Image 3 */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Image 3</label>
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(e, "imageUrl2")}
-                  className="form-input w-full border-b-2 border-gray-300"
-                />
-                {imagePreview[2] && (
-                  <img
-                    src={imagePreview[2]}
-                    alt="Preview"
-                    className="mt-4 w-20 h-20 object-cover"
-                  />
-                )}
-              </div>
-
-              {/* Submit buttons */}
-              <div className="flex justify-between">
-                <button
-                  type="submit"
-                  className={`btn bg-black text-white border-black hover:bg-[#D5B868] hover:text-black transition duration-300 ${
-                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  disabled={isSubmitting}
-                >
-                  {editProduct ? "Update" : "Add"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className={`btn bg-[#D5B868] text-black border-[#D5B868] hover:bg-black hover:text-white transition duration-300 ${
-                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {showDeletePopup && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-            <h2 className="text-lg font-semibold mb-4">Confirm Deletion</h2>
-            <p>Are you sure you want to delete this product?</p>
-            <div className="flex justify-between mt-4">
-              <button onClick={confirmDelete} className="btn btn-red">
-                Yes, Delete
-              </button>
-              <button
-                onClick={() => setShowDeletePopup(false)}
-                className="btn btn-gray"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+          <Sidebar loginInfo={loginInfo} />
         </div>
       )}
     </div>
