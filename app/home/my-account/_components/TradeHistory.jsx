@@ -9,7 +9,7 @@ const TradeHistory = ({ loginInfo }) => {
 
   useEffect(() => {
     const fetchTradeHistory = async () => {
-      if (!loginInfo?.token) {
+      if (!loginInfo?.user.token) {
         setError("User not authenticated");
         setLoading(false);
         return;
