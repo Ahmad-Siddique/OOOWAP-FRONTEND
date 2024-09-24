@@ -47,7 +47,7 @@ const ShopPage = ({ loginInfo }) => {
       axios
         .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", { filter })
         .then((response) => {
-          setProducts(response.data.results);
+          setProducts(response.data);
           setIsLoading(false);
         })
         .catch((error) => {
@@ -258,7 +258,17 @@ const ShopPage = ({ loginInfo }) => {
         {/* Products Section */}
         <div className="col-span-3">
           <div className="flex flex-col gap-2">
-            <span className="text-sm">Showing 1-8 pages</span>
+            <span className="text-sm">
+              Showing 1-
+              {products &&
+                products.pagination &&
+                products.pagination.totalDocuments}{" "}
+              of{" "}
+              {products &&
+                products.pagination &&
+                products.pagination.totalDocuments} results
+             
+            </span>
             {isLoading ? (
               <div className="flex justify-center items-center">
                 <svg
@@ -285,8 +295,8 @@ const ShopPage = ({ loginInfo }) => {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
-                {products && products.length !== 0 ? (
-                  products.map((product) => (
+                {products.results && products.results.length !== 0 ? (
+                  products.results.map((product) => (
                     <ProductCard key={product._id} product={product} />
                   ))
                 ) : (

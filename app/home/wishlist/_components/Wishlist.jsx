@@ -9,7 +9,7 @@ const Wishlist = ({ loginInfo }) => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = loginInfo ? loginInfo?.token : null;
+  const token = loginInfo ? loginInfo?.user.token : null;
   const router = useRouter();
 
   const config = {

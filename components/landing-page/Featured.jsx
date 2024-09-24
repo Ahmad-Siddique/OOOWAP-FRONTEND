@@ -67,7 +67,7 @@ const Featured = ({ loginInfo }) => {
         config
       );
       setwishlistproduct(data.data.products)
-      toast.success("Added to wishlist!");
+      // toast.success("Added to wishlist!");
     } catch (error) {
       console.error("Error adding to wishlist:", error);
       toast.error("Please login to add products to wishlist");
