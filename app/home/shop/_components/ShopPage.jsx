@@ -306,7 +306,7 @@ const ShopPage = ({ loginInfo }) => {
                 )}
               </div>
             )}
-            <Pagination>
+            {/* <Pagination>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious href="#" />
@@ -321,7 +321,7 @@ const ShopPage = ({ loginInfo }) => {
                   <PaginationNext href="#" />
                 </PaginationItem>
               </PaginationContent>
-            </Pagination>
+            </Pagination> */}
           </div>
         </div>
       </div>
