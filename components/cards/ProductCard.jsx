@@ -45,11 +45,11 @@ const ProductCard = ({
           <p className="text-lg font-medium mb-1">{product.name}</p>
           <p className="text-sm font-light mb-0.5 text-gray-600 ">
             By:{" "}
-            <span className="font-extralight ">
+            <span className="">
               {product.userId.firstName} {product.userId.lastName}
             </span>
           </p>
-          <p className="text-sm font-extralight">${product.price}</p>
+          <p className="text-sm">${product.price}</p>
           <button className="mt-4 w-fit flex items-center gap-1 bg-black group text-white py-2 text-xl font-light pl-5 pr-4">
             Trade
             <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />

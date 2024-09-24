@@ -3,6 +3,7 @@ import ShopPage from "./_components/ShopPage"; // Adjust the import path as need
 
 const Shop = async () => {
   const session = await auth();
+
   return <ShopPage loginInfo={session} />;
 };
 

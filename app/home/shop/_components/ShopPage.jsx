@@ -12,7 +12,16 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Link from "next/link";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 import classNames from "classnames"; // For conditional class application
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import ProductCard from "@/components/cards/ProductCard";
@@ -29,22 +38,14 @@ const ShopPage = ({ loginInfo }) => {
   });
 
   useEffect(() => {
-   
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-
-    if (isMounted ) {
-     
-     
+    if (isMounted) {
       setIsLoading(true);
       axios
-        .post(
-          process.env.NEXT_PUBLIC_API_URL + "/product/filtered",
-          { filter },
-         
-        )
+        .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", { filter })
         .then((response) => {
           setProducts(response.data.results);
           setIsLoading(false);
@@ -117,7 +118,7 @@ const ShopPage = ({ loginInfo }) => {
       )}
 
       <div className="w-full h-96 bg-[url(/images/brands.jpg)] bg-contain bg-top bg-no-repeat"></div>
-      <div className="grid w-full py-10 px-5 grid-cols-1 lg:grid-cols-4 gap-y-10 lg:gap-x-10 gap-x-0">
+      <div className="grid w-full py-10 px-5 lg:px-10 grid-cols-1 lg:grid-cols-4 gap-y-10 lg:gap-x-10 gap-x-0">
         {/* Filter Section */}
         <div className="col-span-1 flex items-center w-full flex-col gap-5">
           <Accordion type="single" collapsible className="w-full">
@@ -256,41 +257,62 @@ const ShopPage = ({ loginInfo }) => {
 
         {/* Products Section */}
         <div className="col-span-3">
-          {isLoading ? (
-            <div className="flex justify-center items-center">
-              <svg
-                className="animate-spin h-8 w-8 text-[#D5B868]"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                ></path>
-              </svg>
-              <span className="ml-2 text-gray-700">Loading...</span>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products && products.length !== 0 ? (
-                products.map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))
-              ) : (
-                <div className="text-center text-lg">No products available</div>
-              )}
-            </div>
-          )}
+          <div className="flex flex-col gap-2">
+            <span className="text-sm">Showing 1-8 pages</span>
+            {isLoading ? (
+              <div className="flex justify-center items-center">
+                <svg
+                  className="animate-spin h-8 w-8 text-[#D5B868]"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                <span className="ml-2 text-gray-700">Loading...</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
+                {products && products.length !== 0 ? (
+                  products.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))
+                ) : (
+                  <div className="text-center text-lg">
+                    No products available
+                  </div>
+                )}
+              </div>
+            )}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </div>
       </div>
     </div>
