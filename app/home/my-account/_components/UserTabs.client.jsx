@@ -13,12 +13,13 @@ import AcceptedTrades from "./AcceptedTrades";
 export default function UserTabs({ loginInfo }) {
   const [activeTab, setActiveTab] = useState("Profile");
   const router = useRouter();
+  console.log("LOGIN INFO", loginInfo);
 
-  useEffect(() => {
-    if (!loginInfo || !loginInfo.token) {
-      router.push("/login"); // Redirect to login page if not authenticated
-    }
-  }, [loginInfo, router]);
+  // useEffect(() => {
+  //   if (!loginInfo || !loginInfo.token) {
+  //     router.push("/login"); // Redirect to login page if not authenticated
+  //   }
+  // }, [loginInfo, router]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -45,38 +46,37 @@ export default function UserTabs({ loginInfo }) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-[#F8F8F8]">
       {/* Tabs */}
-      <div className="tabs flex flex-col md:flex-row justify-center space-x-0 md:space-x-1 space-y-1 md:space-y-0">
-        {[
-          "Profile",
-          "Products",
-          "Profile Settings",
-          "Pending Items",
-          "Accpted/Completed Trades",
-          "Reviews",
-          "Trade History",
-          "Dispute",
-        ].map((tab) => (
-          <a
-            key={tab}
-            role="tab"
-            aria-current={activeTab === tab ? "true" : "false"}
-            className={`tab tab-bordered w-full md:w-auto ${
-              activeTab === tab ? "tab-active" : ""
-            }`}
-            onClick={() => setActiveTab(tab)}
-            tabIndex={0} // Make the tab focusable
-          >
-            {tab}
-          </a>
-        ))}
+      <div className="px-5 border-b-4 border-primary bg-white flex items-center justify-center">
+        <div className="flex flex-col w-full max-w-7xl md:flex-row">
+          {[
+            "Profile",
+            "Products",
+            "Profile Settings",
+            "Pending Items",
+            "Accpted/Completed Trades",
+            "Reviews",
+            "Trade History",
+            "Dispute",
+          ].map((tab, index) => (
+            <a
+              key={tab}
+              role="tab"
+              aria-current={activeTab === tab ? "true" : "false"}
+              className={`px-4 text-sm lg:text-base border-b md:border-b-0 md:border-r border-black/10 py-3 lg:py-5 ${
+                index === 0 && "md:border-l"
+              } ${activeTab === tab ? "tab-active" : ""}`}
+              onClick={() => setActiveTab(tab)}
+              tabIndex={0} // Make the tab focusable
+            >
+              {tab}
+            </a>
+          ))}
+        </div>
       </div>
-
       {/* Tab Content */}
-      <div className="mt-4 md:mt-2 w-full border-t-2 pt-4">
-        {renderContent()}
-      </div>
+      <div className="mt-4 md:mt-2 w-full pt-4">{renderContent()}</div>
     </div>
   );
 }

@@ -32,38 +32,141 @@ const Profile = ({ loginInfo }) => {
   };
 
   useEffect(() => {
-    if (!loginInfo) {
-      router.push("/login");
-    }
+    // if (!loginInfo) {
+    //   router.push("/login");
+    // }
     fetchUserData();
   }, [loginInfo]);
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Main Content Column */}
-        <div className="md:col-span-3">
-          <div className="bg-white shadow-lg p-6 mb-6 rounded-lg">
-            {loginInfo && (
-              <div className="flex flex-col items-center">
-                <img
-                  src={loginInfo.user.image}
-                  alt="User"
-                  className="rounded-full w-40 h-40 mb-4 border-4 border-[#D5B868]"
-                />
-                <h2 className="text-3xl font-bold text-black mb-2">
+        <div className="md:col-span-3 flex flex-col gap-10">
+          <div className="relative w-full h-72">
+            <div className="absolute w-full bg-[#F5E9A6] left-3 top-3 p-5">
+              {loginInfo && (
+                <div className="flex flex-col">
+                  <img
+                    src={loginInfo.user.image}
+                    alt="User"
+                    className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
+                  />
+                  {/* <h2 className="text-3xl font-bold text-black mb-2">
                   {loginInfo.user.firstName} {loginInfo.user.lastName}
                 </h2>
                 <p className="text-gray-600 mt-2 text-lg text-center">
                   {userData.userDescription || "No description available"}
-                </p>
-              </div>
-            )}
+                </p> */}
+                </div>
+              )}
+            </div>
+            <div className="absolute w-full bg-[#FDDC26] left-2 top-2 p-5">
+              {loginInfo && (
+                <div className="flex flex-col">
+                  <img
+                    src={loginInfo.user.image}
+                    alt="User"
+                    className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
+                  />
+                  {/* <h2 className="text-3xl font-bold text-black mb-2">
+                  {loginInfo.user.firstName} {loginInfo.user.lastName}
+                </h2>
+                <p className="text-gray-600 mt-2 text-lg text-center">
+                  {userData.userDescription || "No description available"}
+                </p> */}
+                </div>
+              )}
+            </div>
+            <div className="absolute w-full bg-[#DFAF2E] left-1 top-1 p-5">
+              {loginInfo && (
+                <div className="flex flex-col">
+                  <img
+                    src={loginInfo.user.image}
+                    alt="User"
+                    className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
+                  />
+                  {/* <h2 className="text-3xl font-bold text-black mb-2">
+                  {loginInfo.user.firstName} {loginInfo.user.lastName}
+                </h2>
+                <p className="text-gray-600 mt-2 text-lg text-center">
+                  {userData.userDescription || "No description available"}
+                </p> */}
+                </div>
+              )}
+            </div>
+            <div className="absolute w-full bg-white p-5">
+              {loginInfo && (
+                <div className="flex flex-col">
+                  <img
+                    src={loginInfo.user.image}
+                    alt="User"
+                    className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
+                  />
+                  {/* <h2 className="text-3xl font-bold text-black mb-2">
+                  {loginInfo.user.firstName} {loginInfo.user.lastName}
+                </h2>
+                <p className="text-gray-600 mt-2 text-lg text-center">
+                  {userData.userDescription || "No description available"}
+                </p> */}
+                </div>
+              )}
+            </div>
           </div>
-
+          <div className="flex flex-col gap-3">
+            <div className="px-3 border-l-[6px] border-primary">
+              <div className="border-b-2 border-primary pb-2 w-fit">
+                <span className="text-5xl font-bold italic border-b-2 text-primary border-primary">
+                  This is Dashboard
+                </span>
+              </div>
+            </div>
+            <span className="text-blue-800">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
+              voluptatibus a dolorem nulla vero quae voluptates velit inventore
+              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
+              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
+              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
+              aliquam fuga nam molestiae quae provident. Dolorum distinctio
+              numquam nostrum?
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
+              voluptatibus a dolorem nulla vero quae voluptates velit inventore
+              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
+              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
+              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
+              aliquam fuga nam molestiae quae provident. Dolorum distinctio
+              numquam nostrum?
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
+              voluptatibus a dolorem nulla vero quae voluptates velit inventore
+              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
+              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
+              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
+              aliquam fuga nam molestiae quae provident. Dolorum distinctio
+              numquam nostrum?
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
+              voluptatibus a dolorem nulla vero quae voluptates velit inventore
+              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
+              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
+              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
+              aliquam fuga nam molestiae quae provident. Dolorum distinctio
+              numquam nostrum?
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
+              voluptatibus a dolorem nulla vero quae voluptates velit inventore
+              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
+              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
+              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
+              aliquam fuga nam molestiae quae provident. Dolorum distinctio
+              numquam nostrum?
+            </span>
+          </div>
           <div>
-            <h3 className="text-3xl font-bold text-[#D5B868] mb-6">
-              Featured Products
+            <h3 className="text-3xl font-bold mb-6">
+              Featured Items
             </h3>
             {isLoading ? (
               <div className="flex flex-col items-center">
@@ -124,7 +227,7 @@ const Profile = ({ loginInfo }) => {
         </div>
 
         {/* Sidebar Column */}
-        <div className="hidden md:block">
+        <div className="">
           <Sidebar loginInfo={loginInfo} />
         </div>
       </div>

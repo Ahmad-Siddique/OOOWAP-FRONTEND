@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import axios from "axios"; // Import axios
 import { useRouter } from "next/navigation";
+import UserTabs from "./UserTabs.client";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 
 export default function UserProfile({ loginInfo }) {
   console.log("Login info", loginInfo);
@@ -17,13 +19,13 @@ export default function UserProfile({ loginInfo }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!loginInfo) {
-      router.push("/login");
-    }
+    // if (!loginInfo) {
+    //   router.push("/login");
+    // }
 
     const fetchMetrics = async () => {
       try {
-        const token = loginInfo ? loginInfo?.token : null;
+        const token = loginInfo.token;
 
         const config = {
           headers: {
@@ -51,16 +53,16 @@ export default function UserProfile({ loginInfo }) {
     <div className="w-screen">
       {/* First Row */}
       <div
-        className="w-full px-6 md:px-12 lg:px-16 py-12 bg-cover bg-center flex items-center justify-center relative overflow-hidden h-100 md:h-80 lg:h-80 xl:h-80 2xl:h-80"
+        className="w-full px-5 py-20 bg-cover bg-center flex items-center justify-center relative overflow-hidden"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
           backgroundSize: "cover", // Ensure the image covers the container
         }}
       >
         {/* Overlay for better readability */}
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
 
-        <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-center md:justify-between">
+        <div className="relative max-w-7xl z-10 w-full flex flex-col md:flex-row items-center justify-center md:justify-between">
           {/* Left Column */}
           {loginInfo && (
             <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 text-center md:text-left text-white">
@@ -88,7 +90,7 @@ export default function UserProfile({ loginInfo }) {
                       }
                     )}
                 </p>
-                <button className="btn bg-black border-black text-white mt-2 hover:bg-white hover:text-black hover:border-black transition duration-300">
+                <button className="bg-primary px-10 py-3 rounded-md text-white mt-2 hover:bg-white hover:text-black hover:border-black transition duration-300">
                   Products
                 </button>
               </div>
@@ -96,32 +98,31 @@ export default function UserProfile({ loginInfo }) {
           )}
 
           {/* Right Column */}
-          <div className="flex flex-col items-center md:items-end text-center md:text-right mt-4 md:mt-0 text-white">
-            <div className="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0 md:space-x-4">
-              <h3 className="text-lg font-semibold">Total Trades</h3>
-              <p className="text-2xl">{metrics && metrics.totalTrades}</p>
+          <div className="flex flex-col sm:flex-row items-center sm:items-end text-center sm:text-start pt-10 md:pt-0 text-white gap-5 md:gap-10">
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold">0</span>
+              <span className="text-sm">Total Trades</span>
             </div>
-            <div className="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0 md:space-x-4 mt-4">
-              <h3 className="text-lg font-semibold">Rating</h3>
-              <p className="text-2xl">{metrics && metrics.averageRating} / 5</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1">
+                <StarFilledIcon className="w-4 h-4 text-white" />
+                <StarFilledIcon className="w-4 h-4 text-white" />
+                <StarFilledIcon className="w-4 h-4 text-white" />
+                <StarFilledIcon className="w-4 h-4 text-white" />
+                <StarFilledIcon className="w-4 h-4 text-gray-500" />
+                <span className="text-sm">(0 Reviews)</span>
+              </div>
+              <span className="text-sm">Ratings</span>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Tabs Section */}
-      <div className="w-full mt-6">
-        {/* Horizontal Lines */}
-        <hr className="border-t-2 border-gray-300" />
-        {/* Client-Side Tabs Component */}
-        <UserTabs />
-        <hr className="border-t-2 border-gray-300" />
-      </div>
+      <UserTabs loginInfo={loginInfo} />
     </div>
   );
 }
 
 // Import the client-side component dynamically
-const UserTabs = dynamic(() => import("./UserTabs.client"), {
-  ssr: false,
-});
+// const UserTabs = dynamic(() => import("./UserTabs.client"), {
+//   ssr: false,
+// });
