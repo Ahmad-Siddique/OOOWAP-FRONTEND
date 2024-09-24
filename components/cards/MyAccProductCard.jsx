@@ -2,6 +2,7 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import FeatureProductModal from "@/components/modals/FeatureProductModal";
 import DeleteProductModal from "@/components/modals/DeleteProductModal";
 import AddEditProductModal from "@/components/modals/AddEditProductModal";
+import { ChevronRightIcon } from "lucide-react";
 
 export default function MyAccProductCard({
   product,
@@ -12,8 +13,11 @@ export default function MyAccProductCard({
   handleInputChange = () => {},
   categories,
   handleFileChange = () => {},
+  handleFeature = () => {},
   imagePreview,
   isSubmitting,
+  handleEdit = () => {},
+  token,
 }) {
   return (
     <div
@@ -32,6 +36,7 @@ export default function MyAccProductCard({
         <p className="text-gray-600">{product.tradesCount} Trades</p>
         <div className="flex items-center gap-1">
           <AddEditProductModal
+            product={product}
             editProduct={true}
             handleSubmit={handleSubmit}
             formData={formData}
@@ -39,9 +44,20 @@ export default function MyAccProductCard({
             categories={categories}
             imagePreview={imagePreview}
             handleFileChange={handleFileChange}
+            handleEdit={handleEdit}
           />
-          <FeatureProductModal />
-          <DeleteProductModal fetchProducts={fetchProducts} />
+          <button
+            onClick={() => handleFeature()}
+            className="w-fit flex items-center gap-1 bg-green-500 group text-white py-2 font-light pl-5 pr-4"
+          >
+            Feature
+            <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+          </button>
+          <DeleteProductModal
+            token={token}
+            product={product}
+            fetchProducts={fetchProducts}
+          />
         </div>
         <div className="flex items-center gap-1 text-gray-600">
           <StarFilledIcon className="h-5 w-5 text-gray-400" />

@@ -12,24 +12,33 @@ import {
 import { ChevronRightIcon } from "lucide-react";
 
 export default function AddEditProductModal({
+  product,
   editProduct,
   handleSubmit = () => {},
   formData = {},
   handleInputChange = () => {},
   categories,
   handleFileChange = () => {},
+  handleEdit = () => {},
   imagePreview,
   isSubmitting,
 }) {
   return (
     <Dialog>
-      <DialogTrigger className="w-fit flex items-center gap-1 bg-gray-400 group text-white py-2 font-light pl-5 pr-4">
-        {editProduct ? "Edit" : "Add"}
-        <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+      <DialogTrigger>
+        <button
+          onClick={() => {
+            editProduct ? handleEdit(product) : null;
+          }}
+          className="w-fit flex items-center gap-1 bg-gray-400 group text-white py-2 font-light pl-5 pr-4"
+        >
+          {editProduct ? "Edit" : "Add"}
+          <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+        </button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Product</DialogTitle>
+          <DialogTitle>{editProduct ? "Edit" : "Add"} Product</DialogTitle>
           <DialogDescription>
             Please fill the form to {editProduct ? "edit" : "add"} a product.
           </DialogDescription>

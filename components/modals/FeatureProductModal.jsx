@@ -14,10 +14,7 @@ export default function FeatureProductModal() {
   return (
     <Dialog>
       <DialogTrigger>
-        <button className="w-fit flex items-center gap-1 bg-green-500 group text-white py-2 font-light pl-5 pr-4">
-          Feature
-          <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
-        </button>
+        
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import Link from "next/link";
 import { ChevronRightIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import AskAQuestionModal from "@/components/modals/AskAQuestionModal";
 import ProductCard from "@/components/cards/ProductCard";
 
 const ShopDetailPage = ({ params, loginInfo }) => {
@@ -332,6 +333,24 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Your Products
+              </label>
+              <select
+                className="bg-transparent w-full mt-2"
+                value={selectedUserProduct}
+                onChange={(e) => setSelectedUserProduct(e.target.value)}
+              >
+                <option value="">Select one of your products</option>
+                {Array.isArray(userProducts) &&
+                  userProducts.map((userProduct) => (
+                    <option key={userProduct._id} value={userProduct._id}>
+                      {userProduct.name} (${userProduct.price})
+                    </option>
+                  ))}
+              </select>
+            </div>
 
             {tradeMessage && (
               <div className="mt-4 text-center text-red-500">
@@ -342,9 +361,9 @@ const ShopDetailPage = ({ params, loginInfo }) => {
             <div className="flex gap-5 flex-col mt-10">
               <button
                 onClick={() => handleTrade(product.userId)}
-                className="w-fit flex rounded-full uppercase items-center gap-1 bg-gray-400 group text-white py-4 pl-5 pr-4"
+                className="w-fit flex rounded-full uppercase items-center gap-1 bg-black group text-white py-4 pl-5 pr-4"
               >
-                Book Now
+                Trade
                 <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
               </button>
               <button
@@ -355,15 +374,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 <HeartFilledIcon className="h-5 w-5 text-gray-300 ml-2" />
                 <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
               </button>
-              <button className="w-fit text-xl flex items-center gap-1 border-2 border-blue-400 group text-blue-400 py-4 pl-5 pr-4">
-                Make an offer
-                <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
-              </button>
-              <button className="w-fit flex items-center gap-1 bg-black group text-gray-300 py-2 pl-5 pr-4">
-                <QuestionMarkCircleIcon className="h-5 w-5" />
-                Ask a question
-                <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
-              </button>
+              <AskAQuestionModal />
               {/* <button
                 className="bg-black text-white py-2 px-4 rounded hover:bg-[#D5B868] transition duration-300"
                 onClick={() => handleTrade(product.userId)}

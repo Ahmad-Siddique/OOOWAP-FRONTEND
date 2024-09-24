@@ -53,6 +53,7 @@ const ShopPage = ({ loginInfo }) => {
       axios
         .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", { filter })
         .then((response) => {
+          console.log("{PRODUCTS}", response.data); 
           setProducts(response.data);
           setIsLoading(false);
         })
@@ -60,6 +61,7 @@ const ShopPage = ({ loginInfo }) => {
           console.error("Error fetching products:", error);
           setIsLoading(false);
         });
+       
     }
   }, [isMounted]);
 

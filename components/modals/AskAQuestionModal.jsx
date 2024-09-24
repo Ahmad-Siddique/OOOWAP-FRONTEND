@@ -9,58 +9,48 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import axios from "axios";
+import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import { ChevronRightIcon } from "lucide-react";
 import { toast } from "react-toastify";
 
-export default function DeleteProductModal({
-  product,
-  fetchProducts = () => {},
-  token,
-}) {
-  const handleDelete = async (productId) => {
+export default function AskAQuestionModal({ product }) {
+  const handleSubmit = async (productId) => {
     try {
-      console.log("Deleting product with id: ", productId);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/products/${productId}`,
-        config
-      );
-      fetchProducts();
-      toast.success("Product deleted successfully!");
+      // Your logic here
+      toast.success("Question submitted successfully");
     } catch (error) {
-      console.log("ERROR", error)
-      toast.error("Error deleting product!");
+      console.error(error);
+      toast.error("Failed to submit question");
     }
   };
   return (
     <Dialog>
       <DialogTrigger>
-        <button className="w-fit flex items-center gap-1 bg-red-600 group text-white py-2 font-light pl-5 pr-4">
-          Delete
+        <button className="w-fit flex items-center gap-1 bg-black group text-gray-300 py-2 pl-5 pr-4">
+          <QuestionMarkCircleIcon className="h-5 w-5" />
+          Ask a question
           <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
         </button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            Are you sure you want to delete this product?
-          </DialogTitle>
+          <DialogTitle>Ask a question</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            product and remove your data from our servers.
+            Ask anything you want to know about this product.
           </DialogDescription>
+          <div className="pt-5">
+            <input
+              placeholder="Type your question ..."
+              className="w-full py-2 px-3 focus:outline-none border border-black/10 rounded-md"
+            />
+          </div>
           <div className="flex items-center pt-5 gap-1">
             <DialogClose asChild>
               <button
-                onClick={() => handleDelete(product._id)}
-                className="w-fit flex items-center gap-1 bg-red-600 group text-white py-2 font-light pl-5 pr-4"
+                onClick={() => handleSubmit(product._id)}
+                className="w-fit flex items-center gap-1 bg-green-600 group text-white py-2 font-light pl-5 pr-4"
               >
-                Confirm
+                Submit
                 <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
               </button>
             </DialogClose>

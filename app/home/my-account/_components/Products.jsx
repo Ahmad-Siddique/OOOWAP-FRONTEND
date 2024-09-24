@@ -122,19 +122,6 @@ const Products = ({ loginInfo }) => {
     }
   };
 
-  const handleDelete = async (productId) => {
-    try {
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/products/${productId}`,
-        config
-      );
-      toast.success("Product deleted successfully!");
-      fetchProducts(); // Refetch products after deletion
-    } catch (error) {
-      toast.error("Error deleting product!");
-    }
-  };
-
   const handleEdit = (product) => {
     setEditProduct(product);
     setFormData({
@@ -203,6 +190,7 @@ const Products = ({ loginInfo }) => {
                   categories={categories}
                   imagePreview={imagePreview}
                   handleFileChange={handleFileChange}
+                  token={loginInfo?.user.token}
                 />
               ))}
           </div>
