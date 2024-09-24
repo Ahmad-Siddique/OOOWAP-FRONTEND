@@ -106,7 +106,7 @@ const Featured = ({ loginInfo }) => {
     );
   }
 
-  const isProductinWishlist = (productId) => {
+  const isProductinWishlist = (productId) => {  
     if (wishlistproduct.includes(productId)) {
       console.log("TRUEEE")
       return true;

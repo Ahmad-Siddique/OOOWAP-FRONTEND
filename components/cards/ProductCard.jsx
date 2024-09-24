@@ -35,7 +35,7 @@ const ProductCard = ({
           >
             <HeartFilledIcon
               className={`h-6 w-6 ${
-                isProductinWishlist() ? "text-[#DC3232]" : "text-[#8B8B8B]"
+                isProductinWishlist(product._id) ? "text-[#DC3232]" : "text-[#8B8B8B]"
               }`}
             />
           </button>

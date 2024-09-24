@@ -207,11 +207,11 @@ const ShopDetailPage = ({ params, loginInfo }) => {
 
   return (
     <div className="bg-gray-50 p-8 min-h-screen">
-      <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="flex flex-col lg:flex-row">
+      <div className="max-w-6xl mx-auto bg-white overflow-hidden">
+        <div className="flex flex-col gap-10 lg:flex-row">
           <div className="lg:w-1/2 relative">
-            <div className="carousel w-full">
-              <div className="carousel-item relative w-full">
+            <div className="w-full">
+              <div className="relative w-full">
                 <img
                   src={product.imageUrl}
                   alt={product.name}
@@ -219,7 +219,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 />
               </div>
               {product.imageUrl1 && (
-                <div className="carousel-item relative w-full">
+                <div className="relative w-full">
                   <img
                     src={product.imageUrl1}
                     alt={product.name}
@@ -228,7 +228,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 </div>
               )}
               {product.imageUrl2 && (
-                <div className="carousel-item relative w-full">
+                <div className="relative w-full">
                   <img
                     src={product.imageUrl2}
                     alt={product.name}
