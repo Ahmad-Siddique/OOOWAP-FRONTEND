@@ -117,9 +117,9 @@ const ShopPage = ({ loginInfo }) => {
       )}
 
       <div className="w-full h-96 bg-[url(/images/brands.jpg)] bg-contain bg-top bg-no-repeat"></div>
-      <div className="grid w-full py-10 px-5 grid-cols-1 max-w-7xl lg:grid-cols-4 gap-8">
+      <div className="grid w-full py-10 px-5 grid-cols-1 lg:grid-cols-4 gap-y-10 lg:gap-x-10 gap-x-0">
         {/* Filter Section */}
-        <div className="col-span-1 p-6">
+        <div className="col-span-1 flex items-center w-full flex-col gap-5">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-xl font-semibold text-black/80">
@@ -239,7 +239,7 @@ const ShopPage = ({ loginInfo }) => {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          <div className="flex items-center justify-between gap-1">
+          <div className="flex items-center w-full justify-between gap-1">
             <button className="w-full justify-center flex items-center gap-1 bg-secondary group text-black font-bold py-2 text-lg pl-5 pr-4">
               Filter
               <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />

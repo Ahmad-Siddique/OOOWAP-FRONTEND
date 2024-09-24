@@ -118,7 +118,7 @@ const Featured = ({ loginInfo }) => {
 
   return (
     <div className="bg-white w-full py-16 px-4">
-      <div className="container mx-auto flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-2 mb-12 justify-center">
           <h2 className="text-4xl uppercase text-gray-900 text-center">
             <span className="font-extralight">Featured</span>{" "}
