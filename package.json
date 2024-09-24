@@ -32,6 +32,7 @@
     "eslint-config-next": "14.2.7",
     "heroicons": "^2.1.5",
     "lucide-react": "^0.445.0",
+    "multi-range-slider-react": "^2.0.7",
     "next": "14.2.7",
     "next-auth": "^5.0.0-beta.21",
     "postcss": "8.4.45",
@@ -47,6 +48,5 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.5.4",
     "zod": "^3.23.8"
-  },
-  "devDependencies": {}
+  }
 }

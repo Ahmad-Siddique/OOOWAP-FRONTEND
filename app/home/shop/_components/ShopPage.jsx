@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Slider } from "@/components/ui/slider";
+import MultiRangeSlider from "multi-range-slider-react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -41,40 +41,40 @@ const ShopPage = ({ loginInfo }) => {
   const [brands, setBrands] = useState("All");
   const [tiers, setTiers] = useState("All");
   const [popularity, setPopularity] = useState("Default");
-  const [price, setPrice] = useState([33]);
+  const [price, setPrice] = useState({
+    min: 100,
+    max: 200,
+  });
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const filteredProducts = async () => {
-    console.log("ZUZU")
-    console.log(brands,tiers,popularity,price)
-    axios
-      .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", {
-        brands,
-        tiers,
-        popularity, price,
-        userId:loginInfo?.user.id
-       })
-      .then((response) => {
-        console.log("{PRODUCTS}", response.data);
-        setProducts(response.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-        setIsLoading(false);
-      });
-  }
-
   useEffect(() => {
     if (isMounted) {
       setIsLoading(true);
-      
-      filteredProducts();
+      axios
+        .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", { filter })
+        .then((response) => {
+          console.log("{PRODUCTS}", response.data); 
+          setProducts(response.data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+          setIsLoading(false);
+        });
+       
     }
   }, [isMounted]);
+
+  const handleRangeSelectorInput = (e) => {
+    setPrice(
+      e.minValue === 0 && e.maxValue === 0
+        ? { min: 0, max: 0 }
+        : { min: e.minValue, max: e.maxValue }
+    );
+  };
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -343,16 +343,28 @@ const ShopPage = ({ loginInfo }) => {
               <AccordionTrigger className="text-xl font-semibold text-black/80">
                 Price
               </AccordionTrigger>
-              <AccordionContent className="flex flex-col gap-5">
-                <Slider
-                  className="mt-3"
-                  value={price}
-                  onValueChange={(value) => setPrice(value)}
+              <AccordionContent className="flex flex-col gap-1">
+                <MultiRangeSlider
+                  style={{
+                    border: "none",
+                    boxShadow: "none",
+                    padding: "10px 0px",
+                  }}
+                  barLeftColor="white"
+                  barRightColor="white"
+                  barInnerColor="#F5BA41"
+                  ruler={false}
+                  label={false}
                   min={0}
-                  max={100}
-                  step={1}
+                  max={500}
+                  steps={5}
+                  minValue={price.min}
+                  maxValue={price.max}
+                  onInput={(e) => handleRangeSelectorInput(e)}
                 />
-                <span className="text-center">$100 - $500</span>
+                <span className="text-center">
+                  ${price.min} - ${price.max}
+                </span>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
