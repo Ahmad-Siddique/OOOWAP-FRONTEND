@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import ProductCard from "@/components/cards/ProductCard";
 
 const Profile = ({ loginInfo }) => {
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userInfo,setuserInfo] = useState({})
   const [error, setError] = useState("");
   const config = {
     headers: {
@@ -14,12 +16,27 @@ const Profile = ({ loginInfo }) => {
     },
   };
 
+  const fetchUser = async () => {
+    try {
+      // Replace with your actual API endpoint
+      const response = await axios.get(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/getuserprofile",
+        config
+      );
+      setuserInfo(response.data)
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      // setErrorMessage("Failed to load user data. Please try again.");
+      setIsLoading(false);
+    }
+  }
+
   const fetchUserData = async () => {
     setIsLoading(true);
     setError("");
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/featured-products`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/products/featured-products`,
         config
       );
       setUserData(response.data);
@@ -31,9 +48,10 @@ const Profile = ({ loginInfo }) => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchUserData();
-  // }, [loginInfo]);
+  useEffect(() => {
+    fetchUserData();
+    fetchUser();
+  }, [loginInfo]);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -119,43 +137,7 @@ const Profile = ({ loginInfo }) => {
               </div>
             </div>
             <span className="text-blue-800">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi,
-              ipsam perferendis. Totam quisquam est exercitationem a. Culpa,
-              voluptatibus a dolorem nulla vero quae voluptates velit inventore
-              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
-              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
-              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
-              aliquam fuga nam molestiae quae provident. Dolorum distinctio
-              numquam nostrum? Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Nisi, ipsam perferendis. Totam quisquam est
-              exercitationem a. Culpa, voluptatibus a dolorem nulla vero quae
-              voluptates velit inventore maiores? Dolor libero, laborum,
-              distinctio suscipit officiis nisi vel quidem laboriosam, fuga
-              voluptatibus perferendis? Commodi nostrum sequi, quam et, eligendi
-              sed assumenda, officiis modi aliquam fuga nam molestiae quae
-              provident. Dolorum distinctio numquam nostrum? Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Nisi, ipsam perferendis.
-              Totam quisquam est exercitationem a. Culpa, voluptatibus a dolorem
-              nulla vero quae voluptates velit inventore maiores? Dolor libero,
-              laborum, distinctio suscipit officiis nisi vel quidem laboriosam,
-              fuga voluptatibus perferendis? Commodi nostrum sequi, quam et,
-              eligendi sed assumenda, officiis modi aliquam fuga nam molestiae
-              quae provident. Dolorum distinctio numquam nostrum? Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Nisi, ipsam
-              perferendis. Totam quisquam est exercitationem a. Culpa,
-              voluptatibus a dolorem nulla vero quae voluptates velit inventore
-              maiores? Dolor libero, laborum, distinctio suscipit officiis nisi
-              vel quidem laboriosam, fuga voluptatibus perferendis? Commodi
-              nostrum sequi, quam et, eligendi sed assumenda, officiis modi
-              aliquam fuga nam molestiae quae provident. Dolorum distinctio
-              numquam nostrum? Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Nisi, ipsam perferendis. Totam quisquam est
-              exercitationem a. Culpa, voluptatibus a dolorem nulla vero quae
-              voluptates velit inventore maiores? Dolor libero, laborum,
-              distinctio suscipit officiis nisi vel quidem laboriosam, fuga
-              voluptatibus perferendis? Commodi nostrum sequi, quam et, eligendi
-              sed assumenda, officiis modi aliquam fuga nam molestiae quae
-              provident. Dolorum distinctio numquam nostrum?
+              {userInfo && userInfo.description}
             </span>
           </div>
           <div>
@@ -189,7 +171,19 @@ const Profile = ({ loginInfo }) => {
                 {error}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
+                {userData.featuredProducts && userData.featuredProducts.length !== 0 ? (
+                  userData.featuredProducts.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))
+                ) : (
+                  <div className="text-center text-lg">
+                    No products available
+                  </div>
+                )}
+
+                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {userData.featuredProducts &&
                 userData.featuredProducts.length > 0 ? (
                   userData.featuredProducts.map((product) => (
@@ -213,7 +207,9 @@ const Profile = ({ loginInfo }) => {
                     No featured products available.
                   </p>
                 )}
-              </div>
+              </div> */}
+                </div>
+              </>
             )}
           </div>
         </div>

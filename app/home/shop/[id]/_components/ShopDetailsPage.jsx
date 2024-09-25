@@ -40,7 +40,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${loginInfo?.token}`,
+      Authorization: `Bearer ${loginInfo?.user.token}`,
     },
   };
 
@@ -48,7 +48,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/userproducts`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/products/userproducts`,
         config
       );
       setUserProducts(response.data.data);
@@ -123,8 +123,9 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         setError(true);
         setIsLoading(false);
       });
-
-    fetchUserProducts();
+    // if (loginInfo?.user.toke) {
+      fetchUserProducts();
+    // }
   }, [params.id]);
 
   const handleTrade = (receiverid) => {
@@ -374,7 +375,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 <HeartFilledIcon className="h-5 w-5 text-gray-300 ml-2" />
                 <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
               </button>
-              <AskAQuestionModal />
+              <AskAQuestionModal product={product} config={config} />
               {/* <button
                 className="bg-black text-white py-2 px-4 rounded hover:bg-[#D5B868] transition duration-300"
                 onClick={() => handleTrade(product.userId)}
@@ -433,7 +434,8 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         <h2 className="text-3xl font-light italic mb-4 text-center">
           You'll Also Love These
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div className="grid grid-cols-1 w-full max-w-7xl sm:grid-cols-2 md:grid-cols-3 gap-10">
           {similarProducts.map((similarProduct) => (
             <ProductCard key={similarProduct._id} product={similarProduct} />
           ))}

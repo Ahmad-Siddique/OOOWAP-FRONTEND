@@ -18,7 +18,8 @@ const Sidebar = ({ loginInfo }) => {
         );
         setMetrics(response.data);
       } catch (error) {
-        toast.error("Error fetching metrics!");
+        
+        // toast.error("Error fetching metrics!");
       }
     };
 
@@ -58,13 +59,13 @@ const Sidebar = ({ loginInfo }) => {
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.trades}
+              {metrics.reviews}
             </p>
             <h5 className="text-sm text-gray-700">Reviews</h5>
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.reviews}
+              {metrics.totalQuestions}
             </p>
             <h5 className="text-sm text-gray-700">Comments</h5>
           </div>
@@ -101,13 +102,13 @@ const Sidebar = ({ loginInfo }) => {
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.trades}
+              {metrics.reviews}
             </p>
             <h5 className="text-sm text-gray-700">Reviews</h5>
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.reviews}
+              {metrics.totalQuestions}
             </p>
             <h5 className="text-sm text-gray-700">Comments</h5>
           </div>
@@ -144,13 +145,13 @@ const Sidebar = ({ loginInfo }) => {
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.trades}
+              {metrics.reviews}
             </p>
             <h5 className="text-sm text-gray-700">Reviews</h5>
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.reviews}
+              {metrics.totalQuestions}
             </p>
             <h5 className="text-sm text-gray-700">Comments</h5>
           </div>
@@ -187,13 +188,13 @@ const Sidebar = ({ loginInfo }) => {
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.trades}
+              {metrics.reviews}
             </p>
             <h5 className="text-sm text-gray-700">Reviews</h5>
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.reviews}
+              {metrics.totalQuestions}
             </p>
             <h5 className="text-sm text-gray-700">Comments</h5>
           </div>
@@ -230,13 +231,13 @@ const Sidebar = ({ loginInfo }) => {
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.trades}
+              {metrics.reviews}
             </p>
             <h5 className="text-sm text-gray-700">Reviews</h5>
           </div>
           <div>
             <p className="text-2xl font-semibold text-gray-900">
-              {metrics.reviews}
+              {metrics.totalQuestions}
             </p>
             <h5 className="text-sm text-gray-700">Comments</h5>
           </div>

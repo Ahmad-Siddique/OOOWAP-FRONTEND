@@ -10,12 +10,22 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import axios from "axios";
 import { ChevronRightIcon } from "lucide-react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function AskAQuestionModal({ product }) {
+export default function AskAQuestionModal({ product,config }) {
+   const [question, setquestion] = useState("");
   const handleSubmit = async (productId) => {
+   
     try {
+       const response = await axios.post(
+         `${process.env.NEXT_PUBLIC_API_URL}/question/product/${productId}/question`, {
+           question
+         },
+         config
+       );
       // Your logic here
       toast.success("Question submitted successfully");
     } catch (error) {
@@ -40,6 +50,8 @@ export default function AskAQuestionModal({ product }) {
           </DialogDescription>
           <div className="pt-5">
             <input
+              value={question}
+              onChange={(e) => setquestion(e.target.value)}
               placeholder="Type your question ..."
               className="w-full py-2 px-3 focus:outline-none border border-black/10 rounded-md"
             />

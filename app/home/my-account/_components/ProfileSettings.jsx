@@ -78,7 +78,7 @@ const ProfileSettings = ({ loginInfo }) => {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setErrorMessage("Failed to load user data. Please try again.");
+        // setErrorMessage("Failed to load user data. Please try again.");
         setIsLoading(false);
       }
     };
@@ -225,7 +225,7 @@ const ProfileSettings = ({ loginInfo }) => {
       }));
     } catch (error) {
       console.error("Error updating profile:", error);
-      setErrorMessage("Failed to update profile. Please try again.");
+      // setErrorMessage("Failed to update profile. Please try again.");
       setIsLoading(false);
     }
   };

@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios"; // Import axios
 import { StarFilledIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 
 export default function UserProfile({ loginInfo }) {
+  const router = useRouter()
   const [metrics, setMetrics] = useState({
     creationDate: "",
     totalTrades: 0,
@@ -13,6 +15,10 @@ export default function UserProfile({ loginInfo }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!loginInfo?.user.token) {
+      router.push("/login")
+      return
+    }
     const fetchMetrics = async () => {
       try {
         const token = loginInfo?.user.token;
@@ -89,17 +95,34 @@ export default function UserProfile({ loginInfo }) {
           {/* Right Column */}
           <div className="flex flex-col sm:flex-row items-center sm:items-end text-center sm:text-start pt-10 md:pt-0 text-white gap-5 md:gap-10">
             <div className="flex flex-col">
-              <span className="text-2xl font-bold">0</span>
+              <span className="text-2xl font-bold">
+                {metrics && metrics.totalTrades}
+              </span>
               <span className="text-sm">Total Trades</span>
             </div>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1">
-                <StarFilledIcon className="w-4 h-4 text-white" />
-                <StarFilledIcon className="w-4 h-4 text-white" />
-                <StarFilledIcon className="w-4 h-4 text-white" />
-                <StarFilledIcon className="w-4 h-4 text-white" />
-                <StarFilledIcon className="w-4 h-4 text-gray-500" />
-                <span className="text-sm">(0 Reviews)</span>
+                {/* Dynamically generate the stars based on averageRating */}
+                {Array.from({ length: 5 }, (v, i) => {
+                  const isFilled = i + 1 <= Math.floor(metrics?.averageRating); // Filled stars for whole numbers
+                  const isHalfFilled =
+                    i + 1 > Math.floor(metrics?.averageRating) &&
+                    i + 1 <= Math.ceil(metrics?.averageRating); // Half-filled star condition (optional)
+
+                  return (
+                    <span key={i}>
+                      {isFilled
+                        ? "★" // Unicode for filled star
+                        : isHalfFilled
+                        ? "⯪" // Optional half-filled star (could use other symbols or CSS for half stars)
+                        : "☆" // Unicode for empty star
+                      }
+                    </span>
+                  );
+                })}
+                <span className="text-sm">
+                  ({metrics?.averageRating || 0} Reviews)
+                </span>
               </div>
               <span className="text-sm">Ratings</span>
             </div>

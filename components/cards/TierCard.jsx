@@ -23,7 +23,7 @@ const TierCard = ({ tier }) => {
       </p>
       {/* Enroll Button */}
       <Link
-        href="/deposit"
+        href="/home/deposit"
         className="text-white group relative border-2 border-white hover:border-primary hover:text-primary transition-all duration-300 text-lg w-32 py-1 flex items-center justify-center"
       >
         Enroll

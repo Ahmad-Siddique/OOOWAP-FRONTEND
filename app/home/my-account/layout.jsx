@@ -5,6 +5,7 @@ import Tabs from "./_components/Tabs";
 export default async function MyAccLayout({ children }) {
   const session = await auth();
 
+  
   return (
     <div className="flex flex-col">
       <UserProfile loginInfo={session} />

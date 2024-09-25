@@ -42,28 +42,38 @@ const ShopPage = ({ loginInfo }) => {
   const [tiers, setTiers] = useState("All");
   const [popularity, setPopularity] = useState("Default");
   const [price, setPrice] = useState({
-    min: 100,
-    max: 200,
+    min: 0,
+    max: 2000,
   });
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  const filteredProducts = async () => {
+     axios
+       .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", {
+         brands,
+         tiers,
+         popularity,
+         price,
+         userId:loginInfo?.user.id
+       })
+       .then((response) => {
+         console.log("{PRODUCTS}", response.data);
+         setProducts(response.data);
+         setIsLoading(false);
+       })
+       .catch((error) => {
+         console.error("Error fetching products:", error);
+         setIsLoading(false);
+       });
+  }
+
   useEffect(() => {
     if (isMounted) {
       setIsLoading(true);
-      axios
-        .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", { filter })
-        .then((response) => {
-          console.log("{PRODUCTS}", response.data); 
-          setProducts(response.data);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching products:", error);
-          setIsLoading(false);
-        });
+     filteredProducts();
        
     }
   }, [isMounted]);
@@ -356,7 +366,7 @@ const ShopPage = ({ loginInfo }) => {
                   ruler={false}
                   label={false}
                   min={0}
-                  max={500}
+                  max={2000}
                   steps={5}
                   minValue={price.min}
                   maxValue={price.max}

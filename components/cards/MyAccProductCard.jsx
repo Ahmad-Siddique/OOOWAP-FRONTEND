@@ -47,7 +47,7 @@ export default function MyAccProductCard({
             handleEdit={handleEdit}
           />
           <button
-            onClick={() => handleFeature()}
+            onClick={() => handleFeature(product._id)}
             className="w-fit flex items-center gap-1 bg-green-500 group text-white py-2 font-light pl-5 pr-4"
           >
             Feature
@@ -59,14 +59,7 @@ export default function MyAccProductCard({
             fetchProducts={fetchProducts}
           />
         </div>
-        <div className="flex items-center gap-1 text-gray-600">
-          <StarFilledIcon className="h-5 w-5 text-gray-400" />
-          <StarFilledIcon className="h-5 w-5 text-gray-400" />
-          <StarFilledIcon className="h-5 w-5 text-gray-400" />
-          <StarFilledIcon className="h-5 w-5 text-gray-400" />
-          <StarFilledIcon className="h-5 w-5 text-gray-400" />
-          <span>(0)</span>
-        </div>
+       
       </div>
     </div>
   );
