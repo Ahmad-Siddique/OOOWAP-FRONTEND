@@ -18,7 +18,7 @@ const LoginPage = ({loginInfo}) => {
     if (loginInfo?.user.id) {
       router.push("/home")
     }
-  },[])
+  },[dispatch])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
