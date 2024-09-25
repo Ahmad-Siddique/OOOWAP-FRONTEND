@@ -7,6 +7,7 @@ import { auth, signOut } from "@/auth";
 
 const Header = async () => {
   const session = await auth();
+ 
   const logOut = async () => {
     "use server";
     await signOut();
@@ -37,6 +38,11 @@ const Header = async () => {
             <Link href="/home/contact-us" className="hover:text-primary">
               Contact Us
             </Link>
+            {session?.user.role=="admin" && (
+              <Link href="/home/admin" className="hover:text-primary">
+                Admin
+              </Link>
+            )}
           </div>
           {session ? (
             <div className="flex items-center gap-3">

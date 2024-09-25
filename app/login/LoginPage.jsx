@@ -51,16 +51,13 @@ const LoginPage = () => {
               </div>
             )}
             <p className="text-center text-black">
-              <Link
-                href="/forgot-password"
-                className="text-[#D5B868] underline"
-              >
+              <Link href="/home/forgot-password" className="text-black underline">
                 Forgot Password?
               </Link>
             </p>
             <p className="text-center text-black">
               Not a member?{" "}
-              <Link href="/signup" className="text-[#D5B868] underline">
+              <Link href="/signup" className="text-black underline">
                 Apply
               </Link>
             </p>

@@ -59,7 +59,7 @@ const Hero = () => {
               }`}
             >
               <Image
-                src="/images/Purse2.jpg"
+                src="/images/Purse3.jpg"
                 alt="Purse 2"
                 className="w-full h-full object-cover"
                 width={600}
@@ -74,7 +74,7 @@ const Hero = () => {
               }`}
             >
               <Image
-                src="/images/Purse3.jpg"
+                src="/images/Purse2.jpg"
                 alt="Purse 3"
                 className="w-full h-full object-cover"
                 width={600}

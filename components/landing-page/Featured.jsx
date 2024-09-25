@@ -121,12 +121,12 @@ const Featured = ({ loginInfo }) => {
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-2 mb-12 justify-center">
           <h2 className="text-4xl uppercase text-gray-900 text-center">
-            <span className="font-extralight">Featured</span>{" "}
+            <span className="font-light">Featured</span>{" "}
             <span className="font-bold">Products</span>
           </h2>
           <div className="bg-primary h-0.5 w-32"></div>
         </div>
-        <div className="grid grid-cols-1 w-full max-w-7xl sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 w-full max-w-[57%] sm:grid-cols-2 md:grid-cols-3 gap-10">
           {products.map((product) => (
             <ProductCard
               key={product._id}

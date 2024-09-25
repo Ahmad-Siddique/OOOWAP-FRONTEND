@@ -147,9 +147,9 @@ const ShopPage = ({ loginInfo }) => {
       )}
 
       <div className="w-full h-96 bg-[url(/images/brands.jpg)] bg-contain bg-top bg-no-repeat"></div>
-      <div className="grid w-full py-10 px-5 lg:px-10 grid-cols-1 lg:grid-cols-4 gap-y-10 lg:gap-x-10 gap-x-0">
+      <div className="grid w-full py-10 px-5 lg:px-10 grid-cols-1 lg:grid-cols-4 gap-y-10 lg:gap-x-20 gap-x-0">
         {/* Filter Section */}
-        <div className="col-span-1 flex items-center w-full flex-col gap-5">
+        <div className="col-span-1 flex items-center w-full flex-col gap-6">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-xl font-semibold text-black/80">
@@ -435,7 +435,7 @@ const ShopPage = ({ loginInfo }) => {
                 <span className="ml-2 text-gray-700">Loading...</span>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
+              <div className="grid grid-cols-1 max-w-6xl sm:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-16 ">
                 {products.results && products.results.length !== 0 ? (
                   products.results.map((product) => (
                     <ProductCard key={product._id} product={product} />

@@ -193,7 +193,7 @@ const SignupPage = () => {
             )}
             <button
               type="submit"
-              className="py-3 px-6 bg-[#D5B868] text-white rounded-md hover:bg-[#b38b59] transition disabled:opacity-50"
+              className="py-3 px-6 bg-black text-white rounded-md hover:bg-[#b38b59] transition disabled:opacity-50"
               disabled={isLoading}
             >
               {isLoading ? "Signing Up..." : "Sign Up"}
@@ -201,7 +201,7 @@ const SignupPage = () => {
             {message && <p className="text-red-500 text-sm mt-2">{message}</p>}
             <p className="text-center text-black">
               Already a member?{" "}
-              <a href="/login" className="text-[#D5B868] underline">
+              <a href="/login" className="text-black underline">
                 Login
               </a>
             </p>

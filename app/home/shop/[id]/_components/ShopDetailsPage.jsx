@@ -65,8 +65,8 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/product/productpageproducts`,
-        { id: params.id },
-        config
+        { id: params.id, userId: loginInfo?.user.id },
+        
       );
       setSimilarProducts(response.data.filteredProducts);
       setIsLoading(false);
@@ -77,6 +77,9 @@ const ShopDetailPage = ({ params, loginInfo }) => {
   };
 
   const addToWishList = async (productId) => {
+    if (!loginInfo?.user.token) {
+      toast.error("Login to add products to wishlist");
+    }
     try {
       setIsLoading(true);
       const response = await axios.post(
@@ -85,23 +88,23 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         config
       );
       toast.success("Item added to wishlist!");
-      setNotification({
-        show: true,
-        message: "Item added to wishlist!",
-        type: "success",
-      });
+      // setNotification({
+      //   show: true,
+      //   message: "Item added to wishlist!",
+      //   type: "success",
+      // });
     } catch (error) {
       console.error("Error adding product to wishlist:", error);
-      setNotification({
-        show: true,
-        message: "Error adding item to wishlist. Please try again.",
-        type: "error",
-      });
+      // setNotification({
+      //   show: true,
+      //   message: "Error adding item to wishlist. Please try again.",
+      //   type: "error",
+      // });
     } finally {
       setIsLoading(false);
-      setTimeout(() => {
-        setNotification({ show: false, message: "", type: "" });
-      }, 3000);
+      // setTimeout(() => {
+      //   setNotification({ show: false, message: "", type: "" });
+      // }, 3000);
     }
   };
 
@@ -123,12 +126,23 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         setError(true);
         setIsLoading(false);
       });
-    // if (loginInfo?.user.toke) {
+    if (loginInfo?.user.token) {
       fetchUserProducts();
-    // }
+    }
   }, [params.id]);
 
+
+
+
+  
+
   const handleTrade = (receiverid) => {
+    if (!loginInfo?.user.token) {
+      toast.error(
+        
+          "Login to make trade offer"
+      );
+    }
     const id = params.id;
 
     if (!startDate || !endDate || !selectedUserProduct) {
@@ -334,24 +348,26 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Your Products
-              </label>
-              <select
-                className="bg-transparent w-full mt-2"
-                value={selectedUserProduct}
-                onChange={(e) => setSelectedUserProduct(e.target.value)}
-              >
-                <option value="">Select one of your products</option>
-                {Array.isArray(userProducts) &&
-                  userProducts.map((userProduct) => (
-                    <option key={userProduct._id} value={userProduct._id}>
-                      {userProduct.name} (${userProduct.price})
-                    </option>
-                  ))}
-              </select>
-            </div>
+            {loginInfo && loginInfo?.user.token && (
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Your Products
+                </label>
+                <select
+                  className="bg-transparent w-full mt-2"
+                  value={selectedUserProduct}
+                  onChange={(e) => setSelectedUserProduct(e.target.value)}
+                >
+                  <option value="">Select one of your products</option>
+                  {Array.isArray(userProducts) &&
+                    userProducts.map((userProduct) => (
+                      <option key={userProduct._id} value={userProduct._id}>
+                        {userProduct.name} (${userProduct.price})
+                      </option>
+                    ))}
+                </select>
+              </div>
+            )}
 
             {tradeMessage && (
               <div className="mt-4 text-center text-red-500">
@@ -368,7 +384,10 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                 <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
               </button>
               <button
-                onClick={() => addToWishList(product._id)}
+                onClick={(e) => {
+                  
+                  addToWishList(product._id)
+                }}
                 className="w-fit uppercase flex rounded-full  items-center gap-1 bg-black group text-white py-4 pl-5 pr-4"
               >
                 Add to wishlist
@@ -435,7 +454,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
           You'll Also Love These
         </h2>
 
-        <div className="grid grid-cols-1 w-full max-w-7xl sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 w-full mx-auto max-w-7xl sm:grid-cols-2 md:grid-cols-4 gap-10">
           {similarProducts.map((similarProduct) => (
             <ProductCard key={similarProduct._id} product={similarProduct} />
           ))}
