@@ -140,7 +140,7 @@ const PendingItems = ({ loginInfo }) => {
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
               <button
                 onClick={() => handleAcceptTrade(trade._id)}
-                className="bg-yellow-400 text-white py-2 px-4 rounded-lg hover:bg-yellow-500 transition w-full md:w-auto"
+                className="bg-black text-white py-2 px-4 rounded-lg hover:bg-yellow-500 transition w-full md:w-auto"
               >
                 Start Trade
               </button>

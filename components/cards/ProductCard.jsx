@@ -41,7 +41,7 @@ const ProductCard = ({
           </button>
         </div>
         <div className="flex flex-col py-2">
-          <p className="text-sm font-medium">{product.brand}</p>
+          <p className="text-sm font-medium">{product?.brand ? product.brand : "Other"}</p>
           <p className="text-lg font-medium mb-1">{product.name}</p>
           <p className="text-sm font-light mb-0.5 text-gray-600 ">
             By:{" "}
