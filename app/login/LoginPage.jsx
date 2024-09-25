@@ -47,7 +47,7 @@ const LoginPage = ({loginInfo}) => {
             />
             <button
               type="submit"
-              className="py-3 px-6 bg-[#D5B868] text-white rounded-md hover:bg-[#b38b59] transition"
+              className="py-3 px-6 bg-[#F5BA41] text-white rounded-md hover:bg-[#b38b59] transition"
               aria-disabled={pending}
             >
               {pending ? "Loading..." : "Login"}
