@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link"; // Import Link for navigation
 
 const TradeHistory = ({ loginInfo }) => {
   const [tradeHistory, setTradeHistory] = useState([]);
@@ -100,6 +101,22 @@ const TradeHistory = ({ loginInfo }) => {
                     <p className="text-gray-600">
                       Price: ${trade.offererProduct?.price || "N/A"}
                     </p>
+                    {/* View Product and View Store Links */}
+                    <div className="mt-2 space-y-1">
+                      <Link
+                        href={`/home/shop/${trade.offererProduct?._id}`}
+                        className="text-black hover:underline"
+                      >
+                        View Product
+                      </Link>
+                      <br />
+                      <Link
+                        href={`/store/${trade.offererProduct?.storeId}`}
+                        className="text-black hover:underline"
+                      >
+                        View Store
+                      </Link>
+                    </div>
                     <p className="text-gray-500">
                       Offerer:{" "}
                       {trade.offererProduct.userId === loginInfo.user.id
@@ -125,6 +142,22 @@ const TradeHistory = ({ loginInfo }) => {
                     <p className="text-gray-600">
                       Price: ${trade.receiverProduct?.price || "N/A"}
                     </p>
+                    {/* View Product and View Store Links */}
+                    <div className="mt-2 space-y-1">
+                      <Link
+                        href={`/home/shop/${trade.receiverProduct?._id}`}
+                        className="text-black hover:underline"
+                      >
+                        View Product
+                      </Link>
+                      <br />
+                      <Link
+                        href={`/store/${trade.receiverProduct?.storeId}`}
+                        className="text-black hover:underline"
+                      >
+                        View Store
+                      </Link>
+                    </div>
                     <p className="text-gray-500">
                       Receiver:{" "}
                       {trade.receiverProduct.userId === loginInfo.user.id
