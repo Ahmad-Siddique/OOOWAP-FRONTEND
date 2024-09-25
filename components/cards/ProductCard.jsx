@@ -15,7 +15,7 @@ const ProductCard = ({
     <Link href={`/home/shop/${product._id}`} passHref key={product._id}>
       <div className="cursor-pointer flex flex-col">
         <div
-          className="h-96  relative"
+          className="h-88  relative"
           style={{
             backgroundImage: `url(${product.imageUrl})`,
             backgroundSize: "cover",

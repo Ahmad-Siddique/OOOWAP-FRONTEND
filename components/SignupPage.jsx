@@ -22,7 +22,6 @@ const SignupPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
-  // const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -82,142 +81,146 @@ const SignupPage = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
-      {/* Left Side */}
-      <div className="flex items-center justify-center bg-gray-100 p-8">
-        <div className="w-full px-4 py-8 max-w-2xl">
-          <h1 className="text-5xl font-bold mb-10 text-center text-black">
-            Join Our Membership
-          </h1>
-          <form
-            className="flex flex-col space-y-6"
-            onSubmit={handleSubmit}
-            encType="multipart/form-data"
-          >
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              placeholder="First Name"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
-              required
-            />
-            {errors.firstName && (
-              <p className="text-red-500 text-xs">{errors.firstName}</p>
-            )}
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              placeholder="Last Name"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
-              required
-            />
-            {errors.lastName && (
-              <p className="text-red-500 text-xs">{errors.lastName}</p>
-            )}
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Email Address"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
-              required
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs">{errors.email}</p>
-            )}
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              placeholder="Phone Number"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
-              required
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-xs">{errors.phone}</p>
-            )}
-            <div className="mb-6">
-              <label
-                htmlFor="profilePic"
-                className="block text-sm font-medium mb-1 text-black"
-              >
-                Profile Picture
-              </label>
-              <div className="flex items-center space-x-4">
-                <input
-                  type="file"
-                  id="profilePic"
-                  name="profilePic"
-                  onChange={handleFileChange}
-                  className="input input-bordered border-gray-300 border-2 focus:border-[#D5B868] focus:ring-[#D5B868]"
-                />
-                {profilePicPreview && (
-                  <div className="relative w-24 h-24 flex-shrink-0 rounded-full overflow-hidden border border-[#D5B868] bg-white">
-                    <Image
-                      src={profilePicPreview}
-                      alt="Profile Picture Preview"
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-full"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              placeholder="Password"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
-              required
-            />
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              placeholder="Confirm Password"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
-              required
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
-            )}
-            <button
-              type="submit"
-              className="py-3 px-6 bg-black text-white rounded-md hover:bg-[#b38b59] transition disabled:opacity-50"
-              disabled={isLoading}
+    <div className="flex flex-col min-h-screen gap-y-64">
+      <div className="flex-grow grid grid-cols-1 md:grid-cols-2 h-screen ">
+        {/* Left Side */}
+        <div className="flex items-center justify-center bg-gray-100 p-8">
+          <div className="w-full px-4 py-8 max-w-2xl">
+            <h1 className="text-5xl font-bold mb-10 text-center text-black">
+              Join Our Membership
+            </h1>
+            <form
+              className="flex flex-col space-y-6"
+              onSubmit={handleSubmit}
+              encType="multipart/form-data"
             >
-              {isLoading ? "Signing Up..." : "Sign Up"}
-            </button>
-            {message && <p className="text-red-500 text-sm mt-2">{message}</p>}
-            <p className="text-center text-black">
-              Already a member?{" "}
-              <a href="/login" className="text-black underline">
-                Login
-              </a>
-            </p>
-          </form>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                placeholder="First Name"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                required
+              />
+              {errors.firstName && (
+                <p className="text-red-500 text-xs">{errors.firstName}</p>
+              )}
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                placeholder="Last Name"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                required
+              />
+              {errors.lastName && (
+                <p className="text-red-500 text-xs">{errors.lastName}</p>
+              )}
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Email Address"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                required
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="Phone Number"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                required
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-xs">{errors.phone}</p>
+              )}
+              <div className="mb-6">
+                <label
+                  htmlFor="profilePic"
+                  className="block text-sm font-medium mb-1 text-black"
+                >
+                  Profile Picture
+                </label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    id="profilePic"
+                    name="profilePic"
+                    onChange={handleFileChange}
+                    className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                  />
+                  {profilePicPreview && (
+                    <div className="relative w-24 h-24 flex-shrink-0 rounded-full overflow-hidden border border-[#D5B868] bg-white">
+                      <Image
+                        src={profilePicPreview}
+                        alt="Profile Picture Preview"
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-full"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="Password"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                required
+              />
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="Confirm Password"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                required
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
+              )}
+              <button
+                type="submit"
+                className="py-3 px-6 bg-[#D5B868] text-white rounded-md hover:bg-[#b38b59] transition disabled:opacity-50"
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing Up..." : "Sign Up"}
+              </button>
+              {message && (
+                <p className="text-red-500 text-sm mt-2">{message}</p>
+              )}
+              <p className="text-center text-black">
+                Already a member?{" "}
+                <a href="/login" className="text-black underline">
+                  Login
+                </a>
+              </p>
+            </form>
+          </div>
         </div>
-      </div>
 
-      {/* Right Side */}
-      <div className="relative w-full h-full">
-        <Image
-          src="https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Signup background"
-          layout="fill"
-          objectFit="cover"
-          priority
-        />
+        {/* Right Side */}
+        <div className="relative w-full h-screen">
+          <Image
+            src="https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Signup background"
+            layout="fill"
+            objectFit="cover"
+            priority
+          />
+        </div>
       </div>
 
       {/* Toast Container */}

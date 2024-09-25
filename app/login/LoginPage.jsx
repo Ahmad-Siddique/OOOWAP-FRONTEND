@@ -7,10 +7,18 @@ import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
 import { ExclamationCircleIcon } from "@heroicons/react/outline";
 import { authenticate } from "../../lib/action";
 import { useFormState, useFormStatus } from "react-dom";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const LoginPage = () => {
+const LoginPage = ({loginInfo}) => {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
   const { pending } = useFormStatus();
+  const router = useRouter()
+  useEffect(() => {
+    if (loginInfo?.user.id) {
+      router.push("/home")
+    }
+  },[])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
@@ -26,7 +34,7 @@ const LoginPage = () => {
               name="email"
               id="email"
               placeholder="Email"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
+              className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
               required
             />
             <input
@@ -34,7 +42,7 @@ const LoginPage = () => {
               name="password"
               id="password"
               placeholder="Password"
-              className="p-6 border-b-4 border-[#D5B868] rounded-none bg-white text-black placeholder-gray-500 text-lg"
+              className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
               required
             />
             <button
@@ -51,7 +59,10 @@ const LoginPage = () => {
               </div>
             )}
             <p className="text-center text-black">
-              <Link href="/home/forgot-password" className="text-black underline">
+              <Link
+                href="/home/forgot-password"
+                className="text-black underline"
+              >
                 Forgot Password?
               </Link>
             </p>

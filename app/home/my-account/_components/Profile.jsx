@@ -136,7 +136,7 @@ const Profile = ({ loginInfo }) => {
                 </span>
               </div>
             </div>
-            <span className="text-blue-800">
+            <span className="text-black-800">
               {userInfo && userInfo.description}
             </span>
           </div>
