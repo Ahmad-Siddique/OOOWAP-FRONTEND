@@ -30,7 +30,7 @@ const Featured = ({ loginInfo }) => {
       setProducts(response.data.featuredProducts);
     } catch (error) {
       console.error("Error fetching featured products:", error);
-      toast.error("Failed to fetch products. Please try again.");
+      // toast.error("Failed to fetch products. Please try again.");
     } finally {
       setLoading(false);
     }

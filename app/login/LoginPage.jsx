@@ -16,9 +16,9 @@ const LoginPage = ({loginInfo}) => {
   const router = useRouter()
   useEffect(() => {
     if (loginInfo?.user.id) {
-      router.push("/home")
+      router.push("/home");
     }
-  },[dispatch])
+  }, [loginInfo, router]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
