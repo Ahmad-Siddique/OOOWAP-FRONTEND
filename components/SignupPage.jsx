@@ -100,7 +100,7 @@ const SignupPage = () => {
                 value={formData.firstName}
                 onChange={handleInputChange}
                 placeholder="First Name"
-                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
                 required
               />
               {errors.firstName && (
@@ -112,7 +112,7 @@ const SignupPage = () => {
                 value={formData.lastName}
                 onChange={handleInputChange}
                 placeholder="Last Name"
-                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
                 required
               />
               {errors.lastName && (
@@ -124,7 +124,7 @@ const SignupPage = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Email Address"
-                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
                 required
               />
               {errors.email && (
@@ -136,7 +136,7 @@ const SignupPage = () => {
                 value={formData.phone}
                 onChange={handleInputChange}
                 placeholder="Phone Number"
-                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
                 required
               />
               {errors.phone && (
@@ -155,10 +155,10 @@ const SignupPage = () => {
                     id="profilePic"
                     name="profilePic"
                     onChange={handleFileChange}
-                    className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                    className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
                   />
                   {profilePicPreview && (
-                    <div className="relative w-24 h-24 flex-shrink-0 rounded-full overflow-hidden border border-[#D5B868] bg-white">
+                    <div className="relative w-24 h-24 flex-shrink-0 rounded-full overflow-hidden border border-[#D5B868] bg-gray-100">
                       <Image
                         src={profilePicPreview}
                         alt="Profile Picture Preview"
@@ -176,7 +176,7 @@ const SignupPage = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Password"
-                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
                 required
               />
               <input
@@ -185,7 +185,7 @@ const SignupPage = () => {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Confirm Password"
-                className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+                className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
                 required
               />
               {errors.confirmPassword && (

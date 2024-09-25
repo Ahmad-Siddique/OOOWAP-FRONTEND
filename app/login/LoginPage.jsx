@@ -34,7 +34,7 @@ const LoginPage = ({loginInfo}) => {
               name="email"
               id="email"
               placeholder="Email"
-              className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+              className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
               required
             />
             <input
@@ -42,7 +42,7 @@ const LoginPage = ({loginInfo}) => {
               name="password"
               id="password"
               placeholder="Password"
-              className="p-6 border-b border-b-0.5 border-black rounded-none bg-white text-black placeholder-gray-500 text-lg"
+              className="p-6 border-b border-b-0.5 border-black rounded-none bg-gray-100 text-black placeholder-gray-500 text-lg"
               required
             />
             <button
