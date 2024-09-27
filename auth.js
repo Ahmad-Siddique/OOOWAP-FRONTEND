@@ -15,7 +15,11 @@ async function getUser(email, password) {
   }
 }
 
+<<<<<<< HEAD
 export const { auth, signIn, signOut, update } = NextAuth({
+=======
+export const { auth, signIn, signOut, unstable_update } = NextAuth({
+>>>>>>> 8514c55e99e163cbe853433260a829b2f8f28711
   ...authConfig,
   providers: [
     Credentials({

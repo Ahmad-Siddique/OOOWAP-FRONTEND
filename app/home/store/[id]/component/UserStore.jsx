@@ -13,7 +13,6 @@ const UserStore = ({ loginInfo, products, userInfo }) => {
   const [wishlistproduct, setwishlistproduct] = useState([]);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const router = useRouter();
-  console.log(loginInfo, "GG");
    console.log("Fetched PRODUCTS", userInfo);
   const config = {
     headers: {

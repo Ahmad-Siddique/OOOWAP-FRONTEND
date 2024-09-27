@@ -5,6 +5,9 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 
 const ProfileSettings = ({ loginInfo }) => {
+  const { data: session } = useSession();
+
+  console.log("SESSION123", session);
   // State to manage form data
   const [formData, setFormData] = useState({
     firstName: "",
@@ -32,9 +35,6 @@ const ProfileSettings = ({ loginInfo }) => {
   // State to manage success and error messages
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  // const {session, status, update } = useSession();
-  const { data: session, update } = useSession();
-
 
   // Set Axios configuration with token for authorization
   const config = {
@@ -45,7 +45,7 @@ const ProfileSettings = ({ loginInfo }) => {
 
   // Fetch user data on component mount
   useEffect(() => {
-      // console.log("SESSION DATA", session, status);
+    // console.log("SESSION DATA", session, status);
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
@@ -220,15 +220,7 @@ const ProfileSettings = ({ loginInfo }) => {
       if (response.data.imageUrl) {
         setPreviewImage(response.data.image);
       }
-      await update({
-        user: {
-          ...session.user,
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-          email: response.data.email,
-          image: response.data.imageUrl,
-        },
-      });
+
       // Reset password fields
       setFormData((prevData) => ({
         ...prevData,
