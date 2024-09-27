@@ -12,7 +12,6 @@ const Featured = ({ loginInfo }) => {
   const [wishlistproduct, setwishlistproduct] = useState([]);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const router = useRouter();
-  console.log(loginInfo,"GG")
   const config = {
     headers: {
       Authorization: `Bearer ${loginInfo?.user.token}`,
