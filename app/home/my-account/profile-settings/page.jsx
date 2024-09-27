@@ -5,7 +5,7 @@ export default async function Page() {
   
   const session = await auth();
   return (
-    <SessionProvider session={session}>
+    
       <ProfileSettings loginInfo={session} />
     </SessionProvider>
   );

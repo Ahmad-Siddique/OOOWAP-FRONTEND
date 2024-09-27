@@ -16,6 +16,7 @@ export const authConfig = {
       return session;
     },
     async jwt({ token, user }) {
+      
       if (user) {
         token = { ...token, ...user };
       }

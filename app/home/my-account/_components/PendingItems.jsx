@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 
 const PendingItems = ({ loginInfo }) => {
@@ -14,7 +15,6 @@ const PendingItems = ({ loginInfo }) => {
     const fetchPendingTrades = async () => {
       try {
         const token = loginInfo ? loginInfo.user.token : null;
-
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,26 +39,22 @@ const PendingItems = ({ loginInfo }) => {
   const handleAcceptTrade = async (tradeId) => {
     try {
       const token = loginInfo ? loginInfo.user.token : null;
-
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
 
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/trade/accept`,
         { tradeId },
         config
       );
 
-     
       // Remove accepted trade from the pending list
       setPendingTrades(pendingTrades.filter((trade) => trade._id !== tradeId));
-
       toast.success("Trade Accepted");
     } catch (error) {
-      console.log(error.response?.data?.message);
       toast.error(error.response?.data?.message || "Failed to accept trade");
     }
   };
@@ -66,7 +62,6 @@ const PendingItems = ({ loginInfo }) => {
   const handleRejectTrade = async (tradeId) => {
     try {
       const token = loginInfo ? loginInfo.user.token : null;
-
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -81,7 +76,6 @@ const PendingItems = ({ loginInfo }) => {
 
       // Remove rejected trade from the pending list
       setPendingTrades(pendingTrades.filter((trade) => trade._id !== tradeId));
-
       toast.success("Trade Rejected");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to reject trade");
@@ -93,6 +87,18 @@ const PendingItems = ({ loginInfo }) => {
 
   return (
     <div className="container mx-auto py-8 px-4">
+      <ToastContainer
+        position="top-right" // Positioning the toast
+        autoClose={3000} // Duration for toast visibility
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
+        draggable
+        pauseOnFocusLoss
+        theme="light"
+        style={{ zIndex: 9999 }} // Ensure it stays on top
+      />
       <h1 className="text-2xl font-bold mb-6">Pending Trades</h1>
       <div className="space-y-6">
         {pendingTrades.map((trade) => (
@@ -100,7 +106,6 @@ const PendingItems = ({ loginInfo }) => {
             key={trade._id}
             className="bg-white shadow-lg p-4 md:p-6 flex flex-col md:flex-row items-center justify-between rounded-md"
           >
-            {/* Left Section: Two Product Images */}
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full">
               {/* User's Product */}
               <div className="flex items-center w-full md:w-1/2">
@@ -169,7 +174,6 @@ const PendingItems = ({ loginInfo }) => {
               </div>
             </div>
 
-            {/* Right Section: Start Trade and Reject Trade Buttons */}
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
               <button
                 onClick={() => handleAcceptTrade(trade._id)}
@@ -187,7 +191,6 @@ const PendingItems = ({ loginInfo }) => {
           </div>
         ))}
       </div>
-      <ToastContainer />
     </div>
   );
 };
