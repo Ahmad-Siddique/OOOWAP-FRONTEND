@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import Link from "next/link";
 
 const PendingItems = ({ loginInfo }) => {
   const [pendingTrades, setPendingTrades] = useState([]);
@@ -45,17 +46,19 @@ const PendingItems = ({ loginInfo }) => {
         },
       };
 
-      await axios.post(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/trade/accept`,
         { tradeId },
         config
       );
 
+     
       // Remove accepted trade from the pending list
       setPendingTrades(pendingTrades.filter((trade) => trade._id !== tradeId));
 
       toast.success("Trade Accepted");
     } catch (error) {
+      console.log(error.response?.data?.message);
       toast.error(error.response?.data?.message || "Failed to accept trade");
     }
   };
@@ -114,6 +117,21 @@ const PendingItems = ({ loginInfo }) => {
                   <p className="text-gray-600">
                     Price: ${trade.offererProduct.price}
                   </p>
+                  <div className="mt-2 space-y-1">
+                    <Link
+                      href={`/home/shop/${trade.offererProduct?._id}`}
+                      className="text-black hover:underline"
+                    >
+                      View Product
+                    </Link>
+                    <br />
+                    <Link
+                      href={`/home/store/${trade.offererProduct?.userId}`}
+                      className="text-black hover:underline"
+                    >
+                      View Store
+                    </Link>
+                  </div>
                 </div>
               </div>
 
@@ -132,6 +150,21 @@ const PendingItems = ({ loginInfo }) => {
                   <p className="text-gray-600">
                     Price: ${trade.receiverProduct.price}
                   </p>
+                  <div className="mt-2 space-y-1">
+                    <Link
+                      href={`/home/shop/${trade.receiverProduct?._id}`}
+                      className="text-black hover:underline"
+                    >
+                      View Product
+                    </Link>
+                    <br />
+                    <Link
+                      href={`/home/store/${trade.receiverProduct?.userId}`}
+                      className="text-black hover:underline"
+                    >
+                      View Store
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -154,6 +187,7 @@ const PendingItems = ({ loginInfo }) => {
           </div>
         ))}
       </div>
+      <ToastContainer />
     </div>
   );
 };

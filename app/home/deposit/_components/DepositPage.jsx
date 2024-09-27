@@ -22,7 +22,7 @@ const DepositPage = ({ loginInfo }) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${loginInfo?.token}`,
+        Authorization: `Bearer ${loginInfo?.user.token}`,
       },
     };
 

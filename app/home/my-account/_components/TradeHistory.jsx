@@ -111,7 +111,7 @@ const TradeHistory = ({ loginInfo }) => {
                       </Link>
                       <br />
                       <Link
-                        href={`/store/${trade.offererProduct?.storeId}`}
+                        href={`/home/store/${trade.offererProduct?.userId}`}
                         className="text-black hover:underline"
                       >
                         View Store
@@ -152,7 +152,7 @@ const TradeHistory = ({ loginInfo }) => {
                       </Link>
                       <br />
                       <Link
-                        href={`/store/${trade.receiverProduct?.storeId}`}
+                        href={`/home/store/${trade.receiverProduct?.userId}`}
                         className="text-black hover:underline"
                       >
                         View Store

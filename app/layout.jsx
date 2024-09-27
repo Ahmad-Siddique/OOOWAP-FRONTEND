@@ -15,14 +15,17 @@ export const metadata = {
     "OOOWAP is a platform that allows you to exchange your goods for other goods.",
 };
 
-export default function RootLayout({ children }) {
+export default  function RootLayout({ children }) {
+ 
   return (
     <html lang="en">
-      <body className={font.className}>
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      
+        <body className={font.className}>
+          <Header />
+          {children}
+          <Footer />
+        </body>
+      
     </html>
   );
 }

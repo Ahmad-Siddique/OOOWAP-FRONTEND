@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const ProfileSettings = ({ loginInfo }) => {
   // State to manage form data
@@ -31,6 +32,9 @@ const ProfileSettings = ({ loginInfo }) => {
   // State to manage success and error messages
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  // const {session, status, update } = useSession();
+  const { data: session, update } = useSession();
+
 
   // Set Axios configuration with token for authorization
   const config = {
@@ -41,6 +45,7 @@ const ProfileSettings = ({ loginInfo }) => {
 
   // Fetch user data on component mount
   useEffect(() => {
+      // console.log("SESSION DATA", session, status);
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
@@ -213,9 +218,17 @@ const ProfileSettings = ({ loginInfo }) => {
       // dispatch(updateuserprofilecheck({ zz: response.data, gg: loginInfo }));
       // Optionally, update preview image with the new image URL returned from the backend
       if (response.data.imageUrl) {
-        setPreviewImage(response.data.imageUrl);
+        setPreviewImage(response.data.image);
       }
-
+      await update({
+        user: {
+          ...session.user,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          email: response.data.email,
+          image: response.data.imageUrl,
+        },
+      });
       // Reset password fields
       setFormData((prevData) => ({
         ...prevData,
