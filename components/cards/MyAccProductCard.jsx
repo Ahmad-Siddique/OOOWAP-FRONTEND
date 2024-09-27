@@ -11,7 +11,7 @@ export default function MyAccProductCard({
   handleSubmit = () => {},
   formData = {},
   handleInputChange = () => {},
-  categories,
+  
   handleFileChange = () => {},
   handleFeature = () => {},
   imagePreview,
@@ -41,7 +41,7 @@ export default function MyAccProductCard({
             handleSubmit={handleSubmit}
             formData={formData}
             handleInputChange={handleInputChange}
-            categories={categories}
+           
             imagePreview={imagePreview}
             handleFileChange={handleFileChange}
             handleEdit={handleEdit}

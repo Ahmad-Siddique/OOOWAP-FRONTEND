@@ -1,13 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*", // Check if something like this exists
-        destination: "http://localhost:5000/:path*", // If so, ensure it's configured correctly
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/api/:path*", // Check if something like this exists
+  //       destination: "http://localhost:5000/:path*", // If so, ensure it's configured correctly
+  //       destination: "",
+  //     },
+  //   ];
+  // },
   images: {
     domains: [
       "images.unsplash.com",

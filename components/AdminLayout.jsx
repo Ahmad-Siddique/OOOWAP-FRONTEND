@@ -76,18 +76,7 @@ const AdminLayout = ({ children }) => {
             </Link>
           </li>
 
-          <li>
-            <Link
-              href="/home/admin/categories"
-              className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
-                currentPath.includes("/home/admin/categories")
-                  ? "bg-[#D5B868] text-black"
-                  : "hover:bg-[#D5B868] hover:text-black"
-              }`}
-            >
-              <FaExclamationTriangle className="mr-3" /> Categories
-            </Link>
-          </li>
+         
 
           <li>
             <Link

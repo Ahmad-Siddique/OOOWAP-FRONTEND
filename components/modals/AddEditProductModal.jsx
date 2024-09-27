@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogClose,
@@ -17,12 +18,22 @@ export default function AddEditProductModal({
   handleSubmit = () => {},
   formData = {},
   handleInputChange = () => {},
-  categories,
   handleFileChange = () => {},
   handleEdit = () => {},
   imagePreview,
   isSubmitting,
 }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure this component is only rendered client-side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null; // Don't render anything on the server
+  }
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -57,24 +68,6 @@ export default function AddEditProductModal({
               onChange={handleInputChange}
               className="form-input w-full border-b-2 border-gray-300"
             />
-          </div>
-
-          {/* Category field */}
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Category</label>
-            <select
-              name="categories"
-              value={formData.categories}
-              onChange={handleInputChange}
-              className="form-select w-full border-b-2 border-gray-300"
-            >
-              <option value="">Select Category</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
           </div>
 
           {/* Brand field */}
@@ -127,20 +120,6 @@ export default function AddEditProductModal({
               onChange={handleInputChange}
               className="form-input w-full border-b-2 border-gray-300"
             />
-          </div>
-
-          {/* Currency field */}
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Currency</label>
-            <select
-              name="currency"
-              value={formData.currency}
-              onChange={handleInputChange}
-              className="form-select w-full border-b-2 border-gray-300"
-            >
-              <option value="USD">USD</option>
-              {/* Add more currencies as needed */}
-            </select>
           </div>
 
           {/* Size field */}

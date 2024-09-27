@@ -8,12 +8,12 @@ import AddEditProductModal from "@/components/modals/AddEditProductModal";
 import Sidebar from "./Sidebar";
 
 const Products = ({ loginInfo }) => {
-  const [categories, setCategories] = useState([]);
+ 
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    categories: "",
+   
     price: "",
     currency: "USD",
     size: "",
@@ -50,22 +50,7 @@ const Products = ({ loginInfo }) => {
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/category/categories`,
-          config
-        );
-        setCategories(response.data);
-      } catch (error) {
-        toast.error("Error fetching categories!");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCategories();
+    
     fetchProducts();
   }, [loginInfo?.user.token]);
 
@@ -93,7 +78,7 @@ const Products = ({ loginInfo }) => {
     e.preventDefault();
     setIsSubmitting(true); // Lock buttons during submission
     try {
-      console.log("Categories", formData.categories);
+     
       const formDataToSubmit = new FormData();
       Object.keys(formData).forEach((key) => {
         formDataToSubmit.append(key, formData[key]);
@@ -126,7 +111,7 @@ const Products = ({ loginInfo }) => {
     setEditProduct(product);
     setFormData({
       name: product.name,
-      categories: product.categories,
+      
       price: product.price,
       currency: product.currency,
       size: product.size,
@@ -163,7 +148,7 @@ const Products = ({ loginInfo }) => {
           handleSubmit={handleSubmit}
           formData={formData}
           handleInputChange={handleInputChange}
-          categories={categories}
+        
           imagePreview={imagePreview}
           handleFileChange={handleFileChange}
         />
@@ -187,7 +172,7 @@ const Products = ({ loginInfo }) => {
                   handleSubmit={handleSubmit}
                   formData={formData}
                   handleInputChange={handleInputChange}
-                  categories={categories}
+               
                   imagePreview={imagePreview}
                   handleFileChange={handleFileChange}
                   token={loginInfo?.user.token}

@@ -221,6 +221,8 @@ const ProfileSettings = ({ loginInfo }) => {
         setPreviewImage(response.data.image);
       }
 
+      await handleUpdate(response.data);
+
       // Reset password fields
       setFormData((prevData) => ({
         ...prevData,
@@ -234,6 +236,32 @@ const ProfileSettings = ({ loginInfo }) => {
       setIsLoading(false);
     }
   };
+
+
+  const handleUpdate = async (data) => {
+     console.log("INSIDE ZUUZ")
+    
+     try {
+       const response = await fetch("/api/update-session", {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ firstName:data.firstName, lastName:data.lastName, image:data.image }),
+       });
+
+       if (!response.ok) {
+         throw new Error("Failed to update session");
+       }
+
+       const updatedSession = await response.json();
+       console.log("Updated session:", updatedSession);
+       // Optionally, update local state or context if needed
+     } catch (error) {
+       console.error("Error updating session:", error);
+     }
+   };
+
 
   return (
     <div className="container mx-auto py-8 px-4">
