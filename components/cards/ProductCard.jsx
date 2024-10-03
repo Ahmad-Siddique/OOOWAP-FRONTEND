@@ -12,7 +12,7 @@ const ProductCard = ({
   isProductinWishlist = () => {},
 }) => {
   return (
-    <Link href={`/home/shop/${product._id}`} passHref key={product._id}>
+    <Link href={`/home/shop/${product.productNumber}`} passHref key={product.productNumber}>
       <div className="cursor-pointer flex flex-col">
         <div
           className="h-88  relative"

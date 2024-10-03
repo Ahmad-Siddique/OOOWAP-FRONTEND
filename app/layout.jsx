@@ -4,7 +4,7 @@ import { Roboto } from "next/font/google";
 import Header from "@/components/header/Header";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "next-auth/react";
-import { auth } from "@/auth";
+
 
 const font = Roboto({
   subsets: ["latin"],
@@ -18,15 +18,15 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await auth();
+
   return (
     <html lang="en">
       <body className={font.className}>
-        <SessionProvider session={session}>
+      
           <Header />
           {children}
           <Footer />
-        </SessionProvider>
+       
       </body>
     </html>
   );

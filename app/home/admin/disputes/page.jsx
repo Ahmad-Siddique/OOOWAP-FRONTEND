@@ -8,21 +8,22 @@ const DisputePanel = () => {
   const [disputes, setDisputes] = useState([]);
   const [selectedDispute, setSelectedDispute] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
   useEffect(() => {
-    const fetchDisputes = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes`
-        );
-        setDisputes(response.data);
-      } catch (error) {
-        console.error("Error fetching disputes:", error);
-      }
-    };
-
     fetchDisputes();
-  }, []);
+  }, [searchQuery]);
+
+  const fetchDisputes = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes?search=${searchQuery}`
+      );
+      setDisputes(response.data);
+    } catch (error) {
+      console.error("Error fetching disputes:", error);
+    }
+  };
 
   const handleResolve = async (disputeId) => {
     try {
@@ -68,6 +69,13 @@ const DisputePanel = () => {
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">Dispute Management</h2>
+      <input
+        type="text"
+        placeholder="Search by User or Trade ID"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full mb-4 p-2 border rounded-md"
+      />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead>
@@ -131,7 +139,8 @@ const DisputePanel = () => {
             <label className="modal-box relative" htmlFor="">
               <h2 className="text-xl font-bold mb-4">Dispute Details</h2>
               <p>
-                <strong>Trade ID:</strong> {selectedDispute.trade?._id.toString()}
+                <strong>Trade ID:</strong>{" "}
+                {selectedDispute.trade?._id.toString()}
               </p>
               <p>
                 <strong>User:</strong> {selectedDispute.user?.firstName}

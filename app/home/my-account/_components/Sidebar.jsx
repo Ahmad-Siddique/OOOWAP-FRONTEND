@@ -46,7 +46,7 @@ const Sidebar = ({ loginInfo }) => {
             {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
               "User"}
           </h1>
-          <span className="text-sm mb-10">March 26th, 2023</span>
+          {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
 
         {/* Metrics */}
@@ -89,7 +89,7 @@ const Sidebar = ({ loginInfo }) => {
             {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
               "User"}
           </h1>
-          <span className="text-sm mb-10">March 26th, 2023</span>
+          {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
 
         {/* Metrics */}
@@ -132,7 +132,7 @@ const Sidebar = ({ loginInfo }) => {
             {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
               "User"}
           </h1>
-          <span className="text-sm mb-10">March 26th, 2023</span>
+          {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
 
         {/* Metrics */}
@@ -175,7 +175,7 @@ const Sidebar = ({ loginInfo }) => {
             {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
               "User"}
           </h1>
-          <span className="text-sm mb-10">March 26th, 2023</span>
+          {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
 
         {/* Metrics */}
@@ -218,7 +218,7 @@ const Sidebar = ({ loginInfo }) => {
             {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
               "User"}
           </h1>
-          <span className="text-sm mb-10">March 26th, 2023</span>
+          {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
 
         {/* Metrics */}

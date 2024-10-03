@@ -20,33 +20,51 @@ const PaymentStatus = ({ loginInfo }) => {
     setValue(valueParam);
 
     // Making API call to fetch user info
+    // Making API call to fetch user info
     const fetchUserData = async () => {
       try {
-        const token = loginInfo ? loginInfo.user.token : null;
+        // Fetching ooowap-user from localStorage
+        const localStorageUser = JSON.parse(
+          localStorage.getItem("ooowap-user")
+        );
+
+        // Check if loginInfo or token exists
+        const token = localStorageUser ? localStorageUser.token : null;
+
+        if (!token) {
+          console.error("Token not found in localStorage.");
+          return;
+        }
 
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         };
+
+        // Fetch user data from API
         const response = await axios.get(
           process.env.NEXT_PUBLIC_API_URL + "/auth/getMe",
           config
         );
 
-        // Dispatching both the API response and loginInfo to update user profile
-        // dispatch(
-        //   updateuserprofilecheck({
-        //     zz: {
-        //       firstName: response.data.data.firstName,
-        //       lastName: response.data.data.lastName,
-        //       balance: response.data.data.balance,
-        //       email: response.data.data.email,
-        //       image: response.data.data.photoURL,
-        //     }, // API response data
-        //     gg: loginInfo, // loginInfo from Redux
-        //   })
-        // );
+        const apiUserData = response.data.data;
+
+        // Compare balance in localStorage and API response
+        if (localStorageUser.balance !== apiUserData.balance) {
+          // Update localStorage with the new balance and other user data
+          localStorageUser.firstName = apiUserData.firstName;
+          localStorageUser.lastName = apiUserData.lastName;
+          localStorageUser.balance = apiUserData.balance;
+          localStorageUser.email = apiUserData.email;
+          localStorageUser.picture = apiUserData.photoURL;
+
+          // Store updated user data in localStorage
+          localStorage.setItem("ooowap-user", JSON.stringify(localStorageUser));
+
+          // Reload the page to reflect updated user data
+          window.location.reload();
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

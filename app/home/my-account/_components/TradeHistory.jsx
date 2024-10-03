@@ -45,7 +45,7 @@ const TradeHistory = ({ loginInfo }) => {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <svg
-          className="animate-spin h-8 w-8 text-yellow-500"
+          className="animate-spin h-8 w-8 text-[#F5BA41]"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

@@ -1,65 +1,57 @@
-import { StarFilledIcon } from "@radix-ui/react-icons";
-import FeatureProductModal from "@/components/modals/FeatureProductModal";
-import DeleteProductModal from "@/components/modals/DeleteProductModal";
-import AddEditProductModal from "@/components/modals/AddEditProductModal";
-import { ChevronRightIcon } from "lucide-react";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 
 export default function MyAccProductCard({
   product,
   fetchProducts = () => {},
-  editProduct,
-  handleSubmit = () => {},
-  formData = {},
-  handleInputChange = () => {},
-  
-  handleFileChange = () => {},
-  handleFeature = () => {},
-  imagePreview,
-  isSubmitting,
-  handleEdit = () => {},
-  token,
 }) {
+  const router = useRouter();
+
+  const handleEditProduct = () => {
+    // Redirect to the edit product page
+    router.push(`/home/my-account/products/edit/${product._id}`); // Update with the correct path for your edit product page
+  };
+
+  const handleDeleteProduct = async () => {
+    // Implement your delete logic here, and then call fetchProducts to refresh the product list
+    // Example:
+    // try {
+    //   await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/product/products/${product._id}`, config);
+    //   fetchProducts();
+    //   toast.success("Product deleted successfully!");
+    // } catch (error) {
+    //   toast.error("Error deleting product!");
+    // }
+  };
+
   return (
     <div
       key={product._id}
-      className="bg-white p-4 w-full flex flex-col md:flex-row items-center"
+      className="bg-white p-4 w-full flex flex-col md:flex-row items-center shadow-lg rounded-md"
     >
       <img
         src={product.imageUrl}
         alt={product.name}
-        className="w-full md:w-32 h-32 object-cover mb-4 md:mb-0 md:mr-4"
+        className="w-full md:w-32 h-32 object-cover mb-4 md:mb-0 md:mr-4 rounded-md"
       />
       <div className="flex flex-col h-full">
         <h2 className="text-xl font-semibold">
-          {product.name} ({product.price})
+          {product.name} ({product.price} {product.currency})
         </h2>
         <p className="text-gray-600">{product.tradesCount} Trades</p>
-        <div className="flex items-center gap-1">
-          <AddEditProductModal
-            product={product}
-            editProduct={true}
-            handleSubmit={handleSubmit}
-            formData={formData}
-            handleInputChange={handleInputChange}
-           
-            imagePreview={imagePreview}
-            handleFileChange={handleFileChange}
-            handleEdit={handleEdit}
-          />
+        <div className="flex items-center gap-2 mt-2">
           <button
-            onClick={() => handleFeature(product._id)}
-            className="w-fit flex items-center gap-1 bg-green-500 group text-white py-2 font-light pl-5 pr-4"
+            onClick={handleEditProduct}
+            className="bg-[#F5BA41] text-white py-2 px-4 rounded hover:bg-yellow-600 transition duration-150"
           >
-            Feature
-            <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
+            Edit
           </button>
-          <DeleteProductModal
-            token={token}
-            product={product}
-            fetchProducts={fetchProducts}
-          />
+          <button
+            onClick={handleDeleteProduct}
+            className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-150"
+          >
+            Delete
+          </button>
         </div>
-       
       </div>
     </div>
   );

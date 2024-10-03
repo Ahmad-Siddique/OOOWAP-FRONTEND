@@ -27,7 +27,7 @@ export default function DeleteProductModal({
         },
       };
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/products/${productId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/${productId}`,
         config
       );
       fetchProducts();

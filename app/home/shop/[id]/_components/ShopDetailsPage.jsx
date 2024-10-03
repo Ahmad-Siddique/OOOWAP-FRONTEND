@@ -60,12 +60,12 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     }
   };
 
-  const fetchSimilarProducts = async () => {
+  const fetchSimilarProducts = async (id) => {
     setIsLoading(true);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/product/productpageproducts`,
-        { id: params.id, userId: loginInfo?.user.id },
+        { id:id, userId: loginInfo?.user.id },
         
       );
       setSimilarProducts(response.data.filteredProducts);
@@ -108,14 +108,47 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     }
   };
 
+
+
+  const productVisit = async () => {
+   
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL + "/product/" + product?._id + "/visit",
+        
+        { userId: loginInfo?.user.id },
+        config
+      );
+      toast.success("Item added to wishlist!");
+      // setNotification({
+      //   show: true,
+      //   message: "Item added to wishlist!",
+      //   type: "success",
+      // });
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+      // setNotification({
+      //   show: true,
+      //   message: "Error adding item to wishlist. Please try again.",
+      //   type: "error",
+      // });
+    } finally {
+      setIsLoading(false);
+      // setTimeout(() => {
+      //   setNotification({ show: false, message: "", type: "" });
+      // }, 3000);
+    }
+  };
+
   useEffect(() => {
     const id = params.id;
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/${id}`, config)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/productnumber/${id}`, config)
       .then((response) => {
         if (response.data) {
           setProduct(response.data);
-          fetchSimilarProducts();
+          fetchSimilarProducts(response.data._id);
         } else {
           setError(true);
         }
@@ -126,6 +159,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         setError(true);
         setIsLoading(false);
       });
+    productVisit();
     if (loginInfo?.user.token) {
       fetchUserProducts();
     }
@@ -143,7 +177,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
           "Login to make trade offer"
       );
     }
-    const id = params.id;
+    const id = product?._id;
 
     if (!startDate || !endDate || !selectedUserProduct) {
       setTradeMessage(
@@ -201,7 +235,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <svg
-          className="animate-spin h-8 w-8 text-yellow-500"
+          className="animate-spin h-8 w-8 text-[#F5BA41]"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -385,8 +419,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
               </button>
               <button
                 onClick={(e) => {
-                  
-                  addToWishList(product._id)
+                  addToWishList(product._id);
                 }}
                 className="w-fit uppercase flex rounded-full  items-center gap-1 bg-black group text-white py-4 pl-5 pr-4"
               >
@@ -415,25 +448,36 @@ const ShopDetailPage = ({ params, loginInfo }) => {
                     Description
                   </AccordionTrigger>
                   <AccordionContent className="ml-4">
-                    Yes. It adheres to the WAI-ARIA design pattern.
+                    {product && product.description}
                   </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-2">
-                  <AccordionTrigger className="text-base ml-4 font-normal">
-                    Size
-                  </AccordionTrigger>
-                  <AccordionContent className="ml-4">
-                    Yes. It comes with default styles that matches the other
-                    components&apos; aesthetic.
-                  </AccordionContent>
-                </AccordionItem>
+                {product && (product.width || product.height) && (
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger className="text-base ml-4 font-normal">
+                      Size
+                    </AccordionTrigger>
+                    <AccordionContent className="ml-4">
+                      {product.width && (
+                        <>
+                          Width: {product.width} cm
+                          <br />
+                        </>
+                      )}
+                      {product.height && (
+                        <>
+                          Height: {product.height} cm
+                          <br />
+                        </>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
                 <AccordionItem value="item-3">
                   <AccordionTrigger className="text-base ml-4 font-normal">
                     Condition
                   </AccordionTrigger>
                   <AccordionContent className="ml-4">
-                    Yes. It&apos;s animated by default, but you can disable it
-                    if you prefer.
+                    {product && product.condition}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

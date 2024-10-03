@@ -24,6 +24,7 @@ export default function AddEditProductModal({
   isSubmitting,
 }) {
   const [isMounted, setIsMounted] = useState(false);
+  const [descriptionLength, setDescriptionLength] = useState(0);
 
   // Ensure this component is only rendered client-side
   useEffect(() => {
@@ -33,6 +34,14 @@ export default function AddEditProductModal({
   if (!isMounted) {
     return null; // Don't render anything on the server
   }
+
+  const handleDescriptionChange = (e) => {
+    const value = e.target.value;
+    if (value.length <= 200) {
+      setDescriptionLength(value.length);
+      handleInputChange(e);
+    }
+  };
 
   return (
     <Dialog>
@@ -47,7 +56,7 @@ export default function AddEditProductModal({
           <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
         </button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-3xl mx-auto" style={{ height: "600px" }}>
         <DialogHeader>
           <DialogTitle>{editProduct ? "Edit" : "Add"} Product</DialogTitle>
           <DialogDescription>
@@ -66,7 +75,8 @@ export default function AddEditProductModal({
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="form-input w-full border-b-2 border-gray-300"
+              className="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500 transition duration-150"
+              required
             />
           </div>
 
@@ -77,7 +87,8 @@ export default function AddEditProductModal({
               name="brand"
               value={formData.brand}
               onChange={handleInputChange}
-              className="form-select w-full border-b-2 border-gray-300"
+              className="form-select w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500 transition duration-150"
+              required
             >
               <option value="">Select Brand</option>
               {[
@@ -98,40 +109,60 @@ export default function AddEditProductModal({
                 </option>
               ))}
             </select>
-            {formData.brand === "Other" && (
-              <input
-                type="text"
-                name="customBrand"
-                value={formData.customBrand}
-                onChange={handleInputChange}
-                placeholder="Enter brand name"
-                className="form-input w-full border-b-2 border-gray-300 mt-2"
-              />
-            )}
           </div>
 
           {/* Price field */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Price</label>
             <input
-              type="number"
+              type="text" // Change to text to remove controls
               name="price"
               value={formData.price}
-              onChange={handleInputChange}
-              className="form-input w-full border-b-2 border-gray-300"
+              onChange={(e) => {
+                // Ensure only numeric input
+                if (/^\d*\.?\d*$/.test(e.target.value)) {
+                  handleInputChange(e);
+                }
+              }}
+              className="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500 transition duration-150"
+              required
             />
           </div>
 
-          {/* Size field */}
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Size</label>
-            <input
-              type="text"
-              name="size"
-              value={formData.size}
-              onChange={handleInputChange}
-              className="form-input w-full border-b-2 border-gray-300"
-            />
+          {/* Width and Height fields */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-gray-700 mb-2">Width</label>
+              <input
+                type="text" // Change to text to remove controls
+                name="width"
+                value={formData.width}
+                onChange={(e) => {
+                  // Ensure only numeric input
+                  if (/^\d*\.?\d*$/.test(e.target.value)) {
+                    handleInputChange(e);
+                  }
+                }}
+                className="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500 transition duration-150"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 mb-2">Height</label>
+              <input
+                type="text" // Change to text to remove controls
+                name="height"
+                value={formData.height}
+                onChange={(e) => {
+                  // Ensure only numeric input
+                  if (/^\d*\.?\d*$/.test(e.target.value)) {
+                    handleInputChange(e);
+                  }
+                }}
+                className="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500 transition duration-150"
+                required
+              />
+            </div>
           </div>
 
           {/* Description field */}
@@ -140,25 +171,34 @@ export default function AddEditProductModal({
             <textarea
               name="description"
               value={formData.description}
-              onChange={handleInputChange}
-              className="form-textarea w-full border-b-2 border-gray-300"
+              onChange={handleDescriptionChange}
+              className="form-textarea w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500 transition duration-150"
               rows="4"
+              maxLength={200}
+              required
             ></textarea>
+            <div className="text-gray-600 text-sm mt-1">
+              {descriptionLength}/200
+            </div>
           </div>
 
           {/* Condition field */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Condition</label>
-            <input
-              type="text"
+            <select
               name="condition"
               value={formData.condition}
               onChange={handleInputChange}
-              className="form-input w-full border-b-2 border-gray-300"
-            />
+              className="form-select w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-gray-500 transition duration-150"
+              required
+            >
+              <option value="">Select Condition</option>
+              <option value="New">New</option>
+              <option value="Old">Old</option>
+              {/* Add more options as needed */}
+            </select>
           </div>
 
-          {/* Image 1 */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Image 1</label>
             <input
@@ -230,7 +270,6 @@ export default function AddEditProductModal({
                 disabled={isSubmitting}
               >
                 Cancel
-                <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
               </button>
             </DialogClose>
           </div>

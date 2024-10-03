@@ -33,7 +33,7 @@ export default function WishlistTable({ wishlist, handleRemove = () => {} }) {
               <td className="">
                 <div className="flex items-center justify-center w-full">
                   <button
-                    onClick={() => router.push(`/home/shop/${product._id}`)}
+                    onClick={() => router.push(`/home/shop/${product.productNumber}`)}
                     className="w-fit flex items-center gap-1 bg-black group text-white py-2 px-5 text-nowrap font-light pl-5 pr-4"
                   >
                     Trade

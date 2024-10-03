@@ -91,7 +91,7 @@ const ResetPasswordPage = ({ params }) => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-black-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none"
+            className="w-full py-2 px-4 bg-black-600 text-white font-semibold rounded-md hover:bg-[#F5BA41] focus:outline-none"
           >
             Reset Password
           </button>

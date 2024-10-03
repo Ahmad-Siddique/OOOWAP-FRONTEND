@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
+import Link from "next/link";
 
 const AcceptedTrades = ({ loginInfo }) => {
   const [trades, setTrades] = useState([]);
@@ -136,6 +137,21 @@ const AcceptedTrades = ({ loginInfo }) => {
                       <p className="text-gray-600">
                         Price: ${trade.offererProduct.price}
                       </p>
+                      <div className="mt-2 space-y-1">
+                        <Link
+                          href={`/home/shop/${trade.offererProduct?.productNumber}`}
+                          className="text-black hover:underline"
+                        >
+                          View Product
+                        </Link>
+                        <br />
+                        <Link
+                          href={`/home/store/${trade.offererProduct?.userId}`}
+                          className="text-black hover:underline"
+                        >
+                          View Store
+                        </Link>
+                      </div>
                     </div>
                   </div>
 
@@ -157,6 +173,21 @@ const AcceptedTrades = ({ loginInfo }) => {
                       <p className="text-gray-600">
                         Price: ${trade.receiverProduct.price}
                       </p>
+                      <div className="mt-2 space-y-1">
+                        <Link
+                          href={`/home/shop/${trade.receiverProduct?.productNumber}`}
+                          className="text-black hover:underline"
+                        >
+                          View Product
+                        </Link>
+                        <br />
+                        <Link
+                          href={`/home/store/${trade.receiverProduct?.userId}`}
+                          className="text-black hover:underline"
+                        >
+                          View Store
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -168,7 +199,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                   {isCompletedOrExpired && showReviewButton && (
                     <button
                       onClick={() => handleReviewClick(trade)}
-                      className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition w-full md:w-auto"
+                      className="bg-[#F5BA41] text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition w-full md:w-auto"
                     >
                       Leave Review
                     </button>
@@ -195,7 +226,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                   key={star}
                   size={30}
                   className={`cursor-pointer ${
-                    reviewStars >= star ? "text-yellow-500" : "text-gray-400"
+                    reviewStars >= star ? "text-[#F5BA41]" : "text-gray-400"
                   }`}
                   onClick={() => setReviewStars(star)}
                 />
@@ -203,7 +234,7 @@ const AcceptedTrades = ({ loginInfo }) => {
             </div>
             <button
               onClick={submitReview}
-              className="bg-yellow-400 text-white py-2 px-4 rounded-lg hover:bg-yellow-500 transition w-full"
+              className="bg-[#F5BA41] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition w-full"
             >
               Submit Review
             </button>

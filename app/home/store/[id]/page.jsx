@@ -12,7 +12,7 @@ const Page = async ({ params }) => {
   const session = await auth();
   
   const products = await userproducts(params.id);
- 
+  console.log(products)
   return (
     <UserStore
       loginInfo={session}

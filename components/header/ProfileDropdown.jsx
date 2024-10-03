@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +11,12 @@ import {
 import Link from "next/link";
 
 const ProfileDropdown = ({ loginInfo, logOut }) => {
+
+  const [userdata, setuserdata] = useState()
+  useEffect(() => {
+    setuserdata(JSON.parse(localStorage.getItem("ooowap-user")))
+  },[])
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="w-10 h-10">
@@ -25,7 +32,7 @@ const ProfileDropdown = ({ loginInfo, logOut }) => {
             <p className="text-xs text-black/80 font-normal">
               Balance:{" "}
               <span className="text-black text-sm font-bold">
-                ${loginInfo.user.balance?.toFixed(2)}
+                ${userdata && userdata?.balance?.toFixed(2)}
               </span>
             </p>
           </div>

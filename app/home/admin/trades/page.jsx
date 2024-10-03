@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Ensure this is included for client-side rendering in Next.js
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTrash, FaEye } from "react-icons/fa";
@@ -8,12 +8,14 @@ const TradePanel = () => {
   const [trades, setTrades] = useState([]);
   const [selectedTrade, setSelectedTrade] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState(""); // State for search input
 
   useEffect(() => {
     const fetchTrades = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/admin/trades`
+          `${process.env.NEXT_PUBLIC_API_URL}/admin/trades`,
+          { params: { search } } // Pass the search term as a parameter
         );
         setTrades(response.data);
       } catch (error) {
@@ -22,7 +24,7 @@ const TradePanel = () => {
     };
 
     fetchTrades();
-  }, []);
+  }, [search]); // Refetch trades when search input changes
 
   const handleDelete = async (tradeId) => {
     try {
@@ -48,6 +50,13 @@ const TradePanel = () => {
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">Trade Management</h2>
+      <input
+        type="text"
+        placeholder="Search trades..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)} // Update search state on input change
+        className="mb-4 p-2 border rounded"
+      />
       <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead>
           <tr className="bg-[#C79B44] text-white">
@@ -78,13 +87,13 @@ const TradePanel = () => {
               <td className="text-center justify-center py-2 px-4 flex space-x-2">
                 <button
                   onClick={() => openModal(trade)}
-                  className="btn bg-[#D5B868] flex items-center space-x-1"
+                  className="flex items-center space-x-1 px-3 py-2 text-sm font-semibold text-white bg-[#D5B868] rounded-lg hover:bg-[#b79355] transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b79355]"
                 >
                   <FaEye /> <span>View</span>
                 </button>
                 <button
                   onClick={() => handleDelete(trade._id)}
-                  className="btn bg-[red] flex items-center space-x-1"
+                  className="flex items-center space-x-1 px-3 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-400 transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
                 >
                   <FaTrash /> <span>Delete</span>
                 </button>
@@ -95,53 +104,55 @@ const TradePanel = () => {
       </table>
 
       {/* Modal for Trade Details */}
-      {selectedTrade && (
-        <div>
-          <input
-            type="checkbox"
-            id="trade-modal"
-            className="modal-toggle"
-            checked={isModalOpen}
-            onChange={() => setIsModalOpen(!isModalOpen)}
-          />
-          <label htmlFor="trade-modal" className="modal cursor-pointer">
-            <label className="modal-box relative" htmlFor="">
-              <h2 className="text-xl font-bold mb-4">Trade Details</h2>
-              <p>
-                <strong>Offerer:</strong> {selectedTrade.offerer?.firstName}
-              </p>
-              <p>
-                <strong>Receiver:</strong> {selectedTrade.receiver?.firstName}
-              </p>
-              <p>
-                <strong>Offerer Product:</strong>{" "}
-                {selectedTrade.offererProduct?.name}
-              </p>
-              <p>
-                <strong>Receiver Product:</strong>{" "}
-                {selectedTrade.receiverProduct?.name}
-              </p>
-              <p>
-                <strong>Shipping Fee:</strong> ${selectedTrade.shippingFee}
-              </p>
-              <p>
-                <strong>Status:</strong> {selectedTrade.status}
-              </p>
-              <p>
-                <strong>Start Date:</strong>{" "}
-                {new Date(selectedTrade.startDate).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>End Date:</strong>{" "}
-                {new Date(selectedTrade.endDate).toLocaleDateString()}
-              </p>
-              <div className="flex justify-end mt-4">
-                <label htmlFor="trade-modal" className="btn btn-secondary">
-                  Close
-                </label>
-              </div>
-            </label>
-          </label>
+      {selectedTrade && isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3 p-6 relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+              Trade Details
+            </h2>
+            <p>
+              <strong>Offerer:</strong> {selectedTrade.offerer?.firstName}
+            </p>
+            <p>
+              <strong>Receiver:</strong> {selectedTrade.receiver?.firstName}
+            </p>
+            <p>
+              <strong>Offerer Product:</strong>{" "}
+              {selectedTrade.offererProduct?.name}
+            </p>
+            <p>
+              <strong>Receiver Product:</strong>{" "}
+              {selectedTrade.receiverProduct?.name}
+            </p>
+            <p>
+              <strong>Shipping Fee:</strong> ${selectedTrade.shippingFee}
+            </p>
+            <p>
+              <strong>Status:</strong> {selectedTrade.status}
+            </p>
+            <p>
+              <strong>Start Date:</strong>{" "}
+              {new Date(selectedTrade.startDate).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>End Date:</strong>{" "}
+              {new Date(selectedTrade.endDate).toLocaleDateString()}
+            </p>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={closeModal}
+                className="px-6 py-2 bg-[#D5B868] text-white rounded-lg shadow-md hover:bg-[#b79355] transition-all duration-300"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </AdminLayout>

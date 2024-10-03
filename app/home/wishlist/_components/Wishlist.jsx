@@ -70,7 +70,7 @@ const Wishlist = ({ loginInfo }) => {
   return (
     <div className="flex justify-center w-full bg-gray-50 h-full min-h-screen">
       <div className="text-black py-12 px-6 w-full h-full flex flex-col gap-10 max-w-7xl">
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <span className="text-sm">Share on</span>
           <FaFacebookSquare className="text-2xl text-blue-600 cursor-pointer" />
           <MailIcon className="text-2xl text-blue-600 cursor-pointer" />
@@ -81,7 +81,7 @@ const Wishlist = ({ loginInfo }) => {
             height={30}
             className="cursor-pointer"
           />
-        </div>
+        </div> */}
 
         {wishlist.length === 0 ? (
           <div className="text-center text-lg text-gray-600">

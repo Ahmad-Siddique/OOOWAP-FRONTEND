@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+
 
 const ProfileSettings = ({ loginInfo }) => {
-  const { data: session } = useSession();
+  
 
-  console.log("SESSION123", session);
+
   // State to manage form data
   const [formData, setFormData] = useState({
     firstName: "",
@@ -220,7 +220,17 @@ const ProfileSettings = ({ loginInfo }) => {
       if (response.data.imageUrl) {
         setPreviewImage(response.data.image);
       }
+     const userData = JSON.parse(localStorage.getItem("ooowap-user"));
+     if (userData) {
+       // Update user data with new values
+       userData.firstName = response.data.firstName || firstName;
+       userData.lastName = response.data.lastName || lastName;
+       userData.email = response.data.email || email;
+       userData.picture = response.data.image || formData.image;
 
+       // Save the updated user data back to localStorage
+       localStorage.setItem("ooowap-user", JSON.stringify(userData));
+     }
       await handleUpdate(response.data);
 
       // Reset password fields
@@ -230,6 +240,9 @@ const ProfileSettings = ({ loginInfo }) => {
         newpassword: "",
         confirmPassword: "",
       }));
+
+      window.location.reload();
+
     } catch (error) {
       console.error("Error updating profile:", error);
       // setErrorMessage("Failed to update profile. Please try again.");
@@ -281,7 +294,7 @@ const ProfileSettings = ({ loginInfo }) => {
       {isLoading ? (
         <div className="flex justify-center items-center">
           <svg
-            className="animate-spin h-8 w-8 text-yellow-500"
+            className="animate-spin h-8 w-8 text-[#F5BA41]"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

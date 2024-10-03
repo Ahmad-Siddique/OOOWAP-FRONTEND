@@ -10,13 +10,25 @@ import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const LoginPage = ({loginInfo}) => {
+const LoginPage = ({ loginInfo }) => {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
   const { pending } = useFormStatus();
-  const router = useRouter()
+  const router = useRouter();
+
   useEffect(() => {
-    if (loginInfo?.user.id) {
-      router.push("/home");
+    if (typeof window !== "undefined" && loginInfo?.user?.id) {
+      // Now safe to access localStorage
+      console.log("User info: ", loginInfo); // Log to check if loginInfo is passed correctly
+
+      try {
+        window.localStorage.setItem(
+          "ooowap-user",
+          JSON.stringify(loginInfo.user)
+        ); // Store loginInfo in localStorage
+        router.push("/home"); // Redirect after saving to localStorage
+      } catch (error) {
+        console.error("Error saving user data to localStorage:", error);
+      }
     }
   }, [loginInfo, router]);
 
@@ -78,7 +90,7 @@ const LoginPage = ({loginInfo}) => {
       {/* Right Side */}
       <div className="relative w-full h-full">
         <Image
-          src="https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src="/images/ooowap-login.webp"
           alt="Login background"
           layout="fill"
           objectFit="cover"

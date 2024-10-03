@@ -15,9 +15,7 @@ async function getUser(email, password) {
   }
 }
 
-
 export const { auth, signIn, signOut, update } = NextAuth({
-
   ...authConfig,
   providers: [
     Credentials({
@@ -25,10 +23,13 @@ export const { auth, signIn, signOut, update } = NextAuth({
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
+
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const userDB = await getUser(email, password);
+
           if (!userDB.success) return null;
+
           const user = {
             id: userDB.user.id,
             firstName: userDB.user.firstName,
@@ -39,10 +40,19 @@ export const { auth, signIn, signOut, update } = NextAuth({
             balance: userDB.user.balance,
             token: userDB.token,
           };
+
+          // Save user data in localStorage
+          if (typeof window !== "undefined") {
+            localStorage.setItem("ooowap-user", JSON.stringify(user));
+          }
+
           return user;
         }
+
         return null;
       },
     }),
   ],
+ 
+  
 });

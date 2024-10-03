@@ -8,7 +8,7 @@ export const authConfig = {
       const isOnDashboard = nextUrl.pathname.startsWith("/home");
       console.log("PATH", nextUrl.pathname);
       if (isLoggedIn && !isOnDashboard) {
-        return Response.redirect(new URL("/home", nextUrl));
+        // return Response.redirect(new URL("/home", nextUrl));
       }
       return true;
     },

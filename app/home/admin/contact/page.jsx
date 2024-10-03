@@ -1,38 +1,41 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaEye, FaTrash } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import AdminLayout from "@/components/AdminLayout"; // Adjust the path if necessary
 
 const ContactPanel = () => {
   const [contacts, setContacts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedContact, setSelectedContact] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/contact`
-        );
-        setContacts(response.data);
-      } catch (error) {
-        console.error("Error fetching contacts:", error);
-      }
-    };
+  // Fetch contacts from backend
+  const fetchContacts = async (query = "") => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/contact`,
+        {
+          params: {
+            search: query,
+          },
+        }
+      );
+      setContacts(response.data);
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchContacts();
   }, []);
 
-  const handleDelete = async (contactId) => {
-    try {
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/contact/${contactId}`
-      );
-      setContacts(contacts.filter((contact) => contact._id !== contactId));
-    } catch (error) {
-      console.error("Error deleting contact:", error);
-    }
+  // Trigger search when the query changes
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    fetchContacts(query); // Send the search query to the backend
   };
 
   const openModal = (contact) => {
@@ -48,6 +51,18 @@ const ContactPanel = () => {
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">Contact Us Management</h2>
+
+      {/* Search field */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search contacts by name"
+          className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D5B868]"
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+      </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead>
@@ -73,16 +88,10 @@ const ContactPanel = () => {
                 <td className="text-center justify-center py-2 px-4 flex space-x-2">
                   <button
                     onClick={() => openModal(contact)}
-                    className="btn bg-[#D5B868] flex items-center space-x-1"
+                    className="flex items-center space-x-1 px-3 py-2 text-sm font-semibold text-white bg-[#D5B868] rounded-lg hover:bg-[#b79355] transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b79355]"
                   >
-                    <FaEye /> <span>View</span>
+                    <FaEye className="mr-1" /> <span>View</span>
                   </button>
-                  {/* <button
-                    onClick={() => handleDelete(contact._id)}
-                    className="btn btn-danger flex items-center space-x-1"
-                  >
-                    <FaTrash /> <span>Delete</span>
-                  </button> */}
                 </td>
               </tr>
             ))}
@@ -92,39 +101,43 @@ const ContactPanel = () => {
 
       {/* Modal for Contact Details */}
       {selectedContact && isModalOpen && (
-        <div>
-          <input
-            type="checkbox"
-            id="contact-modal"
-            className="modal-toggle"
-            checked={isModalOpen}
-            onChange={() => setIsModalOpen(!isModalOpen)}
-          />
-          <label htmlFor="contact-modal" className="modal cursor-pointer">
-            <label className="modal-box relative" htmlFor="">
-              <h2 className="text-xl font-bold mb-4">Contact Details</h2>
-              <p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3 p-6 relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+              Contact Details
+            </h2>
+            <div className="mb-4">
+              <p className="text-gray-700">
                 <strong>Name:</strong> {selectedContact.name}
               </p>
-              <p>
+              <p className="text-gray-700">
                 <strong>Email:</strong> {selectedContact.email}
               </p>
-              <p>
+              <p className="text-gray-700 mt-2">
                 <strong>Message:</strong>
                 <br />
                 {selectedContact.message}
               </p>
-              <p>
+              <p className="text-gray-500 mt-2">
                 <strong>Created At:</strong>{" "}
                 {new Date(selectedContact.createdAt).toLocaleDateString()}
               </p>
-              <div className="flex justify-end mt-4">
-                <label htmlFor="contact-modal" className="btn btn-secondary">
-                  Close
-                </label>
-              </div>
-            </label>
-          </label>
+            </div>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={closeModal}
+                className="px-6 py-2 bg-[#D5B868] text-white rounded-lg shadow-md hover:bg-[#b79355] transition-all duration-300"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </AdminLayout>

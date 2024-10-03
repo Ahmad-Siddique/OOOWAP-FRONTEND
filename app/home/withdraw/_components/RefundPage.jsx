@@ -29,7 +29,7 @@ const RefundPage = ({ loginInfo }) => {
 
       if (response.data.success) {
         toast.success("Refund request successful!");
-        await fetchUpdatedUserData(token);
+        await fetchUpdatedUserData(token); // Fetch updated user data
       } else {
         throw new Error("Failed to process refund");
       }
@@ -53,19 +53,24 @@ const RefundPage = ({ loginInfo }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/auth/getMe`,
         config
       );
-        
-      // dispatch(
-      //   updateuserprofilecheck({
-      //     zz: {
-      //       firstName: response.data.data.firstName,
-      //       lastName: response.data.data.lastName,
-      //       balance: response.data.data.balance,
-      //       email: response.data.data.email,
-      //       image: response.data.data.photoURL,
-      //     },
-      //     gg: loginInfo,
-      //   })
-      // );
+
+      const apiUserData = response.data.data;
+      const localStorageUser = JSON.parse(localStorage.getItem("ooowap-user"));
+
+      // Compare balance and update localStorage if different
+      if (localStorageUser.balance !== apiUserData.balance) {
+        localStorageUser.firstName = apiUserData.firstName;
+        localStorageUser.lastName = apiUserData.lastName;
+        localStorageUser.balance = apiUserData.balance;
+        localStorageUser.email = apiUserData.email;
+        localStorageUser.picture = apiUserData.photoURL;
+
+        // Store updated user data in localStorage
+        localStorage.setItem("ooowap-user", JSON.stringify(localStorageUser));
+
+        // Reload the page to reflect the updated user data
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -99,7 +104,7 @@ const RefundPage = ({ loginInfo }) => {
           <button
             type="submit"
             className={`w-full py-3 px-4 bg-[#D5B868] text-white font-semibold rounded-md ${
-              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-yellow-500"
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#F5BA41]"
             } transition duration-150`}
             disabled={loading}
           >

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import LoadingIcon from "./LoadingIcon"; // Adjust the path if necessary
 
-const Dispute = () => {
+const Dispute = ({loginInfo}) => {
   const [trades, setTrades] = useState([]);
   const [disputes, setDisputes] = useState([]);
   const [selectedTrade, setSelectedTrade] = useState("");
@@ -14,15 +14,23 @@ const Dispute = () => {
   const [success, setSuccess] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${loginInfo?.user.token}`,
+    },
+  };
+
   useEffect(() => {
     fetchTradesAndDisputes();
   }, []);
 
+
+
   const fetchTradesAndDisputes = async () => {
     setLoading(true);
     try {
-      const token = JSON.parse(localStorage.getItem("loginInfo")).token;
-      const config = { headers: { Authorization: `Bearer ${token}` } };
+      
+     
 
       // Fetch trades
       const { data: tradeData } = await axios.get(
@@ -38,7 +46,8 @@ const Dispute = () => {
       );
       setDisputes(disputeData.data);
     } catch (error) {
-      setError("Failed to load data");
+      console.log("Failed to Dispute Trade data");
+      // setError("Failed to load data");
     } finally {
       setLoading(false);
     }
@@ -104,7 +113,7 @@ const Dispute = () => {
       {/* Add Dispute Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-yellow-500 text-white py-2 px-4 mt-6 rounded-md"
+        className="bg-[#F5BA41] text-white py-2 px-4 mt-6 rounded-md"
       >
         Add Dispute
       </button>
@@ -170,7 +179,7 @@ const Dispute = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-yellow-500 text-white py-2 px-4 rounded-md"
+                  className="bg-[#F5BA41] text-white py-2 px-4 rounded-md"
                   disabled={loading}
                 >
                   {loading ? "Submitting..." : "Submit Dispute"}

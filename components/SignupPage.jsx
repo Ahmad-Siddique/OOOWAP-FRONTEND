@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
+import axios from "axios";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const SignupPage = () => {
     password: "",
     confirmPassword: "",
   });
+  
   const [profilePic, setProfilePic] = useState(null);
   const [profilePicPreview, setProfilePicPreview] = useState(null);
   const [errors, setErrors] = useState({});
@@ -22,11 +24,25 @@ const SignupPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
+  
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  let cleanedValue = value;
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  // Clean phone input by removing non-digit characters
+  if (name === "phone") {
+    cleanedValue = value.replace(/\D/g, ""); // Keep only digits
+  }
+
+  // Update form data
+  setFormData({ ...formData, [name]: cleanedValue });
+
+  // Clear error for the current field if it's corrected
+  if (errors[name]) {
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: null }));
+  }
+};
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -35,26 +51,41 @@ const SignupPage = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
-    if (!formData.firstName) newErrors.firstName = "First Name is required";
-    if (!formData.lastName) newErrors.lastName = "Last Name is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.phone) newErrors.phone = "Phone Number is required";
-    if (!/^\d+$/.test(formData.phone)) newErrors.phone = "Invalid phone number";
-    if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
+   
+   const newErrors = {};
 
-    return newErrors;
-  };
+   // Trim and clean input for phone number validation
+   const cleanedPhone = formData.phone.trim().replace(/\D/g, "");
 
-  const handleSubmit = (e) => {
+   if (!formData.firstName) newErrors.firstName = "First Name is required";
+   if (!formData.lastName) newErrors.lastName = "Last Name is required";
+   if (!formData.email) newErrors.email = "Email is required";
+   if (!formData.phone) newErrors.phone = "Phone Number is required";
+
+   // Update the phone number validation to check for exactly 10 digits
+   if (!/^\d{10}$/.test(cleanedPhone)) {
+     newErrors.phone = "Invalid phone number. It should be exactly 10 digits.";
+   }
+
+   if (formData.password !== formData.confirmPassword) {
+     newErrors.confirmPassword = "Passwords do not match";
+   }
+
+   return newErrors;
+ };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    console.log("Inside console")
 
     const newErrors = validateForm();
+    console.log(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+    console.log("Inside console1");
 
     // Prepare form data for submission, including profile picture
     const formDataToSubmit = new FormData();
@@ -66,7 +97,21 @@ const SignupPage = () => {
     if (profilePic) {
       formDataToSubmit.append("image", profilePic);
     }
+    try {
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/register",
+        formDataToSubmit
+      );
+      toast.success("Sign up successfull.")
+      router.push("/login")
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString() || "Invalid Credetials";
+      toast.error(message)
+     
+    }
 
+    setIsLoading(false);
     // Dispatch register action
     // dispatch(register(formDataToSubmit));
   };
@@ -214,7 +259,7 @@ const SignupPage = () => {
         {/* Right Side */}
         <div className="relative w-full h-screen">
           <Image
-            src="https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="/images/oowap-registration.webp"
             alt="Signup background"
             layout="fill"
             objectFit="cover"

@@ -137,7 +137,7 @@ const ShopPage = ({ loginInfo }) => {
           className={classNames(
             "fixed top-5 right-5 p-4 rounded shadow-lg text-white",
             {
-              "bg-yellow-500": notification.type === "success",
+              "bg-[#F5BA41]": notification.type === "success",
               "bg-red-500": notification.type === "error",
             }
           )}

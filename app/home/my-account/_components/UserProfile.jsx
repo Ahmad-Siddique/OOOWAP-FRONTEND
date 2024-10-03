@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import axios from "axios"; // Import axios
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function UserProfile({ loginInfo }) {
   const router = useRouter()
+  const [userdata, setuserdata] = useState()
   const [metrics, setMetrics] = useState({
     creationDate: "",
     totalTrades: 0,
@@ -19,6 +21,9 @@ export default function UserProfile({ loginInfo }) {
       router.push("/login")
       return
     }
+    const data = JSON.parse(localStorage.getItem("ooowap-user"));
+    console.log("USER DATA APPL",data)
+    setuserdata(data)
     const fetchMetrics = async () => {
       try {
         const token = loginInfo?.user.token;
@@ -33,6 +38,7 @@ export default function UserProfile({ loginInfo }) {
           config
         );
         console.log("RESPONSE: ", response.data);
+       
         setMetrics(response.data);
       } catch (error) {
         console.log("Error fetching user metrics:", error);
@@ -64,14 +70,15 @@ export default function UserProfile({ loginInfo }) {
               <img
                 className="w-32 h-32 md:w-24 md:h-24 rounded-full"
                 src={
-                  loginInfo?.user.image ||
+                  (userdata && userdata?.picture) ||
                   "https://plus.unsplash.com/premium_photo-1671656349218-5218444643d8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 }
                 alt="User Pic"
               />
               <div className="flex flex-col items-center md:items-start">
                 <h2 className="text-xl font-bold">
-                  {loginInfo?.user.firstName} {loginInfo?.user.lastName}
+                  {userdata && userdata.firstName}{" "}
+                  {userdata && userdata.lastName}
                 </h2>
                 <p className="text-sm">
                   Member since{" "}
@@ -85,9 +92,12 @@ export default function UserProfile({ loginInfo }) {
                       }
                     )}
                 </p>
-                <button className="bg-primary px-10 py-3 rounded-md text-white mt-2 hover:bg-white hover:text-black hover:border-black transition duration-300">
+                <Link
+                  href="/home/my-account/products"
+                  className="bg-[#F5BA41] px-10 py-3 rounded-md text-black mt-2 hover:bg-white hover:text-black hover:border-black transition duration-300"
+                >
                   Products
-                </button>
+                </Link>
               </div>
             </div>
           )}
@@ -111,11 +121,12 @@ export default function UserProfile({ loginInfo }) {
 
                   return (
                     <span key={i}>
-                      {isFilled
-                        ? "★" // Unicode for filled star
-                        : isHalfFilled
-                        ? "⯪" // Optional half-filled star (could use other symbols or CSS for half stars)
-                        : "☆" // Unicode for empty star
+                      {
+                        isFilled
+                          ? "★" // Unicode for filled star
+                          : isHalfFilled
+                          ? "⯪" // Optional half-filled star (could use other symbols or CSS for half stars)
+                          : "☆" // Unicode for empty star
                       }
                     </span>
                   );

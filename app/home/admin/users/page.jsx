@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaTrash, FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import AdminLayout from "@/components/AdminLayout"; // Adjust the path if necessary
 
 const UserPanel = () => {
@@ -9,19 +9,23 @@ const UserPanel = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newRole, setNewRole] = useState("user");
-  const fetchUsers = async () => {
+  const [searchQuery, setSearchQuery] = useState(""); // Add search query state
+
+  const fetchUsers = async (query = "") => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users`
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users`,
+        { params: { search: query } } // Pass search query as a parameter
       );
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
+
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    fetchUsers(searchQuery); // Fetch users based on the search query
+  }, [searchQuery]); // Add searchQuery to dependency array
 
   const handleRoleChange = async () => {
     try {
@@ -32,7 +36,7 @@ const UserPanel = () => {
       setIsModalOpen(false);
       setSelectedUser(null);
       // Re-fetch users after updating the role
-      fetchUsers();
+      fetchUsers(searchQuery); // Use the current search query
     } catch (error) {
       console.error("Error updating user role:", error);
     }
@@ -55,7 +59,7 @@ const UserPanel = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`
       );
       // Re-fetch users after deletion
-      fetchUsers();
+      fetchUsers(searchQuery); // Use the current search query
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -64,6 +68,13 @@ const UserPanel = () => {
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">User Management</h2>
+      <input
+        type="text"
+        placeholder="Search users by name or email"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+        className="border rounded p-2 mb-4 w-full"
+      />
       <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead>
           <tr className="bg-[#C79B44] text-white">
@@ -82,9 +93,9 @@ const UserPanel = () => {
               <td className="text-center justify-center py-2 px-4 flex space-x-2">
                 <button
                   onClick={() => openModal(user)}
-                  className="text-blue-500 hover:underline"
+                  className="btn bg-[#D5B868] text-white py-1 px-2 rounded"
                 >
-                  <FaEdit />
+                  Edit
                 </button>
                 <button
                   onClick={() => handleDelete(user._id)}
@@ -98,10 +109,10 @@ const UserPanel = () => {
         </tbody>
       </table>
 
-      {/* DaisyUI Modal */}
+      {/* Modal for Editing User Role */}
       {isModalOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
             <h2 className="text-xl font-bold mb-4">Edit User Role</h2>
             <label className="block mb-2">
               Role:
@@ -115,15 +126,20 @@ const UserPanel = () => {
               </select>
             </label>
             <div className="flex space-x-4">
-              <button onClick={handleRoleChange} className="btn btn-primary">
+              <button
+                onClick={handleRoleChange}
+                className="bg-[#D5B868] text-white py-2 px-4 rounded"
+              >
                 Save
               </button>
-              <button onClick={closeModal} className="btn">
+              <button
+                onClick={closeModal}
+                className="bg-gray-400 text-white py-2 px-4 rounded"
+              >
                 Cancel
               </button>
             </div>
           </div>
-          <div className="modal-backdrop" onClick={closeModal}></div>
         </div>
       )}
     </AdminLayout>

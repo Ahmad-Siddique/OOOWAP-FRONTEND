@@ -38,7 +38,7 @@ const Header = async () => {
             <Link href="/home/contact-us" className="hover:text-primary">
               Contact Us
             </Link>
-            {session?.user.role=="admin" && (
+            {session?.user.role == "admin" && (
               <Link href="/home/admin" className="hover:text-primary">
                 Admin
               </Link>
@@ -60,7 +60,7 @@ const Header = async () => {
               </div>
             </div>
           ) : (
-            <Link href="/login" className="bg-primary text-black px-8 py-2.5">
+            <Link href="/login" className="bg-[#F5BA41] text-black px-8 py-2.5">
               Login
             </Link>
           )}

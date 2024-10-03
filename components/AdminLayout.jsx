@@ -9,9 +9,16 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 
-const AdminLayout = ({ children }) => {
+const AdminLayout = ({ loginInfo, children }) => {
   const router = useRouter();
   const [currentPath, setCurrentPath] = useState("");
+
+  useEffect(() => {
+    // Check if loginInfo is available and user is not an admin
+    if (!loginInfo || loginInfo.user?.role !== "admin") {
+      router.push("/home"); // Redirect to home if not authorized
+    }
+  }, [loginInfo, router]);
 
   useEffect(() => {
     if (router && router.pathname) {
@@ -75,9 +82,6 @@ const AdminLayout = ({ children }) => {
               <FaExclamationTriangle className="mr-3" /> Disputes
             </Link>
           </li>
-
-         
-
           <li>
             <Link
               href="/home/admin/contact"
