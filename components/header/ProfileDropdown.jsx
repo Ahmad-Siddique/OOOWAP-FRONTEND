@@ -20,7 +20,7 @@ const ProfileDropdown = ({ loginInfo, logOut }) => {
     // Try parsing and catch any errors
     try {
       const parsedData = userDataString ? JSON.parse(userDataString) : null;
-      if (parsedData==null) {
+      if (loginInfo && parsedData==null) {
          window.location.reload();
       }
       console.log("Parsed user data:", parsedData); // Log the parsed user data
