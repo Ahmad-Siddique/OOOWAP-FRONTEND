@@ -48,7 +48,7 @@ const ProfileDropdown = ({ loginInfo, logOut }) => {
             <p className="text-xs text-black/80 font-normal">
               Balance:{" "}
               <span className="text-black text-sm font-bold">
-                ${userdata ? userdata.balance?.toFixed(2) : "0.00"}
+                ${userdata ? userdata.balance : "0.00"}
               </span>
             </p>
           </div>
