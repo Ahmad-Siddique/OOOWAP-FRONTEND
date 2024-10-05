@@ -16,7 +16,7 @@ const ProfileDropdown = ({ loginInfo, logOut }) => {
 
   useEffect(() => {
     const userDataString = localStorage.getItem("ooowap-user");
-
+    console.log("Suuuuuuuuuuu",userDataString)
     // Try parsing and catch any errors
     try {
       const parsedData = userDataString ? JSON.parse(userDataString) : null;
