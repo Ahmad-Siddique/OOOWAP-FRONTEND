@@ -38,7 +38,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/home/about"
-                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
+                className="hover:underline hover:text-black font-extralight transition duration-300"
               >
                 About
               </Link>
@@ -46,7 +46,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/home/contact"
-                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
+                className="hover:underline hover:text-black font-extralight transition duration-300"
               >
                 Contact
               </Link>
@@ -54,7 +54,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/home/policy"
-                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
+                className="hover:underline hover:text-black font-extralight transition duration-300"
               >
                 Policy
               </Link>
@@ -62,7 +62,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/home/terms-of-service"
-                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
+                className="hover:underline hover:text-black font-extralight transition duration-300"
               >
                 Terms of Service
               </Link>
@@ -70,7 +70,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className="hover:underline hover:text-[#D5B868] font-extralight transition duration-300"
+                className="hover:underline hover:text-black font-extralight transition duration-300"
               >
                 FAQ
               </a>
