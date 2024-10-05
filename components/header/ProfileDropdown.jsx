@@ -11,11 +11,27 @@ import {
 import Link from "next/link";
 
 const ProfileDropdown = ({ loginInfo, logOut }) => {
+  const [userdata, setuserdata] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
-  const [userdata, setuserdata] = useState()
   useEffect(() => {
-    setuserdata(JSON.parse(localStorage.getItem("ooowap-user")))
-  },[])
+    const userDataString = localStorage.getItem("ooowap-user");
+
+    // Try parsing and catch any errors
+    try {
+      const parsedData = userDataString ? JSON.parse(userDataString) : null;
+      console.log("Parsed user data:", parsedData); // Log the parsed user data
+      setuserdata(parsedData);
+    } catch (error) {
+      console.error("Error parsing user data from localStorage", error);
+      setuserdata(null); // Reset userdata in case of an error
+    } finally {
+      setLoading(false); // Set loading to false after data retrieval
+    }
+  }, []);
+
+  // Show loading state if necessary
+  if (loading) return <div>Loading...</div>;
 
   return (
     <DropdownMenu>
@@ -32,7 +48,7 @@ const ProfileDropdown = ({ loginInfo, logOut }) => {
             <p className="text-xs text-black/80 font-normal">
               Balance:{" "}
               <span className="text-black text-sm font-bold">
-                ${userdata && userdata?.balance?.toFixed(2)}
+                ${userdata ? userdata.balance?.toFixed(2) : "0.00"}
               </span>
             </p>
           </div>
@@ -44,10 +60,14 @@ const ProfileDropdown = ({ loginInfo, logOut }) => {
           <Link href="/home/withdraw">Withdraw Money</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <button onClick={() => {
-            localStorage.removeItem("ooowap-user")
-            logOut()
-          }}>Logout</button>
+          <button
+            onClick={() => {
+              localStorage.removeItem("ooowap-user");
+              logOut();
+            }}
+          >
+            Logout
+          </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

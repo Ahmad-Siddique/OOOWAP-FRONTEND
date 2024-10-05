@@ -45,7 +45,7 @@ export const { auth, signIn, signOut, update } = NextAuth({
           if (typeof window !== "undefined") {
             localStorage.setItem("ooowap-user", JSON.stringify(user));
           }
-
+              
           return user;
         }
 

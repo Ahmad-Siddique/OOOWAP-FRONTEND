@@ -10,6 +10,54 @@ const PendingItems = ({ loginInfo }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+  const fetchUserData = async () => {
+    try {
+      // Fetching ooowap-user from localStorage
+      const localStorageUser = JSON.parse(localStorage.getItem("ooowap-user"));
+
+      // Check if loginInfo or token exists
+      const token = localStorageUser ? localStorageUser.token : null;
+
+      if (!token) {
+        console.error("Token not found in localStorage.");
+        return;
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      // Fetch user data from API
+      const response = await axios.get(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/getMe",
+        config
+      );
+
+      const apiUserData = response.data.data;
+
+      // Compare balance in localStorage and API response
+      if (localStorageUser.balance !== apiUserData.balance) {
+        // Update localStorage with the new balance and other user data
+        localStorageUser.firstName = apiUserData.firstName;
+        localStorageUser.lastName = apiUserData.lastName;
+        localStorageUser.balance = apiUserData.balance;
+        localStorageUser.email = apiUserData.email;
+        localStorageUser.picture = apiUserData.photoURL;
+
+        // Store updated user data in localStorage
+        localStorage.setItem("ooowap-user", JSON.stringify(localStorageUser));
+
+        // Reload the page to reflect updated user data
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
   // Fetch pending trades from backend API
   useEffect(() => {
     const fetchPendingTrades = async () => {
@@ -33,7 +81,11 @@ const PendingItems = ({ loginInfo }) => {
       }
     };
 
+
+    
+
     fetchPendingTrades();
+    
   }, [loginInfo]);
 
   const handleAcceptTrade = async (tradeId) => {
@@ -53,6 +105,7 @@ const PendingItems = ({ loginInfo }) => {
 
       // Remove accepted trade from the pending list
       setPendingTrades(pendingTrades.filter((trade) => trade._id !== tradeId));
+      fetchUserData();
       toast.success("Trade Accepted");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to accept trade");
