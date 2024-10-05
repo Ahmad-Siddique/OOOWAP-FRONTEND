@@ -193,7 +193,7 @@ const handleSubmit = async (e) => {
         {/* Width Input */}
         <div>
           <Label htmlFor="width" className="font-medium text-gray-700">
-            Width
+            Width (cm)
           </Label>
           <Input
             id="width"
@@ -209,7 +209,7 @@ const handleSubmit = async (e) => {
         {/* Height Input */}
         <div>
           <Label htmlFor="height" className="font-medium text-gray-700">
-            Height
+            Height (cm)
           </Label>
           <Input
             id="height"
@@ -257,12 +257,12 @@ const handleSubmit = async (e) => {
         />
 
         <Button
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
+          onClick={handleSubmit}
+          disabled={isSubmitting}
           type="submit"
           className="mt-6 w-full bg-primary text-white hover:bg-primary-dark transition-colors duration-200"
         >
-                  {isSubmitting ? "Submitting" : "Add Product"}
+          {isSubmitting ? "Submitting" : "Add Product"}
         </Button>
       </div>
     </div>

@@ -238,7 +238,7 @@ const EditProductPage = ({ loginInfo, params }) => {
         {/* Width Input */}
         <div>
           <Label htmlFor="width" className="font-medium text-gray-700">
-            Width
+            Width (cm)
           </Label>
           <Input
             id="width"
@@ -254,7 +254,7 @@ const EditProductPage = ({ loginInfo, params }) => {
         {/* Height Input */}
         <div>
           <Label htmlFor="height" className="font-medium text-gray-700">
-            Height
+            Height (cm)
           </Label>
           <Input
             id="height"
