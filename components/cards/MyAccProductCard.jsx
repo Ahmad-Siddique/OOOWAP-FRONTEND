@@ -8,7 +8,7 @@ export default function MyAccProductCard({
 
   const handleEditProduct = () => {
     // Redirect to the edit product page
-    router.push(`/home/my-account/products/edit/${product._id}`); // Update with the correct path for your edit product page
+    router.push(`/home/my-account/products/edit/${product._id}`);
   };
 
   const handleDeleteProduct = async () => {
@@ -21,6 +21,11 @@ export default function MyAccProductCard({
     // } catch (error) {
     //   toast.error("Error deleting product!");
     // }
+  };
+
+  const handleViewQuestions = () => {
+    // Redirect to the product's questions page
+    router.push(`/home/my-account/products/questions/${product._id}`);
   };
 
   return (
@@ -38,7 +43,9 @@ export default function MyAccProductCard({
           {product.name} ({product.price} {product.currency})
         </h2>
         <p className="text-gray-600">{product.tradesCount} Trades</p>
+
         <div className="flex items-center gap-2 mt-2">
+          {/* Edit and Delete buttons */}
           <button
             onClick={handleEditProduct}
             className="bg-[#F5BA41] text-white py-2 px-4 rounded hover:bg-yellow-600 transition duration-150"
@@ -50,6 +57,14 @@ export default function MyAccProductCard({
             className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-150"
           >
             Delete
+          </button>
+
+          {/* Questions button */}
+          <button
+            onClick={handleViewQuestions}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-150"
+          >
+            Questions ({product.questionsCount || 0})
           </button>
         </div>
       </div>

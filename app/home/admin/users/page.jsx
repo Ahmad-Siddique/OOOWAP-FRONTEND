@@ -13,8 +13,14 @@ const UserPanel = () => {
 
   const fetchUsers = async (query = "") => {
     try {
+       const data = JSON.parse(localStorage.getItem("ooowap-user"));
+       const config = {
+         headers: {
+           Authorization: `Bearer ${data?.token}`,
+         },
+       };
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users`,
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users`,config,
         { params: { search: query } } // Pass search query as a parameter
       );
       setUsers(response.data);
@@ -29,8 +35,14 @@ const UserPanel = () => {
 
   const handleRoleChange = async () => {
     try {
+       const data = JSON.parse(localStorage.getItem("ooowap-user"));
+       const config = {
+         headers: {
+           Authorization: `Bearer ${data?.token}`,
+         },
+       };
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${selectedUser._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${selectedUser._id}`, config,
         { role: newRole }
       );
       setIsModalOpen(false);

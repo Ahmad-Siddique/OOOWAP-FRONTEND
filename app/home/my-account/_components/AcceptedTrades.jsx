@@ -55,8 +55,6 @@ const AcceptedTrades = ({ loginInfo }) => {
         },
       };
 
-      console.log(config);
-
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/trade/review`,
         { tradeId: selectedTrade._id, rating: reviewStars, reviewingFor },
@@ -81,6 +79,34 @@ const AcceptedTrades = ({ loginInfo }) => {
     setShowReviewPopup(true);
   };
 
+  const handleToggleStatus = async (trade) => {
+    try {
+      const token = loginInfo ? loginInfo.user.token : null;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const newStatus =
+        loginInfo?.user.id === trade.offerer._id.toString()
+          ? "offererStatus"
+          : "receiverStatus";
+
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/trade/update-status`,
+        { tradeId: trade._id, status: newStatus },
+        config
+      );
+      toast.success("Status updated successfully!");
+
+      // Refresh trades after status update
+      fetchTrades();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update status");
+    }
+  };
+
   if (loading) return <p className="text-center">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
@@ -102,17 +128,17 @@ const AcceptedTrades = ({ loginInfo }) => {
 
             const offererReviewExists = trade.offererReview;
             const receiverReviewExists = trade.receiverReview;
-            console.log(
-              offererReviewExists,
-              receiverReviewExists,
-              isOfferer,
-              isReceiver
-            );
             const showReviewButton =
               (isOfferer && !offererReviewExists) ||
               (isReceiver && !receiverReviewExists);
 
-            console.log(showReviewButton);
+            const userTradeStatus = isOfferer
+              ? trade.offererStatus
+              : trade.receiverStatus;
+
+            const showToggleButton =
+              isCompletedOrExpired && trade.status !== "completed";
+
             return (
               <div
                 key={trade._id}
@@ -194,14 +220,35 @@ const AcceptedTrades = ({ loginInfo }) => {
 
                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
                   <p className="text-lg font-semibold">
-                    Status: {trade.status}
+                    Trade Status: {trade.status}
                   </p>
+                  <p className="text-lg font-semibold">
+                    Your Status: {userTradeStatus==true ? "Finished" : "Not Finished"}
+                  </p>
+
+                  {/* Display Start and End Dates */}
+                  <p className="text-lg font-semibold">
+                    Start Date: {new Date(trade.startDate).toLocaleDateString()}
+                  </p>
+                  <p className="text-lg font-semibold">
+                    End Date: {new Date(trade.endDate).toLocaleDateString()}
+                  </p>
+
                   {isCompletedOrExpired && showReviewButton && (
                     <button
                       onClick={() => handleReviewClick(trade)}
                       className="bg-[#F5BA41] text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition w-full md:w-auto"
                     >
                       Leave Review
+                    </button>
+                  )}
+
+                  {showToggleButton && (
+                    <button
+                      onClick={() => handleToggleStatus(trade)}
+                      className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full md:w-auto"
+                    >
+                      Change Status
                     </button>
                   )}
                 </div>
@@ -220,27 +267,26 @@ const AcceptedTrades = ({ loginInfo }) => {
                 ? "Offerer"
                 : "Receiver"}
             </h2>
-            <div className="flex justify-center space-x-2 mb-4">
-              {[1, 2, 3, 4, 5].map((star) => (
+            <div className="flex items-center mb-4">
+              {[...Array(5)].map((_, index) => (
                 <FaStar
-                  key={star}
-                  size={30}
+                  key={index}
                   className={`cursor-pointer ${
-                    reviewStars >= star ? "text-[#F5BA41]" : "text-gray-400"
+                    index < reviewStars ? "text-yellow-500" : "text-gray-300"
                   }`}
-                  onClick={() => setReviewStars(star)}
+                  onClick={() => setReviewStars(index + 1)}
                 />
               ))}
             </div>
             <button
               onClick={submitReview}
-              className="bg-[#F5BA41] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition w-full"
+              className="bg-[#F5BA41] text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition w-full"
             >
               Submit Review
             </button>
             <button
               onClick={() => setShowReviewPopup(false)}
-              className="mt-2 text-gray-600 underline"
+              className="text-gray-500 mt-4"
             >
               Cancel
             </button>

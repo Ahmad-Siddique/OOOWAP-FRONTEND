@@ -9,13 +9,21 @@ const TradePanel = () => {
   const [selectedTrade, setSelectedTrade] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState(""); // State for search input
-
+  
   useEffect(() => {
     const fetchTrades = async () => {
+       const data = JSON.parse(localStorage.getItem("ooowap-user"));
+       const config = {
+         headers: {
+           Authorization: `Bearer ${data?.token}`,
+         },
+      };
+      console.log(config)
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/admin/trades`,
-          { params: { search } } // Pass the search term as a parameter
+          `${process.env.NEXT_PUBLIC_API_URL}/admin/trades`,config,
+          { params: { search } },
+           // Pass the search term as a parameter
         );
         setTrades(response.data);
       } catch (error) {
@@ -28,8 +36,15 @@ const TradePanel = () => {
 
   const handleDelete = async (tradeId) => {
     try {
+      const data = JSON.parse(localStorage.getItem("ooowap-user"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${data?.token}`,
+        },
+      };
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/trades/${tradeId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/trades/${tradeId}`,
+        config
       );
       setTrades(trades.filter((trade) => trade._id !== tradeId)); // Update state to remove deleted trade
     } catch (error) {

@@ -16,6 +16,7 @@ const Tabs = () => {
         "Reviews",
         "Trade History",
         "Dispute",
+        "Questions",
       ].map((tab, index) => (
         <Link
           key={index}

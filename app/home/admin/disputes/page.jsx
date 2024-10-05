@@ -9,15 +9,23 @@ const DisputePanel = () => {
   const [selectedDispute, setSelectedDispute] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
-
+  const [userdata, setuserdata] = useState()
   useEffect(() => {
+    setuserdata(JSON.parse(localStorage.getItem("ooowap-user")))
     fetchDisputes();
   }, [searchQuery]);
 
   const fetchDisputes = async () => {
     try {
+      const data = JSON.parse(localStorage.getItem("ooowap-user"))
+       const config = {
+         headers: {
+           Authorization: `Bearer ${data?.token}`,
+         },
+       };
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes?search=${searchQuery}`
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes?search=${searchQuery}`,
+        config
       );
       setDisputes(response.data);
     } catch (error) {

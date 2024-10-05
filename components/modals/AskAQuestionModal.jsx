@@ -60,7 +60,7 @@ export default function AskAQuestionModal({ product,config }) {
             <DialogClose asChild>
               <button
                 onClick={() => handleSubmit(product._id)}
-                className="w-fit flex items-center gap-1 bg-green-600 group text-white py-2 font-light pl-5 pr-4"
+                className="w-fit flex items-center gap-1 bg-[#F5BA41] group text-white py-2 font-light pl-5 pr-4"
               >
                 Submit
                 <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />

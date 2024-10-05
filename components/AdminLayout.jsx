@@ -14,8 +14,10 @@ const AdminLayout = ({ loginInfo, children }) => {
   const [currentPath, setCurrentPath] = useState("");
 
   useEffect(() => {
+
+    const data = JSON.parse(localStorage.getItem("ooowap-user"))
     // Check if loginInfo is available and user is not an admin
-    if (!loginInfo || loginInfo.user?.role !== "admin") {
+    if ( data?.role !== "admin") {
       router.push("/home"); // Redirect to home if not authorized
     }
   }, [loginInfo, router]);

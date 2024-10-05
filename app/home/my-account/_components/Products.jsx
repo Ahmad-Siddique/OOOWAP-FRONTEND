@@ -20,7 +20,7 @@ const Products = ({ loginInfo }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/product/products/userproducts`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/products/userproductsquestions`,
         config
       );
       setProducts(response.data.data);

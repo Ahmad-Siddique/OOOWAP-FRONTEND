@@ -13,8 +13,14 @@ const ContactPanel = () => {
   // Fetch contacts from backend
   const fetchContacts = async (query = "") => {
     try {
+       const data = JSON.parse(localStorage.getItem("ooowap-user"));
+       const config = {
+         headers: {
+           Authorization: `Bearer ${data?.token}`,
+         },
+       };
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/contact`,
+        `${process.env.NEXT_PUBLIC_API_URL}/contact`,config,
         {
           params: {
             search: query,

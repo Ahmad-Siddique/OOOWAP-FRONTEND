@@ -59,8 +59,8 @@ const Dispute = ({loginInfo}) => {
     setError("");
     setSuccess("");
     try {
-      const token = JSON.parse(localStorage.getItem("loginInfo")).token;
-      const config = { headers: { Authorization: `Bearer ${token}` } };
+      // const token = JSON.parse(localStorage.getItem("loginInfo")).token;
+      // const config = { headers: { Authorization: `Bearer ${token}` } };
 
       const { data } = await axios.post(
         process.env.NEXT_PUBLIC_API_URL + "/dispute/create",
@@ -76,7 +76,8 @@ const Dispute = ({loginInfo}) => {
       // Fetch updated disputes
       await fetchTradesAndDisputes(); // Get updated disputes
     } catch (error) {
-      setError("Failed to create dispute");
+      console.log(error)
+      setError("Failed to create dispute", error);
     } finally {
       setLoading(false);
     }

@@ -44,7 +44,10 @@ const ProfileDropdown = ({ loginInfo, logOut }) => {
           <Link href="/home/withdraw">Withdraw Money</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <button onClick={() => logOut()}>Logout</button>
+          <button onClick={() => {
+            localStorage.removeItem("ooowap-user")
+            logOut()
+          }}>Logout</button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
