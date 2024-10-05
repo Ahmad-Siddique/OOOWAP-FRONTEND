@@ -99,9 +99,10 @@ const AcceptedTrades = ({ loginInfo }) => {
       );
 
       fetchTrades();
-      toast.success("Status updated successfully!");
+      // toast.success("Status updated successfully!");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update status");
+      console.log(error)
+      // toast.error(error.response?.data?.message || "Failed to update status");
     }
   };
 
