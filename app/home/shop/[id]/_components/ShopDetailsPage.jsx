@@ -322,7 +322,9 @@ const ShopDetailPage = ({ params, loginInfo }) => {
             <p className="text-sm">
               By:{" "}
               <span className="font-light">
-                {product.userId.firstName} {product.userId.lastName}
+                <Link href={`/home/store/${product.userId._id}`}>
+                  {product.userId.firstName} {product.userId.lastName}
+                </Link>
               </span>
             </p>
             {/* <div

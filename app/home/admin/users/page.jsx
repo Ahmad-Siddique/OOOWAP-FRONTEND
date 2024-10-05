@@ -11,17 +11,20 @@ const UserPanel = () => {
   const [newRole, setNewRole] = useState("user");
   const [searchQuery, setSearchQuery] = useState(""); // Add search query state
 
+  // Fetch users with an optional search query
   const fetchUsers = async (query = "") => {
     try {
-       const data = JSON.parse(localStorage.getItem("ooowap-user"));
-       const config = {
-         headers: {
-           Authorization: `Bearer ${data?.token}`,
-         },
-       };
+      const data = JSON.parse(localStorage.getItem("ooowap-user"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${data?.token}`,
+        },
+        params: { search: query }, // Correctly pass the search query with headers
+      };
+      console.log("SEARCHED", searchQuery);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users`,config,
-        { params: { search: query } } // Pass search query as a parameter
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users`,
+        config
       );
       setUsers(response.data);
     } catch (error) {
@@ -30,25 +33,26 @@ const UserPanel = () => {
   };
 
   useEffect(() => {
-    fetchUsers(searchQuery); // Fetch users based on the search query
-  }, [searchQuery]); // Add searchQuery to dependency array
+    fetchUsers(); // Fetch all users initially
+  }, []);
 
+  // Handle role change
   const handleRoleChange = async () => {
     try {
-       const data = JSON.parse(localStorage.getItem("ooowap-user"));
-       const config = {
-         headers: {
-           Authorization: `Bearer ${data?.token}`,
-         },
-       };
+      const data = JSON.parse(localStorage.getItem("ooowap-user"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${data?.token}`,
+        },
+      };
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${selectedUser._id}`, config,
-        { role: newRole }
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${selectedUser._id}`,
+        { role: newRole }, // Send the new role data
+        config // Pass the config object
       );
       setIsModalOpen(false);
       setSelectedUser(null);
-      // Re-fetch users after updating the role
-      fetchUsers(searchQuery); // Use the current search query
+      fetchUsers(searchQuery); // Re-fetch users with the current search query
     } catch (error) {
       console.error("Error updating user role:", error);
     }
@@ -67,26 +71,48 @@ const UserPanel = () => {
 
   const handleDelete = async (userId) => {
     try {
+      const data = JSON.parse(localStorage.getItem("ooowap-user"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${data?.token}`,
+        },
+      };
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`,
+        config
       );
-      // Re-fetch users after deletion
-      fetchUsers(searchQuery); // Use the current search query
+      fetchUsers(searchQuery); // Re-fetch users after deletion
     } catch (error) {
       console.error("Error deleting user:", error);
     }
   };
 
+  // Submit handler for search
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    fetchUsers(searchQuery); // Fetch users based on the search query
+  };
+
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">User Management</h2>
-      <input
-        type="text"
-        placeholder="Search users by name or email"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)} // Update search query
-        className="border rounded p-2 mb-4 w-full"
-      />
+      <form onSubmit={handleSearchSubmit} className="mb-4">
+        <div className="flex">
+          <input
+            type="text"
+            placeholder="Search users by name or email"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+            className="border rounded p-2 w-full"
+          />
+          <button
+            type="submit"
+            className="bg-[#D5B868] text-white py-2 px-4 rounded ml-2"
+          >
+            Search
+          </button>
+        </div>
+      </form>
       <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead>
           <tr className="bg-[#C79B44] text-white">

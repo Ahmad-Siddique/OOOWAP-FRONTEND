@@ -13,15 +13,16 @@ const ContactPanel = () => {
   // Fetch contacts from backend
   const fetchContacts = async (query = "") => {
     try {
-       const data = JSON.parse(localStorage.getItem("ooowap-user"));
-       const config = {
-         headers: {
-           Authorization: `Bearer ${data?.token}`,
-         },
-       };
+      const data = JSON.parse(localStorage.getItem("ooowap-user"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${data?.token}`,
+        },
+      };
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/contact`,config,
+        `${process.env.NEXT_PUBLIC_API_URL}/contact`,
         {
+          headers: config.headers,
           params: {
             search: query,
           },
@@ -34,14 +35,12 @@ const ContactPanel = () => {
   };
 
   useEffect(() => {
-    fetchContacts();
+    fetchContacts(); // Fetch all contacts on initial load
   }, []);
 
-  // Trigger search when the query changes
   const handleSearch = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    fetchContacts(query); // Send the search query to the backend
+    e.preventDefault(); // Prevent default form submission
+    fetchContacts(searchQuery); // Fetch contacts based on search query
   };
 
   const openModal = (contact) => {
@@ -58,16 +57,22 @@ const ContactPanel = () => {
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">Contact Us Management</h2>
 
-      {/* Search field */}
-      <div className="mb-6">
+      {/* Search form */}
+      <form onSubmit={handleSearch} className="flex space-x-2 mb-4">
         <input
           type="text"
           placeholder="Search contacts by name"
           className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D5B868]"
           value={searchQuery}
-          onChange={handleSearch}
+          onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
         />
-      </div>
+        <button
+          type="submit"
+          className="bg-[#D5B868] text-white py-2 px-4 rounded-md flex items-center space-x-2"
+        >
+          Search
+        </button>
+      </form>
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">

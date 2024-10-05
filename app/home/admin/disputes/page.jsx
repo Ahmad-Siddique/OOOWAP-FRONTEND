@@ -8,21 +8,22 @@ const DisputePanel = () => {
   const [disputes, setDisputes] = useState([]);
   const [selectedDispute, setSelectedDispute] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
-  const [userdata, setuserdata] = useState()
+  const [searchQuery, setSearchQuery] = useState("");
+  const [userdata, setuserdata] = useState();
+
   useEffect(() => {
-    setuserdata(JSON.parse(localStorage.getItem("ooowap-user")))
-    fetchDisputes();
-  }, [searchQuery]);
+    setuserdata(JSON.parse(localStorage.getItem("ooowap-user")));
+    fetchDisputes(); // Fetch disputes initially
+  }, []);
 
   const fetchDisputes = async () => {
     try {
-      const data = JSON.parse(localStorage.getItem("ooowap-user"))
-       const config = {
-         headers: {
-           Authorization: `Bearer ${data?.token}`,
-         },
-       };
+      const data = JSON.parse(localStorage.getItem("ooowap-user"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${data?.token}`,
+        },
+      };
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes?search=${searchQuery}`,
         config
@@ -35,11 +36,20 @@ const DisputePanel = () => {
 
   const handleResolve = async (disputeId) => {
     try {
+      const data = JSON.parse(localStorage.getItem("ooowap-user"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${data?.token}`,
+        },
+      };
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes/${disputeId}`,
+        
         {
           status: "resolved",
-        }
+        },
+        config
+
       );
       setDisputes(
         disputes.map((dispute) =>
@@ -58,7 +68,7 @@ const DisputePanel = () => {
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes/${disputeId}`
       );
-      setDisputes(disputes.filter((dispute) => dispute._id !== disputeId)); // Update state to remove deleted dispute
+      setDisputes(disputes.filter((dispute) => dispute._id !== disputeId));
     } catch (error) {
       console.error("Error deleting dispute:", error);
     }
@@ -74,16 +84,29 @@ const DisputePanel = () => {
     setSelectedDispute(null);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    fetchDisputes(); // Fetch disputes only on submit
+  };
+
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">Dispute Management</h2>
-      <input
-        type="text"
-        placeholder="Search by User or Trade ID"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full mb-4 p-2 border rounded-md"
-      />
+      <form onSubmit={handleSearchSubmit} className="flex space-x-2 mb-4">
+        <input
+          type="text"
+          placeholder="Search by User or Trade ID"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 border rounded-md"
+        />
+        <button
+          type="submit"
+          className="bg-[#D5B868] text-white py-2 px-4 rounded-md flex items-center space-x-2"
+        >
+          Search
+        </button>
+      </form>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead>
@@ -110,19 +133,21 @@ const DisputePanel = () => {
                 <td className="text-center justify-center py-2 px-4 flex space-x-2">
                   <button
                     onClick={() => openModal(dispute)}
-                    className="btn bg-[#D5B868] flex items-center space-x-1"
+                    className="bg-[#D5B868] text-white py-2 px-4 rounded-md flex items-center space-x-1"
                   >
                     <FaEye /> <span>View</span>
                   </button>
-                  <button
-                    onClick={() => handleResolve(dispute._id)}
-                    className="btn btn-success flex items-center space-x-1"
-                  >
-                    <FaCheck /> <span>Resolve</span>
-                  </button>
+                  {dispute && dispute.status != "resolved" &&
+                    <button
+                      onClick={() => handleResolve(dispute._id)}
+                      className="bg-green-500 text-white py-2 px-4 rounded-md flex items-center space-x-1"
+                    >
+                      <FaCheck /> <span>Resolve</span>
+                    </button>
+                  }
                   <button
                     onClick={() => handleDelete(dispute._id)}
-                    className="btn btn-danger flex items-center space-x-1"
+                    className="bg-red-500 text-white py-2 px-4 rounded-md flex items-center space-x-1"
                   >
                     <FaTrash /> <span>Delete</span>
                   </button>
@@ -135,41 +160,35 @@ const DisputePanel = () => {
 
       {/* Modal for Dispute Details */}
       {selectedDispute && isModalOpen && (
-        <div>
-          <input
-            type="checkbox"
-            id="dispute-modal"
-            className="modal-toggle"
-            checked={isModalOpen}
-            onChange={() => setIsModalOpen(!isModalOpen)}
-          />
-          <label htmlFor="dispute-modal" className="modal cursor-pointer">
-            <label className="modal-box relative" htmlFor="">
-              <h2 className="text-xl font-bold mb-4">Dispute Details</h2>
-              <p>
-                <strong>Trade ID:</strong>{" "}
-                {selectedDispute.trade?._id.toString()}
-              </p>
-              <p>
-                <strong>User:</strong> {selectedDispute.user?.firstName}
-              </p>
-              <p>
-                <strong>Reason:</strong> {selectedDispute.reason}
-              </p>
-              <p>
-                <strong>Status:</strong> {selectedDispute.status}
-              </p>
-              <p>
-                <strong>Created At:</strong>{" "}
-                {new Date(selectedDispute.createdAt).toLocaleDateString()}
-              </p>
-              <div className="flex justify-end mt-4">
-                <label htmlFor="dispute-modal" className="btn btn-secondary">
-                  Close
-                </label>
-              </div>
-            </label>
-          </label>
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="relative bg-white rounded-lg p-6 max-w-lg w-full shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Dispute Details</h2>
+            <p>
+              <strong>Trade ID:</strong> {selectedDispute.trade?._id.toString()}
+            </p>
+            <p>
+              <strong>User:</strong> {selectedDispute.user?.firstName}
+            </p>
+            <p>
+              <strong>Reason:</strong> {selectedDispute.reason}
+            </p>
+            <p>
+              <strong>Status:</strong> {selectedDispute.status}
+            </p>
+            <p>
+              <strong>Created At:</strong>{" "}
+              {new Date(selectedDispute.createdAt).toLocaleDateString()}
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeModal}
+                className="bg-gray-500 text-white py-2 px-4 rounded-md"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </AdminLayout>

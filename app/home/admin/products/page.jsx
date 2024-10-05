@@ -40,7 +40,7 @@ const ProductPanel = () => {
     }
   };
 
-  const searchProducts = async (searchTerm) => {
+  const searchProducts = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/products/search?query=${searchTerm}`,
@@ -57,14 +57,12 @@ const ProductPanel = () => {
     if (user) fetchProducts();
   }, [user]); // Fetch products when the user is loaded
 
-  useEffect(() => {
-    // Search for products when searchTerm changes
-    if (searchTerm) {
-      searchProducts(searchTerm);
-    } else {
-      fetchProducts(); // If searchTerm is empty, fetch all products
+  // Trigger search when user presses "Enter"
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      searchProducts();
     }
-  }, [searchTerm]);
+  };
 
   const handleDelete = async (productId) => {
     try {
@@ -111,14 +109,21 @@ const ProductPanel = () => {
       <h2 className="text-2xl font-bold mb-4">Product Management</h2>
 
       {/* Search Bar */}
-      <div className="mb-4">
+      <div className="mb-4 flex space-x-2">
         <input
           type="text"
           placeholder="Search by product name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={handleKeyPress} // Trigger search when "Enter" is pressed
           className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:ring focus:ring-[#D5B868] transition duration-150"
         />
+        <button
+          onClick={searchProducts} // Trigger search when button is clicked
+          className="bg-[#D5B868] text-white py-2 px-4 rounded"
+        >
+          Search
+        </button>
       </div>
 
       <table className="min-w-full bg-white rounded-lg shadow-md">
@@ -136,15 +141,15 @@ const ProductPanel = () => {
         <tbody>
           {products.map((product) => (
             <tr key={product._id} className="border-b hover:bg-gray-100">
-              <td className="text-center py-2 px-4">{product.productNumber}</td>
-              <td className="text-center py-2 px-4">{product.name}</td>
-              <td className="text-center py-2 px-4">${product.price}</td>
-              <td className="text-center py-2 px-4">{product.userId.email}</td>
-              <td className="text-center py-2 px-4">{product.status}</td>
-              <td className="text-center py-2 px-4">
+              <td className=" py-2 px-4">{product.productNumber}</td>
+              <td className=" py-2 px-4">{product.name}</td>
+              <td className=" py-2 px-4">${product.price}</td>
+              <td className=" py-2 px-4">{product.userId.email}</td>
+              <td className=" py-2 px-4">{product.status}</td>
+              <td className=" py-2 px-4">
                 {product.featured ? "Yes" : "No"}
               </td>
-              <td className="text-center justify-center py-2 px-4 flex space-x-2">
+              <td className="  py-2 px-4 flex space-x-2">
                 <button
                   onClick={() => openModal(product)}
                   className="btn bg-[#D5B868] text-white py-1 px-2 rounded"
@@ -202,7 +207,7 @@ const ProductPanel = () => {
                 <option selected={selectedProduct.featured != true} value="no">
                   No
                 </option>
-                <option selected={selectedProduct.featured ==true } value="yes">
+                <option selected={selectedProduct.featured == true} value="yes">
                   Yes
                 </option>
               </select>
