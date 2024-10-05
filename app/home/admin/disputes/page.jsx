@@ -111,8 +111,9 @@ const DisputePanel = () => {
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead>
             <tr className="bg-[#C79B44] text-white">
-              <th className="py-2 px-4">Trade ID</th>
-              <th className="py-2 px-4">User</th>
+              <th className="py-2 px-4">Dispute ID</th>
+              <th className="py-2 px-4">Trade</th>
+              <th className="py-2 px-4">Received By</th>
               <th className="py-2 px-4">Reason</th>
               <th className="py-2 px-4">Status</th>
               <th className="py-2 px-4">Actions</th>
@@ -121,6 +122,9 @@ const DisputePanel = () => {
           <tbody>
             {disputes.map((dispute) => (
               <tr key={dispute._id} className="border-b">
+                <td className="text-center py-2 px-4">
+                  {dispute._id}
+                </td>
                 <td className="text-center py-2 px-4">
                   {dispute.trade?.offerer.firstName} vs{" "}
                   {dispute.trade?.receiver.firstName}
@@ -137,14 +141,14 @@ const DisputePanel = () => {
                   >
                     <FaEye /> <span>View</span>
                   </button>
-                  {dispute && dispute.status != "resolved" &&
+                  {dispute && dispute.status != "resolved" && (
                     <button
                       onClick={() => handleResolve(dispute._id)}
                       className="bg-green-500 text-white py-2 px-4 rounded-md flex items-center space-x-1"
                     >
                       <FaCheck /> <span>Resolve</span>
                     </button>
-                  }
+                  )}
                   <button
                     onClick={() => handleDelete(dispute._id)}
                     className="bg-red-500 text-white py-2 px-4 rounded-md flex items-center space-x-1"

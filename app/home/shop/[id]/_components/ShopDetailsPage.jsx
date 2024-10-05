@@ -35,6 +35,8 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     type: "",
   });
 
+  const [faqss,setfaqss] = useState([])
+
   // State to manage current image index
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -60,13 +62,68 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     }
   };
 
+
+  
+
+  const faqs = [
+    {
+      question: "What is the purpose of this website?",
+      answer:
+        "This website allows users to exchange similar-priced products. Users pay a small shipping fee for the exchange, and after the exchange is completed, the money is refunded to their wallet.",
+    },
+    {
+      question: "How do I start an exchange?",
+      answer:
+        "To start an exchange, select the product you want to exchange, and follow the prompts to choose a similar-priced product. After confirmation, you will need to pay the shipping fee.",
+    },
+    {
+      question: "What types of products can be exchanged?",
+      answer:
+        "You can exchange products of similar value. Ensure the items are in good condition and meet our exchange criteria.",
+    },
+    {
+      question: "How long does the exchange process take?",
+      answer:
+        "The exchange process typically takes 7-10 business days, including shipping time. We will keep you updated throughout the process.",
+    },
+    {
+      question: "Is there a limit to the number of exchanges I can make?",
+      answer:
+        "There is no set limit on the number of exchanges you can make. However, frequent exchanges may be reviewed to ensure compliance with our policies.",
+    },
+    {
+      question: "What happens if my exchange is canceled?",
+      answer:
+        "If your exchange is canceled, you will receive a full refund of the shipping fee to your wallet. The original product will be returned to you.",
+    },
+    {
+      question: "Can I track my exchange?",
+      answer:
+        "Yes, you will receive tracking information for your exchange once it has been processed. You can track the status through your account dashboard.",
+    },
+    {
+      question: "How do I contact customer support?",
+      answer:
+        "You can contact customer support through the 'Contact Us' page on our website. We are here to assist you with any questions or issues you may have.",
+    },
+    {
+      question: "What are the shipping fees for exchanges?",
+      answer:
+        "The shipping fee is calculated based on the weight and dimensions of the product. You will see the fee before confirming your exchange.",
+    },
+    {
+      question: "How do I update my account information?",
+      answer:
+        "To update your account information, log in to your account and navigate to the 'Account Settings' page. From there, you can update your personal details.",
+    },
+  ];
+
   const fetchSimilarProducts = async (id) => {
     setIsLoading(true);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/product/productpageproducts`,
-        { id:id, userId: loginInfo?.user.id },
-        
+        { id: id, userId: loginInfo?.user.id }
       );
       setSimilarProducts(response.data.filteredProducts);
       setIsLoading(false);
@@ -109,18 +166,42 @@ const ShopDetailPage = ({ params, loginInfo }) => {
   };
 
 
-
-  const productVisit = async () => {
-   
+  const QuestionsFetch = async () => {
     try {
-      setIsLoading(true);
+      const response = await axios.get(
+        process.env.NEXT_PUBLIC_API_URL +
+          "/question/product/" +
+          params.id +
+          "/questions",
+        config
+      );
+
+      setfaqss(response.data);
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+      // setNotification({
+      //   show: true,
+      //   message: "Error adding item to wishlist. Please try again.",
+      //   type: "error",
+      // });
+    } finally {
+      setIsLoading(false);
+      // setTimeout(() => {
+      //   setNotification({ show: false, message: "", type: "" });
+      // }, 3000);
+    }
+    
+  }
+  const productVisit = async () => {
+    try {
+      // setIsLoading(true);
       const response = await axios.post(
         process.env.NEXT_PUBLIC_API_URL + "/product/" + product?._id + "/visit",
-        
+
         { userId: loginInfo?.user.id },
         config
       );
-      toast.success("Item added to wishlist!");
+      // toast.success("Item added to wishlist!");
       // setNotification({
       //   show: true,
       //   message: "Item added to wishlist!",
@@ -144,7 +225,10 @@ const ShopDetailPage = ({ params, loginInfo }) => {
   useEffect(() => {
     const id = params.id;
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/productnumber/${id}`, config)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/product/productnumber/${id}`,
+        config
+      )
       .then((response) => {
         if (response.data) {
           setProduct(response.data);
@@ -160,22 +244,15 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         setIsLoading(false);
       });
     productVisit();
+    QuestionsFetch();
     if (loginInfo?.user.token) {
       fetchUserProducts();
     }
   }, [params.id]);
 
-
-
-
-  
-
   const handleTrade = (receiverid) => {
     if (!loginInfo?.user.token) {
-      toast.error(
-        
-          "Login to make trade offer"
-      );
+      toast.error("Login to make trade offer");
     }
     const id = product?._id;
 
@@ -495,6 +572,30 @@ const ShopDetailPage = ({ params, loginInfo }) => {
           </div>
         </div>
       </div>
+      {faqss && (
+        <div className="bg-white rounded-lg shadow-lg p-6 mt-10 max-w-7xl mx-auto">
+          {" "}
+          {/* Set a max width and center it */}
+          <h1 className="text-3xl font-bold text-center mb-6">
+            Frequently Asked Questions
+          </h1>
+          <Accordion type="single" collapsible>
+            {faqss.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-100">
+                  <h2 className="text-xl font-semibold text-black">
+                    {faq.question}
+                  </h2>
+                </AccordionTrigger>
+                <AccordionContent className="p-4 border-t border-gray-200">
+                  <p className="text-gray-700">{faq.answer}</p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      )}
+
       <div className="mt-20">
         <h2 className="text-3xl font-light italic mb-4 text-center">
           You'll Also Love These

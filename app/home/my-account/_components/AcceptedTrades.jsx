@@ -93,15 +93,13 @@ const AcceptedTrades = ({ loginInfo }) => {
           ? "offererStatus"
           : "receiverStatus";
 
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/trade/update-status`,
-        { tradeId: trade._id, status: newStatus },
+      await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/trade/toggletrade/${trade._id}`,
         config
       );
-      toast.success("Status updated successfully!");
 
-      // Refresh trades after status update
       fetchTrades();
+      toast.success("Status updated successfully!");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update status");
     }
@@ -111,57 +109,57 @@ const AcceptedTrades = ({ loginInfo }) => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold mb-6">Accepted/Completed Trades</h1>
-      <div className="space-y-6">
+    <div className="container mx-auto py-10 px-6">
+      <h1 className="text-4xl font-bold mb-8 text-center text-black">
+        Accepted/Completed Trades
+      </h1>
+      <div className="space-y-8">
         {trades &&
           trades.map((trade) => {
             const currentDate = new Date();
             const endDate = new Date(trade.endDate);
-            const isCompletedOrExpired =
-              trade.status === "completed" || endDate < currentDate;
-
+            const isCompletedOrExpired = trade.status === "completed";
             const isOfferer =
               loginInfo?.user.id === trade.offerer._id.toString();
             const isReceiver =
               loginInfo?.user.id === trade.receiver._id.toString();
-
             const offererReviewExists = trade.offererReview;
             const receiverReviewExists = trade.receiverReview;
             const showReviewButton =
               (isOfferer && !offererReviewExists) ||
               (isReceiver && !receiverReviewExists);
-
             const userTradeStatus = isOfferer
-              ? trade.offererStatus
-              : trade.receiverStatus;
-
-            const showToggleButton =
-              isCompletedOrExpired && trade.status !== "completed";
+              ? trade.offererFinished
+              : trade.receiverFinished;
+            const showToggleButton = trade.status !== "completed";
 
             return (
               <div
                 key={trade._id}
-                className="bg-white shadow-lg p-4 md:p-6 flex flex-col md:flex-row items-center justify-between rounded-md"
+                className="bg-white shadow-lg p-6 flex flex-col md:flex-row items-start justify-between rounded-lg border border-gray-300 transition-transform transform hover:scale-105"
               >
                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full">
+                  {/* Offerer's Product */}
                   <div className="flex items-center w-full md:w-1/2">
                     <img
                       src={trade.offererProduct.imageUrl}
                       alt="Offerer's Product"
-                      className="w-32 h-32 object-cover rounded-md"
+                      className="w-32 h-32 object-cover rounded-md shadow-md"
                     />
                     <div className="ml-4">
-                      <h2 className="text-lg font-semibold">
-                        {trade.offerer._id == loginInfo?.user.id
+                      <h2 className="text-lg font-semibold text-[#D5B868]">
+                        {trade.offerer._id === loginInfo?.user.id
                           ? "Offerer Product"
                           : "Your Product"}
                       </h2>
-                      <h4 className="text-xl font-semibold">
+                      <h4 className="text-xl font-semibold text-gray-800">
                         {trade.offererProduct.name}
                       </h4>
                       <p className="text-gray-600">
-                        Price: ${trade.offererProduct.price}
+                        Price:{" "}
+                        <span className="font-bold">
+                          ${trade.offererProduct.price}
+                        </span>
                       </p>
                       <div className="mt-2 space-y-1">
                         <Link
@@ -170,7 +168,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                         >
                           View Product
                         </Link>
-                        <br />
+                        <br></br>
                         <Link
                           href={`/home/store/${trade.offererProduct?.userId}`}
                           className="text-black hover:underline"
@@ -181,23 +179,27 @@ const AcceptedTrades = ({ loginInfo }) => {
                     </div>
                   </div>
 
+                  {/* Receiver's Product */}
                   <div className="flex items-center w-full md:w-1/2">
                     <img
                       src={trade.receiverProduct.imageUrl}
                       alt="Receiver's Product"
-                      className="w-32 h-32 object-cover rounded-md"
+                      className="w-32 h-32 object-cover rounded-md shadow-md"
                     />
                     <div className="ml-4">
-                      <h2 className="text-lg font-semibold">
-                        {trade.receiver._id == loginInfo?.user.id
-                          ? "Offerer Product"
+                      <h2 className="text-lg font-semibold text-[#D5B868]">
+                        {trade.receiver._id === loginInfo?.user.id
+                          ? "Receiver Product"
                           : "Your Product"}
                       </h2>
-                      <h4 className="text-xl font-semibold">
+                      <h4 className="text-xl font-semibold text-gray-800">
                         {trade.receiverProduct.name}
                       </h4>
                       <p className="text-gray-600">
-                        Price: ${trade.receiverProduct.price}
+                        Price:{" "}
+                        <span className="font-bold">
+                          ${trade.receiverProduct.price}
+                        </span>
                       </p>
                       <div className="mt-2 space-y-1">
                         <Link
@@ -206,7 +208,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                         >
                           View Product
                         </Link>
-                        <br />
+                        <br></br>
                         <Link
                           href={`/home/store/${trade.receiverProduct?.userId}`}
                           className="text-black hover:underline"
@@ -220,24 +222,40 @@ const AcceptedTrades = ({ loginInfo }) => {
 
                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
                   <p className="text-lg font-semibold">
-                    Trade Status: {trade.status}
+                    Trade Status:{" "}
+                    <span
+                      className={`font-bold text-${
+                        trade.status === "completed" ? "green" : "red"
+                      }-500`}
+                    >
+                      {trade.status}
+                    </span>
                   </p>
                   <p className="text-lg font-semibold">
-                    Your Status: {userTradeStatus==true ? "Finished" : "Not Finished"}
+                    Your Status:{" "}
+                    <span className="font-bold">
+                      {userTradeStatus ? "Finished" : "Not Finished"}
+                    </span>
                   </p>
 
                   {/* Display Start and End Dates */}
                   <p className="text-lg font-semibold">
-                    Start Date: {new Date(trade.startDate).toLocaleDateString()}
+                    Start Date:{" "}
+                    <span className="font-bold">
+                      {new Date(trade.startDate).toLocaleDateString()}
+                    </span>
                   </p>
                   <p className="text-lg font-semibold">
-                    End Date: {new Date(trade.endDate).toLocaleDateString()}
+                    End Date:{" "}
+                    <span className="font-bold">
+                      {new Date(trade.endDate).toLocaleDateString()}
+                    </span>
                   </p>
 
                   {isCompletedOrExpired && showReviewButton && (
                     <button
                       onClick={() => handleReviewClick(trade)}
-                      className="bg-[#F5BA41] text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition w-full md:w-auto"
+                      className="bg-[#D5B868] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition w-full md:w-auto"
                     >
                       Leave Review
                     </button>
@@ -246,9 +264,9 @@ const AcceptedTrades = ({ loginInfo }) => {
                   {showToggleButton && (
                     <button
                       onClick={() => handleToggleStatus(trade)}
-                      className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full md:w-auto"
+                      className="bg-[#D5B868] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition w-full md:w-auto"
                     >
-                      Change Status
+                      {showToggleButton ? "Toggle Status" : "Complete Trade"}
                     </button>
                   )}
                 </div>
@@ -258,35 +276,33 @@ const AcceptedTrades = ({ loginInfo }) => {
       </div>
 
       {/* Review Popup */}
-      {showReviewPopup && selectedTrade && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">
-              Review{" "}
-              {loginInfo.userId === selectedTrade.offerer.toString()
-                ? "Offerer"
-                : "Receiver"}
+      {showReviewPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg w-11/12 md:w-1/3">
+            <h2 className="text-xl font-bold mb-4 text-[#D5B868]">
+              Leave a Review
             </h2>
-            <div className="flex items-center mb-4">
-              {[...Array(5)].map((_, index) => (
+            <p className="mb-4">Rate your experience:</p>
+            <div className="flex mb-4">
+              {[1, 2, 3, 4, 5].map((star) => (
                 <FaStar
-                  key={index}
+                  key={star}
                   className={`cursor-pointer ${
-                    index < reviewStars ? "text-yellow-500" : "text-gray-300"
+                    reviewStars >= star ? "text-[#D5B868]" : "text-gray-400"
                   }`}
-                  onClick={() => setReviewStars(index + 1)}
+                  onClick={() => setReviewStars(star)}
                 />
               ))}
             </div>
             <button
               onClick={submitReview}
-              className="bg-[#F5BA41] text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition w-full"
+              className="bg-[#D5B868] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition"
             >
               Submit Review
             </button>
             <button
               onClick={() => setShowReviewPopup(false)}
-              className="text-gray-500 mt-4"
+              className="mt-2 text-red-500 hover:underline"
             >
               Cancel
             </button>

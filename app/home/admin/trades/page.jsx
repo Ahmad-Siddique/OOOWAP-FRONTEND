@@ -9,30 +9,30 @@ const TradePanel = () => {
   const [selectedTrade, setSelectedTrade] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState(""); // State for search input
-  
-  useEffect(() => {
-    const fetchTrades = async () => {
-       const data = JSON.parse(localStorage.getItem("ooowap-user"));
-       const config = {
-         headers: {
-           Authorization: `Bearer ${data?.token}`,
-         },
-      };
-      console.log(config)
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/admin/trades`,config,
-          { params: { search } },
-           // Pass the search term as a parameter
-        );
-        setTrades(response.data);
-      } catch (error) {
-        console.error("Error fetching trades:", error);
-      }
-    };
 
-    fetchTrades();
-  }, [search]); // Refetch trades when search input changes
+  // Function to fetch trades
+  const fetchTrades = async (searchTerm) => {
+    const data = JSON.parse(localStorage.getItem("ooowap-user"));
+    const config = {
+      headers: {
+        Authorization: `Bearer ${data?.token}`,
+      },
+    };
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/trades?tradeId=${search}`,
+        config
+      );
+      setTrades(response.data);
+    } catch (error) {
+      console.error("Error fetching trades:", error);
+    }
+  };
+
+  // Fetch all trades on component mount
+  useEffect(() => {
+    fetchTrades(""); // Fetch all trades initially
+  }, []);
 
   const handleDelete = async (tradeId) => {
     try {
@@ -62,19 +62,33 @@ const TradePanel = () => {
     setSelectedTrade(null);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    fetchTrades(search); // Fetch trades based on search input
+  };
+
   return (
     <AdminLayout>
       <h2 className="text-2xl font-bold mb-4">Trade Management</h2>
-      <input
-        type="text"
-        placeholder="Search trades..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)} // Update search state on input change
-        className="mb-4 p-2 border rounded"
-      />
+      <form onSubmit={handleSearchSubmit} className="mb-4 flex space-x-2">
+        <input
+          type="text"
+          placeholder="Search trades..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)} // Update search state on input change
+          className="border border-gray-300 rounded-md py-2 px-4 w-full focus:outline-none focus:ring focus:ring-[#D5B868] transition duration-150"
+        />
+        <button
+          type="submit"
+          className="ml-2 px-4 py-2 bg-[#D5B868] text-white rounded-lg hover:bg-[#b79355] transition-all duration-300"
+        >
+          Search
+        </button>
+      </form>
       <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead>
           <tr className="bg-[#C79B44] text-white">
+            <th className="py-2 px-4">Trade ID</th>
             <th className="py-2 px-4">Offerer</th>
             <th className="py-2 px-4">Receiver</th>
             <th className="py-2 px-4">Offerer Product</th>
@@ -84,37 +98,39 @@ const TradePanel = () => {
           </tr>
         </thead>
         <tbody>
-          {trades.map((trade) => (
-            <tr key={trade._id} className="border-b">
-              <td className="text-center py-2 px-4">
-                {trade.offerer?.firstName}
-              </td>
-              <td className="text-center py-2 px-4">
-                {trade.receiver?.firstName}
-              </td>
-              <td className="text-center py-2 px-4">
-                {trade.offererProduct?.name}
-              </td>
-              <td className="text-center py-2 px-4">
-                {trade.receiverProduct?.name}
-              </td>
-              <td className="text-center py-2 px-4">{trade.status}</td>
-              <td className="text-center justify-center py-2 px-4 flex space-x-2">
-                <button
-                  onClick={() => openModal(trade)}
-                  className="flex items-center space-x-1 px-3 py-2 text-sm font-semibold text-white bg-[#D5B868] rounded-lg hover:bg-[#b79355] transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b79355]"
-                >
-                  <FaEye /> <span>View</span>
-                </button>
-                <button
-                  onClick={() => handleDelete(trade._id)}
-                  className="flex items-center space-x-1 px-3 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-400 transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
-                >
-                  <FaTrash /> <span>Delete</span>
-                </button>
-              </td>
-            </tr>
-          ))}
+          {trades &&
+            trades.map((trade) => (
+              <tr key={trade._id} className="border-b">
+                <td className="text-center py-2 px-4">{trade._id}</td>
+                <td className="text-center py-2 px-4">
+                  {trade.offerer?.firstName}
+                </td>
+                <td className="text-center py-2 px-4">
+                  {trade.receiver?.firstName}
+                </td>
+                <td className="text-center py-2 px-4">
+                  {trade.offererProduct?.name}
+                </td>
+                <td className="text-center py-2 px-4">
+                  {trade.receiverProduct?.name}
+                </td>
+                <td className="text-center py-2 px-4">{trade.status}</td>
+                <td className="text-center justify-center py-2 px-4 flex space-x-2">
+                  <button
+                    onClick={() => openModal(trade)}
+                    className="flex items-center space-x-1 px-3 py-2 text-sm font-semibold text-white bg-[#D5B868] rounded-lg hover:bg-[#b79355] transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b79355]"
+                  >
+                    <FaEye /> <span>View</span>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(trade._id)}
+                    className="flex items-center space-x-1 px-3 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-400 transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                  >
+                    <FaTrash /> <span>Delete</span>
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
@@ -142,8 +158,20 @@ const TradePanel = () => {
               {selectedTrade.offererProduct?.name}
             </p>
             <p>
+              <strong>Offerer Completion Status:</strong>{" "}
+              {selectedTrade.offererProduct?.offererFinished
+                ? "Completed"
+                : "Not Completed"}
+            </p>
+            <p>
               <strong>Receiver Product:</strong>{" "}
               {selectedTrade.receiverProduct?.name}
+            </p>
+            <p>
+              <strong>Offerer Completion Status:</strong>{" "}
+              {selectedTrade.receiverProduct?.receiverFinished
+                ? "Completed"
+                : "Not Completed"}
             </p>
             <p>
               <strong>Shipping Fee:</strong> ${selectedTrade.shippingFee}

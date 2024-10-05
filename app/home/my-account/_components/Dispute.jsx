@@ -95,14 +95,15 @@ const Dispute = ({loginInfo}) => {
           {disputes.map((dispute) => (
             <div key={dispute._id} className="bg-white shadow p-4 rounded-md">
               <p>
-                <strong>Trade:</strong> {dispute.trade.offererProduct.name} vs{" "}
-                {dispute.trade.receiverProduct.name}
+                <strong>Trade:</strong>{" "}
+                {dispute && dispute?.trade?.offererProduct.name} vs{" "}
+                {dispute && dispute?.trade?.receiverProduct.name}
               </p>
               <p>
-                <strong>Reason:</strong> {dispute.reason}
+                <strong>Reason:</strong> {dispute && dispute.reason}
               </p>
               <p>
-                <strong>Status:</strong> {dispute.status}
+                <strong>Status:</strong> {dispute && dispute.status}
               </p>
             </div>
           ))}
