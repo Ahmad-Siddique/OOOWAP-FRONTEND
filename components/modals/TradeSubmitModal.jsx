@@ -52,9 +52,16 @@ export default function TradeOfferModal({ isOpen, onClose, product, handleTrade 
             {/* Shipping and Total */}
             <div className="mt-4 w-full">
               <p className="text-sm">
-                Shipping Price:{" "}
+                Website Shipping Price:{" "}
                 <span className="font-semibold">
                   ${shippingCost.toFixed(2)}
+                </span>
+              </p>
+
+              <p className="text-sm">
+                Product Shipping Price:{" "}
+                <span className="font-semibold">
+                  $0.0
                 </span>
               </p>
 
@@ -68,7 +75,7 @@ export default function TradeOfferModal({ isOpen, onClose, product, handleTrade 
             <div className="flex items-center pt-5 gap-1">
               <DialogClose asChild>
                 <button
-                  onClick={()=>handleSubmit(product)}
+                  onClick={() => handleSubmit(product)}
                   className="w-fit flex items-center gap-1 bg-[#F5BA41] group text-white py-2 font-light pl-5 pr-4"
                 >
                   Send Trade Offer
