@@ -145,7 +145,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                     <img
                       src={trade.offererProduct.imageUrl}
                       alt="Offerer's Product"
-                      className="w-32 h-32 object-cover rounded-md shadow-md"
+                      className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md shadow-md"
                     />
                     <div className="ml-4">
                       <h2 className="text-lg font-semibold text-[#D5B868]">
@@ -169,7 +169,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                         >
                           View Product
                         </Link>
-                        <br></br>
+                        <br />
                         <Link
                           href={`/home/store/${trade.offererProduct?.userId}`}
                           className="text-black hover:underline"
@@ -185,7 +185,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                     <img
                       src={trade.receiverProduct.imageUrl}
                       alt="Receiver's Product"
-                      className="w-32 h-32 object-cover rounded-md shadow-md"
+                      className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md shadow-md"
                     />
                     <div className="ml-4">
                       <h2 className="text-lg font-semibold text-[#D5B868]">
@@ -209,7 +209,7 @@ const AcceptedTrades = ({ loginInfo }) => {
                         >
                           View Product
                         </Link>
-                        <br></br>
+                        <br />
                         <Link
                           href={`/home/store/${trade.receiverProduct?.userId}`}
                           className="text-black hover:underline"
@@ -221,21 +221,15 @@ const AcceptedTrades = ({ loginInfo }) => {
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0">
+                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-0 w-full md:w-auto">
                   <p className="text-lg font-semibold">
                     Trade Status:{" "}
                     <span
                       className={`font-bold text-${
-                        trade.status === "completed" ? "green" : "red"
+                        trade.status === "completed" ? "green" : "black"
                       }-500`}
                     >
                       {trade.status}
-                    </span>
-                  </p>
-                  <p className="text-lg font-semibold">
-                    Your Status:{" "}
-                    <span className="font-bold">
-                      {userTradeStatus ? "Finished" : "Not Finished"}
                     </span>
                   </p>
 
@@ -253,21 +247,19 @@ const AcceptedTrades = ({ loginInfo }) => {
                     </span>
                   </p>
 
+                  <Link
+                    href={`/home/my-account/accepted-completed-trades/${trade._id}`}
+                  >
+                    <button className="bg-[#D5B868] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition w-full md:w-auto">
+                      View Trade Details
+                    </button>
+                  </Link>
                   {isCompletedOrExpired && showReviewButton && (
                     <button
                       onClick={() => handleReviewClick(trade)}
                       className="bg-[#D5B868] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition w-full md:w-auto"
                     >
                       Leave Review
-                    </button>
-                  )}
-
-                  {showToggleButton && (
-                    <button
-                      onClick={() => handleToggleStatus(trade)}
-                      className="bg-[#D5B868] text-white py-2 px-4 rounded-lg hover:bg-[#F5BA41] transition w-full md:w-auto"
-                    >
-                      {showToggleButton ? "Toggle Status" : "Complete Trade"}
                     </button>
                   )}
                 </div>

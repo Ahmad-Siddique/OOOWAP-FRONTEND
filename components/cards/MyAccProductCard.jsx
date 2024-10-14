@@ -36,7 +36,7 @@ export default function MyAccProductCard({
       <img
         src={product.imageUrl}
         alt={product.name}
-        className="w-full md:w-32 h-32 object-cover mb-4 md:mb-0 md:mr-4 rounded-md"
+        className="w-32 h-32 object-cover mb-4 md:mb-0 md:mr-4 rounded-md"
       />
       <div className="flex flex-col h-full">
         <h2 className="text-xl font-semibold">

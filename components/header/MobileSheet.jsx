@@ -8,16 +8,63 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const MobileSheet = ({ loginInfo, logOut }) => {
+   const [userdata, setuserdata] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
+   const config = {
+     headers: {
+       Authorization: `Bearer ${loginInfo && loginInfo?.user?.token}`,
+     },
+   };
+const fetchUser = async () => {
+  try {
+    // Replace with your actual API endpoint
+    const response = await axios.get(
+      process.env.NEXT_PUBLIC_API_URL + "/auth/getuserprofile",
+      config
+    );
+    setuserdata(response.data);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    // setErrorMessage("Failed to load user data. Please try again.");
+    // setIsLoading(false);
+  }
+};
+  useEffect(() => {
+     fetchUser();
+
+
+
+
+
+    //  const userDataString = localStorage.getItem("ooowap-user");
+    //  console.log("Suuuuuuuuuuu", userDataString);
+    //  // Try parsing and catch any errors
+    //  try {
+    //    const parsedData = userDataString ? JSON.parse(userDataString) : null;
+    //    if (loginInfo && parsedData == null) {
+    //      window.location.reload();
+    //    }
+    //    console.log("Parsed user data:", parsedData); // Log the parsed user data
+    //    setuserdata(parsedData);
+    //  } catch (error) {
+    //    console.error("Error parsing user data from localStorage", error);
+    //    setuserdata(null); // Reset userdata in case of an error
+    //  } finally {
+    //    setLoading(false); // Set loading to false after data retrieval
+    //  }
+   }, []);
   return (
     <Sheet>
       <SheetTrigger>
         <div
           className="bg-center w-10 h-10 rounded-full bg-no-repeat bg-cover"
-          style={{ backgroundImage: `url(${loginInfo.user.image})` }}
+          style={{ backgroundImage: `url(${userdata?.image})` }}
         ></div>
       </SheetTrigger>
       <SheetContent className="bg-black text-white border-primary">
@@ -30,14 +77,15 @@ const MobileSheet = ({ loginInfo, logOut }) => {
           <div className="flex items-center gap-3">
             <div
               className="bg-center w-12 h-12 border border-primary rounded-full bg-no-repeat bg-cover"
-              style={{ backgroundImage: `url(${loginInfo.user.image})` }}
+              style={{ backgroundImage: `url(${userdata?.image})` }}
             ></div>
             <div className="pb-2 flex flex-col border-b border-black/30">
-              <h1 className="text-lg font-bold">{loginInfo.user.firstName}</h1>
+              <h1 className="text-lg font-bold">{userdata?.firstName}</h1>
               <p className="text-xs text-white/80 font-normal">
                 Balance:{" "}
                 <span className="text-white text-sm font-bold">
-                  ${loginInfo.user.balance?.toFixed(2)}
+                  {console.log("Mobile Balance: ",userdata?.balance)}
+                  ${userdata?.balance}
                 </span>
               </p>
             </div>

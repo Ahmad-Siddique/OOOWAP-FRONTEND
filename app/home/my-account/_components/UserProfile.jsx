@@ -16,6 +16,10 @@ export default function UserProfile({ loginInfo }) {
   });
   const [loading, setLoading] = useState(true);
 
+
+
+
+  
   useEffect(() => {
     if (!loginInfo?.user.token) {
       router.push("/login")

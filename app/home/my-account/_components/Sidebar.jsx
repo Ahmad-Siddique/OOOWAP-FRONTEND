@@ -4,8 +4,29 @@ import { toast } from "react-toastify";
 
 const Sidebar = ({ loginInfo }) => {
   const [metrics, setMetrics] = useState({ trades: 0, reviews: 0 });
+  const [userInfo, setuserInfo] = useState();
+   const config = {
+     headers: {
+       Authorization: `Bearer ${loginInfo && loginInfo?.user?.token}`,
+     },
+   };
+  const fetchUser = async () => {
+    try {
+      // Replace with your actual API endpoint
+      const response = await axios.get(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/getuserprofile",
+        config
+      );
+      setuserInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      // setErrorMessage("Failed to load user data. Please try again.");
+      // setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
+    fetchUser();
     const fetchMetrics = async () => {
       try {
         const response = await axios.get(
@@ -18,11 +39,10 @@ const Sidebar = ({ loginInfo }) => {
         );
         setMetrics(response.data);
       } catch (error) {
-        
         // toast.error("Error fetching metrics!");
       }
     };
-
+    // fetchUser();
     fetchMetrics();
   }, [loginInfo?.user?.token]);
 
@@ -31,10 +51,10 @@ const Sidebar = ({ loginInfo }) => {
       <div className="bg-[#F5E9A6] left-3 top-3 p-6 absolute w-full text-center">
         {/* User Image */}
         <div className="flex flex-col items-center justify-center gap-1 text-center">
-          {loginInfo?.user?.image ? (
+          {userInfo?.image ? (
             <img
-              src={loginInfo.user.image}
-              alt={`Profile picture of ${loginInfo?.user.name || "User"}`}
+              src={userInfo.image}
+              alt={`Profile picture of ${userInfo?.name || "User"}`}
               className="rounded-full w-24 h-24 mb-4 mx-auto object-cover sm:w-32 sm:h-32"
             />
           ) : (
@@ -43,8 +63,7 @@ const Sidebar = ({ loginInfo }) => {
             </div>
           )}
           <h1 className="text-xl font-bold">
-            {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
-              "User"}
+            {userInfo?.firstName + " " + userInfo?.lastName || "User"}
           </h1>
           {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
@@ -74,10 +93,10 @@ const Sidebar = ({ loginInfo }) => {
       <div className="bg-[#FDDC26] left-2 top-2 p-6 absolute w-full text-center">
         {/* User Image */}
         <div className="flex flex-col items-center justify-center gap-1 text-center">
-          {loginInfo?.user?.image ? (
+          {userInfo?.image ? (
             <img
-              src={loginInfo.user.image}
-              alt={`Profile picture of ${loginInfo?.user.name || "User"}`}
+              src={userInfo.image}
+              alt={`Profile picture of ${userInfo?.name || "User"}`}
               className="rounded-full w-24 h-24 mb-4 mx-auto object-cover sm:w-32 sm:h-32"
             />
           ) : (
@@ -86,8 +105,7 @@ const Sidebar = ({ loginInfo }) => {
             </div>
           )}
           <h1 className="text-xl font-bold">
-            {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
-              "User"}
+            {userInfo?.firstName + " " + userInfo?.lastName || "User"}
           </h1>
           {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
@@ -117,10 +135,10 @@ const Sidebar = ({ loginInfo }) => {
       <div className="bg-[#DFAF2E] left-1 top-1 p-6 absolute w-full text-center">
         {/* User Image */}
         <div className="flex flex-col items-center justify-center gap-1 text-center">
-          {loginInfo?.user?.image ? (
+          {userInfo?.image ? (
             <img
-              src={loginInfo.user.image}
-              alt={`Profile picture of ${loginInfo?.user.name || "User"}`}
+              src={userInfo.image}
+              alt={`Profile picture of ${userInfo?.name || "User"}`}
               className="rounded-full w-24 h-24 mb-4 mx-auto object-cover sm:w-32 sm:h-32"
             />
           ) : (
@@ -129,8 +147,7 @@ const Sidebar = ({ loginInfo }) => {
             </div>
           )}
           <h1 className="text-xl font-bold">
-            {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
-              "User"}
+            {userInfo?.firstName + " " + userInfo?.lastName || "User"}
           </h1>
           {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
@@ -160,10 +177,10 @@ const Sidebar = ({ loginInfo }) => {
       <div className="bg-white p-6 absolute w-full text-center">
         {/* User Image */}
         <div className="flex flex-col items-center justify-center gap-1 text-center">
-          {loginInfo?.user?.image ? (
+          {userInfo?.image ? (
             <img
-              src={loginInfo.user.image}
-              alt={`Profile picture of ${loginInfo?.user.name || "User"}`}
+              src={userInfo.image}
+              alt={`Profile picture of ${userInfo?.name || "User"}`}
               className="rounded-full w-24 h-24 mb-4 mx-auto object-cover sm:w-32 sm:h-32"
             />
           ) : (
@@ -172,8 +189,7 @@ const Sidebar = ({ loginInfo }) => {
             </div>
           )}
           <h1 className="text-xl font-bold">
-            {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
-              "User"}
+            {userInfo?.firstName + " " + userInfo?.lastName || "User"}
           </h1>
           {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>
@@ -203,10 +219,10 @@ const Sidebar = ({ loginInfo }) => {
       <div className="bg-white p-6 absolute w-full text-center">
         {/* User Image */}
         <div className="flex flex-col items-center justify-center gap-1 text-center">
-          {loginInfo?.user?.image ? (
+          {userInfo?.image ? (
             <img
-              src={loginInfo.user.image}
-              alt={`Profile picture of ${loginInfo?.user.name || "User"}`}
+              src={userInfo.image}
+              alt={`Profile picture of ${userInfo?.name || "User"}`}
               className="rounded-full w-24 h-24 mb-4 mx-auto object-cover sm:w-32 sm:h-32"
             />
           ) : (
@@ -215,8 +231,7 @@ const Sidebar = ({ loginInfo }) => {
             </div>
           )}
           <h1 className="text-xl font-bold">
-            {loginInfo?.user?.firstName + " " + loginInfo?.user?.lastName ||
-              "User"}
+            {userInfo?.firstName + " " + userInfo?.lastName || "User"}
           </h1>
           {/* <span className="text-sm mb-10">March 26th, 2023</span> */}
         </div>

@@ -125,7 +125,7 @@ const Featured = ({ loginInfo }) => {
           </h2>
           <div className="bg-primary h-0.5 w-32"></div>
         </div>
-        <div className="grid grid-cols-1 w-full max-w-5xl sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-5xl">
           {products.map((product) => (
             <ProductCard
               key={product._id}

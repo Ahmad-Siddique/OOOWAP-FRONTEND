@@ -1,6 +1,5 @@
 import {
   ChevronRightIcon,
-  ClipboardCopyIcon,
   ClipboardIcon,
   HeartFilledIcon,
 } from "@radix-ui/react-icons";
@@ -12,11 +11,17 @@ const ProductCard = ({
   isProductinWishlist = () => {},
 }) => {
   return (
-    <Link href={`/home/shop/${product.productNumber}`} passHref key={product.productNumber}>
+    <Link
+      href={`/home/shop/${product.productNumber}`}
+      passHref
+      key={product.productNumber}
+    >
       <div className="cursor-pointer flex flex-col">
         <div
-          className="h-88  relative"
+          className="relative"
           style={{
+            width: "300px",
+            height: "300px",
             backgroundImage: `url(${product.imageUrl})`,
             backgroundSize: "cover",
             backgroundPosition: "top",
@@ -35,13 +40,17 @@ const ProductCard = ({
           >
             <HeartFilledIcon
               className={`h-6 w-6 ${
-                isProductinWishlist(product._id) ? "text-[#DC3232]" : "text-[#8B8B8B]"
+                isProductinWishlist(product._id)
+                  ? "text-[#DC3232]"
+                  : "text-[#8B8B8B]"
               }`}
             />
           </button>
         </div>
         <div className="flex flex-col py-2">
-          <p className="text-sm font-medium">{product?.brand ? product.brand : "Other"}</p>
+          <p className="text-sm font-medium">
+            {product?.brand ? product.brand : "Other"}
+          </p>
           <p className="text-lg font-medium mb-1">{product.name}</p>
           <p className="text-sm font-light mb-0.5 text-gray-600 ">
             By:{" "}

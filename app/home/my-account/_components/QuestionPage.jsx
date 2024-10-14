@@ -23,16 +23,16 @@ const QuestionsPage = ({ params, loginInfo }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/question/product/${params.id}/questions`,
+        `${process.env.NEXT_PUBLIC_API_URL}/question/product/${params.id}/questions1`,
         config
       );
 
       // Log response to inspect structure
-      console.log("Data",response.data);
+      console.log("Data", response.data.unansweredQuestions);
 
       // Check if the data is nested or directly available, adjust accordingly
       // Assuming the questions are in response.data.data
-      setQuestions(response.data);
+      setQuestions(response.data.unansweredQuestions);
     } catch (error) {
       toast.error("Error fetching questions!");
     } finally {
@@ -84,13 +84,13 @@ const QuestionsPage = ({ params, loginInfo }) => {
               <h2 className="text-lg font-semibold">{question.question}</h2>
               <p className="text-gray-600">
                 Status:{" "}
-                {question.answer ? (
+                {question.answer != "No answer provided" ? (
                   <span className="text-green-500">Answered</span>
                 ) : (
                   <span className="text-red-500">Not Answered</span>
                 )}
               </p>
-              {!question.answer && (
+              {question.answer == "No answer provided" && (
                 <button
                   className="mt-2 bg-[#F5BA41] text-white py-1 px-3 rounded hover:bg-blue-600"
                   onClick={() => handleOpenModal(question)}

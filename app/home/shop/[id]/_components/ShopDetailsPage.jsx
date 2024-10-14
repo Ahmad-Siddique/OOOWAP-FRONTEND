@@ -15,11 +15,12 @@ import Link from "next/link";
 import { ChevronRightIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import AskAQuestionModal from "@/components/modals/AskAQuestionModal";
+import TradeOfferModal from "@/components/modals/TradeSubmitModal";
 import ProductCard from "@/components/cards/ProductCard";
 
 const ShopDetailPage = ({ params, loginInfo }) => {
   const [selectedImage, setSelectedImage] = useState(0);
-
+  const [tradeModal,settradeModal] = useState(false)
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [userProducts, setUserProducts] = useState([]);
@@ -29,6 +30,8 @@ const ShopDetailPage = ({ params, loginInfo }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [tradeMessage, setTradeMessage] = useState("");
+  const [faqPage, setFaqPage] = useState(1); // State for the current FAQ page
+  const [faqTotal, setFaqTotal] = useState(0);
   const [notification, setNotification] = useState({
     show: false,
     message: "",
@@ -62,61 +65,6 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     }
   };
 
-
-  
-
-  const faqs = [
-    {
-      question: "What is the purpose of this website?",
-      answer:
-        "This website allows users to exchange similar-priced products. Users pay a small shipping fee for the exchange, and after the exchange is completed, the money is refunded to their wallet.",
-    },
-    {
-      question: "How do I start an exchange?",
-      answer:
-        "To start an exchange, select the product you want to exchange, and follow the prompts to choose a similar-priced product. After confirmation, you will need to pay the shipping fee.",
-    },
-    {
-      question: "What types of products can be exchanged?",
-      answer:
-        "You can exchange products of similar value. Ensure the items are in good condition and meet our exchange criteria.",
-    },
-    {
-      question: "How long does the exchange process take?",
-      answer:
-        "The exchange process typically takes 7-10 business days, including shipping time. We will keep you updated throughout the process.",
-    },
-    {
-      question: "Is there a limit to the number of exchanges I can make?",
-      answer:
-        "There is no set limit on the number of exchanges you can make. However, frequent exchanges may be reviewed to ensure compliance with our policies.",
-    },
-    {
-      question: "What happens if my exchange is canceled?",
-      answer:
-        "If your exchange is canceled, you will receive a full refund of the shipping fee to your wallet. The original product will be returned to you.",
-    },
-    {
-      question: "Can I track my exchange?",
-      answer:
-        "Yes, you will receive tracking information for your exchange once it has been processed. You can track the status through your account dashboard.",
-    },
-    {
-      question: "How do I contact customer support?",
-      answer:
-        "You can contact customer support through the 'Contact Us' page on our website. We are here to assist you with any questions or issues you may have.",
-    },
-    {
-      question: "What are the shipping fees for exchanges?",
-      answer:
-        "The shipping fee is calculated based on the weight and dimensions of the product. You will see the fee before confirming your exchange.",
-    },
-    {
-      question: "How do I update my account information?",
-      answer:
-        "To update your account information, log in to your account and navigate to the 'Account Settings' page. From there, you can update your personal details.",
-    },
-  ];
 
   const fetchSimilarProducts = async (id) => {
     setIsLoading(true);
@@ -164,34 +112,54 @@ const ShopDetailPage = ({ params, loginInfo }) => {
       // }, 3000);
     }
   };
+  const QuestionsFetch = async (productId, page = 1) => {
+   console.log("PRODUCT ID", productId)
+   try {
+     setIsLoading(true); // Start loading
+     const response = await axios.get(
+       `${process.env.NEXT_PUBLIC_API_URL}/question/product/${productId}/questions?page=${page}&limit=2`,
+       config
+     );
 
+     // Create a Set to keep track of unique FAQ IDs
+     const existingIds = new Set(faqss.map((faq) => faq._id));
 
-  const QuestionsFetch = async () => {
+     // Filter out duplicates from the new FAQs
+     const uniqueFaqs = response.data.faqs.filter(
+       (faq) => !existingIds.has(faq._id)
+     );
+
+     // Combine existing FAQs with new unique FAQs and filter again for uniqueness
+     const allFaqs = [...faqss, ...uniqueFaqs];
+     const uniqueFaqsFinal = Array.from(
+       new Set(allFaqs.map((faq) => faq._id))
+     ).map((id) => allFaqs.find((faq) => faq._id === id));
+
+     // Update state with unique FAQs only
+     setfaqss(uniqueFaqsFinal);
+console.log("Total questions:", response.data.totalQuestions);
+     setFaqTotal(response.data.totalQuestions); // Update total count of FAQs
+   } catch (error) {
+     console.error("Error fetching questions:", error);
+   } finally {
+     setIsLoading(false); // End loading
+   }
+ };
+
+  const fetchFAQs = async (page) => {
     try {
       const response = await axios.get(
-        process.env.NEXT_PUBLIC_API_URL +
-          "/question/product/" +
-          params.id +
-          "/questions",
+        `${process.env.NEXT_PUBLIC_API_URL}/question/product/${product?._id}/questions?page=${page}&limit=2`,
         config
       );
 
-      setfaqss(response.data);
+      setfaqss((prev) => [...prev, ...response.data.faqs]);
+      console.log("Total questions:",response.data.totalQuestions)
+      setFaqTotal(response.data.totalQuestions); // Store total FAQs count
     } catch (error) {
-      console.error("Error adding product to wishlist:", error);
-      // setNotification({
-      //   show: true,
-      //   message: "Error adding item to wishlist. Please try again.",
-      //   type: "error",
-      // });
-    } finally {
-      setIsLoading(false);
-      // setTimeout(() => {
-      //   setNotification({ show: false, message: "", type: "" });
-      // }, 3000);
+      console.error("Error fetching FAQs:", error);
     }
-    
-  }
+  };
   const productVisit = async () => {
     try {
       // setIsLoading(true);
@@ -222,7 +190,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
     }
   };
 
-  useEffect(() => {
+  const zeu = async () => {
     const id = params.id;
     axios
       .get(
@@ -233,6 +201,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         if (response.data) {
           setProduct(response.data);
           fetchSimilarProducts(response.data._id);
+          QuestionsFetch(response.data._id);
         } else {
           setError(true);
         }
@@ -243,14 +212,44 @@ const ShopDetailPage = ({ params, loginInfo }) => {
         setError(true);
         setIsLoading(false);
       });
+  }
+
+  useEffect(() => {
+    
+    
     productVisit();
-    QuestionsFetch();
+    //  QuestionsFetch(); // Initial fetch
+     zeu();
+        // QuestionsFetch(); // Fetch FAQs initially
+     
+    
     if (loginInfo?.user.token) {
       fetchUserProducts();
     }
   }, [params.id]);
 
+const loadMoreFAQs = () => {
+  setFaqPage((prev) => prev + 1); // Increment page
+  fetchFAQs(faqPage + 1); // Fetch the next page
+};
+  const handleValidation = () => {
+     if (!loginInfo?.user.token) {
+       toast.error("Login to make trade offer");
+     }
+     const id = product?._id;
+
+     if (!startDate || !endDate || !selectedUserProduct) {
+       setTradeMessage(
+         "Please fill out all fields including selecting a product."
+       );
+       return;
+    }
+    
+    settradeModal(true)
+  }
+
   const handleTrade = (receiverid) => {
+    console.log("Received id",receiverid)
     if (!loginInfo?.user.token) {
       toast.error("Login to make trade offer");
     }
@@ -272,7 +271,7 @@ const ShopDetailPage = ({ params, loginInfo }) => {
 
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/trade/offer/${receiverid._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/trade/offer/${receiverid}`,
         body,
         config
       )
@@ -490,12 +489,18 @@ const ShopDetailPage = ({ params, loginInfo }) => {
 
             <div className="flex gap-5 flex-col mt-10">
               <button
-                onClick={() => handleTrade(product.userId)}
+                onClick={() => handleValidation(product.userId)}
                 className="w-fit flex rounded-full uppercase items-center gap-1 bg-black group text-white py-4 pl-5 pr-4"
               >
                 Trade
                 <ChevronRightIcon className="h-5 w-0 group-hover:w-5 transition-all ease-in duration-150" />
               </button>
+              <TradeOfferModal
+                onClose={() => settradeModal(false)}
+                handleTrade={handleTrade}
+                isOpen={tradeModal}
+                product={product}
+              />
               <button
                 onClick={(e) => {
                   addToWishList(product._id);
@@ -574,14 +579,12 @@ const ShopDetailPage = ({ params, loginInfo }) => {
       </div>
       {faqss && (
         <div className="bg-white rounded-lg shadow-lg p-6 mt-10 max-w-7xl mx-auto">
-          {" "}
-          {/* Set a max width and center it */}
           <h1 className="text-3xl font-bold text-center mb-6">
             Frequently Asked Questions
           </h1>
           <Accordion type="single" collapsible>
             {faqss.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionItem key={faq._id} value={`item-${faq._id}`}>
                 <AccordionTrigger className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-100">
                   <h2 className="text-xl font-semibold text-black">
                     {faq.question}
@@ -593,6 +596,22 @@ const ShopDetailPage = ({ params, loginInfo }) => {
               </AccordionItem>
             ))}
           </Accordion>
+          {/* Debugging Logs */}
+          {/* <div>
+            <p>faqTotal: {faqTotal}</p>
+            <p>Current FAQs length: {faqss.length}</p>
+          </div> */}
+          {/* Load More Button */}
+          {faqTotal > faqss.length && ( // Check if more FAQs exist
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={loadMoreFAQs}
+                className="bg-black text-white py-2 px-4 rounded hover:bg-[#D5B868] transition duration-300"
+              >
+                Load More
+              </button>
+            </div>
+          )}
         </div>
       )}
 

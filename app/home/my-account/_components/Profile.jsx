@@ -31,6 +31,7 @@ const Profile = ({ loginInfo }) => {
     }
   }
 
+  
   const fetchUserData = async () => {
     setIsLoading(true);
     setError("");
@@ -60,10 +61,10 @@ const Profile = ({ loginInfo }) => {
         <div className="md:col-span-3 flex flex-col gap-10">
           <div className="relative w-full h-72">
             <div className="absolute w-full bg-[#F5E9A6] left-3 top-3 p-5">
-              {loginInfo && (
+              {userInfo && (
                 <div className="flex flex-col">
                   <img
-                    src={loginInfo?.user.image}
+                    src={userInfo?.image}
                     alt="User"
                     className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
                   />
@@ -77,10 +78,10 @@ const Profile = ({ loginInfo }) => {
               )}
             </div>
             <div className="absolute w-full bg-[#FDDC26] left-2 top-2 p-5">
-              {loginInfo && (
+              {userInfo && (
                 <div className="flex flex-col">
                   <img
-                    src={loginInfo.user.image}
+                    src={userInfo.image}
                     alt="User"
                     className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
                   />
@@ -94,10 +95,10 @@ const Profile = ({ loginInfo }) => {
               )}
             </div>
             <div className="absolute w-full bg-[#DFAF2E] left-1 top-1 p-5">
-              {loginInfo && (
+              {userInfo && (
                 <div className="flex flex-col">
                   <img
-                    src={loginInfo.user.image}
+                    src={userInfo.image}
                     alt="User"
                     className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
                   />
@@ -111,10 +112,10 @@ const Profile = ({ loginInfo }) => {
               )}
             </div>
             <div className="absolute w-full bg-white p-5">
-              {loginInfo && (
+              {userInfo && (
                 <div className="flex flex-col">
                   <img
-                    src={loginInfo.user.image}
+                    src={userInfo.image}
                     alt="User"
                     className="rounded-full w-52 h-52 border-4 border-[#D5B868]"
                   />
@@ -173,17 +174,18 @@ const Profile = ({ loginInfo }) => {
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16">
-                {userData.featuredProducts && userData.featuredProducts.length !== 0 ? (
-                  userData.featuredProducts.map((product) => (
-                    <ProductCard key={product._id} product={product} />
-                  ))
-                ) : (
-                  <div className="text-center text-lg">
-                    No products available
-                  </div>
-                )}
+                  {userData.featuredProducts &&
+                  userData.featuredProducts.length !== 0 ? (
+                    userData.featuredProducts.map((product) => (
+                      <ProductCard key={product._id} product={product} />
+                    ))
+                  ) : (
+                    <div className="text-center text-lg">
+                      No products available
+                    </div>
+                  )}
 
-                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {userData.featuredProducts &&
                 userData.featuredProducts.length > 0 ? (
                   userData.featuredProducts.map((product) => (
@@ -216,7 +218,7 @@ const Profile = ({ loginInfo }) => {
 
         {/* Sidebar Column */}
         <div className="">
-          <Sidebar loginInfo={loginInfo} />
+          <Sidebar userInfo={userInfo} loginInfo={loginInfo} />
         </div>
       </div>
     </div>

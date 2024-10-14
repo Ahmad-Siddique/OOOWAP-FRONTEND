@@ -19,7 +19,7 @@ const PaymentStatus = ({ loginInfo }) => {
     setStatus(statusParam);
     setValue(valueParam);
 
-    // Making API call to fetch user info
+
     // Making API call to fetch user info
     const fetchUserData = async () => {
       try {
@@ -49,7 +49,7 @@ const PaymentStatus = ({ loginInfo }) => {
         );
 
         const apiUserData = response.data.data;
-
+        console.log(apiUserData.balance, localStorageUser.balance)
         // Compare balance in localStorage and API response
         if (localStorageUser.balance !== apiUserData.balance) {
           // Update localStorage with the new balance and other user data
@@ -92,7 +92,7 @@ const PaymentStatus = ({ loginInfo }) => {
             <FiCheckCircle className="text-green-500 mx-auto text-6xl" />
             <h2 className="text-2xl font-bold mt-4">Payment Successful!</h2>
             <p className="mt-2 text-lg text-gray-600">
-              You have successfully paid{" "}
+              You have successfully deposited{" "}
               <span className="font-semibold">${value}</span>.
             </p>
           </>
