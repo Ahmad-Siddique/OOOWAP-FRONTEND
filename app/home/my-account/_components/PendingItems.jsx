@@ -368,30 +368,25 @@ const PendingItems = ({ loginInfo }) => {
         <p className="text-gray-600">No pending trades at the moment.</p>
       )}
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="space-y-6">
         {pendingTrades.map((trade) => (
           <div
             key={trade._id}
-            className="bg-white rounded-lg shadow-lg p-6 relative flex flex-col max-w-full lg:max-w-lg mx-auto"
+            className="bg-white rounded-lg shadow-lg p-6 flex flex-col lg:flex-row items-center justify-between"
           >
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                Trade Proposal
-              </h2>
-
-              <div className="flex flex-col sm:flex-row lg:flex-col justify-between gap-4">
-                {/* Offerer's Product */}
-                <div className="bg-gray-100 p-4 rounded-lg flex-1">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">
+            {/* Offerer's Product and Receiver's Product in a row */}
+            <div className="flex flex-col lg:flex-row w-full lg:space-x-6 mb-4 lg:mb-0">
+              {/* Offerer's Product */}
+              <div className="flex items-center space-x-4 lg:space-x-6">
+                <img
+                  src={trade.offererProduct.imageUrl}
+                  alt={trade.offererProduct.name}
+                  className="w-48 h-48 object-cover rounded"
+                />
+                <div className="space-y-1">
+                  <h3 className="text-lg font-semibold text-gray-700">
                     Offerer's Product
                   </h3>
-                  <div className="w-full aspect-w-4 aspect-h-3 flex items-center justify-center mb-2">
-                    <img
-                      src={trade.offererProduct.imageUrl}
-                      alt={trade.offererProduct.name}
-                      className="w-full max-w-xs h-auto object-cover rounded"
-                    />
-                  </div>
                   <p className="text-gray-800 font-medium">
                     {trade.offererProduct.name}
                   </p>
@@ -405,19 +400,19 @@ const PendingItems = ({ loginInfo }) => {
                     Condition: {trade.offererProduct.condition}
                   </p>
                 </div>
+              </div>
 
-                {/* Receiver's Product */}
-                <div className="bg-gray-100 p-4 rounded-lg flex-1">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              {/* Receiver's Product */}
+              <div className="flex items-center space-x-4 lg:space-x-6 mt-4 lg:mt-0">
+                <img
+                  src={trade.receiverProduct.imageUrl}
+                  alt={trade.receiverProduct.name}
+                  className="w-48 h-48 object-cover rounded"
+                />
+                <div className="space-y-1">
+                  <h3 className="text-lg font-semibold text-gray-700">
                     Your Product
                   </h3>
-                  <div className="w-full aspect-w-4 aspect-h-3 flex items-center justify-center mb-2">
-                    <img
-                      src={trade.receiverProduct.imageUrl}
-                      alt={trade.receiverProduct.name}
-                      className="w-full max-w-xs h-auto object-cover rounded"
-                    />
-                  </div>
                   <p className="text-gray-800 font-medium">
                     {trade.receiverProduct.name}
                   </p>
@@ -432,35 +427,39 @@ const PendingItems = ({ loginInfo }) => {
                   </p>
                 </div>
               </div>
+            </div>
 
-              <p className="text-gray-500 mt-4">
+            {/* Trade Dates and Actions */}
+            <div className="flex flex-col items-start lg:items-end space-y-2">
+              <p className="text-gray-500">
                 Offer Start Date:{" "}
                 {moment(trade.startDate).format("MMMM Do YYYY")}
               </p>
               <p className="text-gray-500">
                 Offer End Date: {moment(trade.endDate).format("MMMM Do YYYY")}
               </p>
-            </div>
 
-            <div className="flex justify-between items-center mt-auto space-x-4">
-              <Button
-                className="bg-[#F5BA41] text-white px-4 py-2 rounded-lg hover:bg-[#F5BA41]"
-                onClick={() => handleAcceptTrade(trade._id)}
-              >
-                Accept
-              </Button>
-              <Button
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                onClick={() => handleRejectTrade(trade._id)}
-              >
-                Reject
-              </Button>
-              <Button
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                onClick={() => handleOpenModal(trade)}
-              >
-                Change Trade Item
-              </Button>
+              {/* Action Buttons */}
+              <div className="flex space-x-4 mt-4 lg:mt-2">
+                <Button
+                  className="bg-[#F5BA41] text-white px-4 py-2 rounded-lg hover:bg-[#F5BA41]"
+                  onClick={() => handleAcceptTrade(trade._id)}
+                >
+                  Accept
+                </Button>
+                <Button
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                  onClick={() => handleRejectTrade(trade._id)}
+                >
+                  Reject
+                </Button>
+                <Button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                  onClick={() => handleOpenModal(trade)}
+                >
+                  Change Trade Item
+                </Button>
+              </div>
             </div>
           </div>
         ))}

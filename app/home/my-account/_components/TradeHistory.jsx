@@ -81,12 +81,12 @@ const TradeHistory = ({ loginInfo }) => {
           tradeHistory.map((trade) => (
             <div
               key={trade._id}
-              className="bg-white shadow-lg p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between"
+              className="bg-white shadow-lg p-4 sm:p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0"
             >
               {/* Left Section: Two Product Images */}
-              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full lg:w-3/4">
                 {/* Offerer's Product */}
-                <div className="flex items-center space-x-4">
+                <div className="flex items-start space-x-4 w-full sm:w-1/2">
                   <img
                     src={trade.offererProduct?.imageUrl || "/placeholder.png"}
                     alt={`Offerer's Product: ${
@@ -94,7 +94,7 @@ const TradeHistory = ({ loginInfo }) => {
                     }`}
                     className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md"
                   />
-                  <div>
+                  <div className="flex-1">
                     <h4 className="text-lg font-semibold">
                       {trade.offererProduct?.name || "Unknown Product"}
                     </h4>
@@ -127,7 +127,7 @@ const TradeHistory = ({ loginInfo }) => {
                 </div>
 
                 {/* Receiver's Product */}
-                <div className="flex items-center space-x-4">
+                <div className="flex items-start space-x-4 w-full sm:w-1/2">
                   <img
                     src={trade.receiverProduct?.imageUrl || "/placeholder.png"}
                     alt={`Receiver's Product: ${
@@ -135,7 +135,7 @@ const TradeHistory = ({ loginInfo }) => {
                     }`}
                     className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md"
                   />
-                  <div>
+                  <div className="flex-1">
                     <h4 className="text-lg font-semibold">
                       {trade.receiverProduct?.name || "Unknown Product"}
                     </h4>
@@ -169,7 +169,7 @@ const TradeHistory = ({ loginInfo }) => {
               </div>
 
               {/* Right Section: Trade Details */}
-              <div className="text-right mt-4 sm:mt-0">
+              <div className="flex flex-col items-start lg:items-end w-full lg:w-1/4 text-left lg:text-right space-y-1">
                 <p className="text-gray-600">
                   Trade Status:{" "}
                   <span className="font-bold capitalize">{trade.status}</span>
