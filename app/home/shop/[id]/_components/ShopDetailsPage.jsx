@@ -583,18 +583,22 @@ const loadMoreFAQs = () => {
             Frequently Asked Questions
           </h1>
           <Accordion type="single" collapsible>
-            {faqss.map((faq, index) => (
-              <AccordionItem key={faq._id} value={`item-${faq._id}`}>
-                <AccordionTrigger className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-100">
-                  <h2 className="text-xl font-semibold text-black">
-                    {faq.question}
-                  </h2>
-                </AccordionTrigger>
-                <AccordionContent className="p-4 border-t border-gray-200">
-                  <p className="text-gray-700">{faq.answer}</p>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
+            {faqss.length != 0 ? (
+              faqss.map((faq, index) => (
+                <AccordionItem key={faq._id} value={`item-${faq._id}`}>
+                  <AccordionTrigger className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-100">
+                    <h2 className="text-xl font-semibold text-black">
+                      {faq.question}
+                    </h2>
+                  </AccordionTrigger>
+                  <AccordionContent className="p-4 border-t border-gray-200">
+                    <p className="text-gray-700">{faq.answer}</p>
+                  </AccordionContent>
+                </AccordionItem>
+              ))
+            ) : (
+              <p className="text-center">No FAQS for this product</p>
+            )}
           </Accordion>
           {/* Debugging Logs */}
           {/* <div>

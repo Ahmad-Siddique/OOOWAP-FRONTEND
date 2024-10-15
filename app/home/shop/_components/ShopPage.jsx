@@ -25,9 +25,16 @@ import {
 import classNames from "classnames"; // For conditional class application
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import ProductCard from "@/components/cards/ProductCard";
+import { useRouter } from "next/navigation";
 
-const ShopPage = ({ loginInfo }) => {
-  const [products, setProducts] = useState([]);
+const ShopPage = ({
+  loginInfo,
+  products,
+  totalPages,
+  currentPage,
+  searchQuery,
+}) => {
+  // const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -41,6 +48,7 @@ const ShopPage = ({ loginInfo }) => {
   const [brands, setBrands] = useState("All");
   const [tiers, setTiers] = useState("All");
   const [popularity, setPopularity] = useState("Default");
+  const router=useRouter()
   const [price, setPrice] = useState({
     min: 0,
     max: 2000,
@@ -50,31 +58,30 @@ const ShopPage = ({ loginInfo }) => {
     setIsMounted(true);
   }, []);
 
-  const filteredProducts = async () => {
-     axios
-       .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", {
-         brands,
-         tiers,
-         popularity,
-         price,
-         userId:loginInfo?.user.id
-       })
-       .then((response) => {
-         console.log("{PRODUCTS}", response.data);
-         setProducts(response.data);
-         setIsLoading(false);
-       })
-       .catch((error) => {
-         console.error("Error fetching products:", error);
-         setIsLoading(false);
-       });
-  }
+  // const filteredProducts = async () => {
+  //    axios
+  //      .post(process.env.NEXT_PUBLIC_API_URL + "/product/filtered", {
+  //        brands,
+  //        tiers,
+  //        popularity,
+  //        price,
+  //        userId:loginInfo?.user.id
+  //      })
+  //      .then((response) => {
+  //        console.log("{PRODUCTS}", response.data);
+  //        setProducts(response.data);
+  //        setIsLoading(false);
+  //      })
+  //      .catch((error) => {
+  //        console.error("Error fetching products:", error);
+  //        setIsLoading(false);
+  //      });
+  // }
 
   useEffect(() => {
     if (isMounted) {
-      setIsLoading(true);
-     filteredProducts();
-       
+      // setIsLoading(true);
+      //  filteredProducts();
     }
   }, [isMounted]);
 
@@ -130,6 +137,25 @@ const ShopPage = ({ loginInfo }) => {
     return null;
   }
 
+  const handleSearchSubmit = () => {
+    // e.preventDefault();
+    let userIdd=""
+    if (loginInfo) {
+      userIdd=loginInfo.user.id
+    }
+    // const query = e.target.search.value; // Get the search query value
+    router.push(
+      `/home/shop?brands=${brands}&tiers=${tiers}&popularity=${popularity}&priceMin=${price.min}&priceMax=${price.max}&userId=${userIdd}&page=1`
+    ); // Navigate to the first page with the search query
+  
+  // /products?brands=Nike&tiers=0-200&userId=123&page=2&limit=5
+  };
+
+  // Handle pagination
+  const handlePageChange = (newPage) => {
+    router.push(`/home/shop?search=${searchQuery}&page=${newPage}`); // Maintain search query and change page
+  };
+
   return (
     <div className="shop-page bg-gray-100 text-black min-h-screen flex flex-col items-center">
       {notification.show && (
@@ -146,7 +172,8 @@ const ShopPage = ({ loginInfo }) => {
         </div>
       )}
 
-      <div className="w-full h-96 bg-[url(/images/brands.jpg)] bg-contain bg-top bg-no-repeat"></div>
+      <div className="w-full h-44 sm:h-40 md:h-96 lg:h-[30rem] bg-[url(/images/brands.jpg)] bg-contain bg-top bg-no-repeat"></div>
+
       <div className="grid w-full py-10 px-5 lg:px-10 grid-cols-1 lg:grid-cols-4 gap-y-10 lg:gap-x-20 gap-x-0">
         {/* Filter Section */}
         <div className="col-span-1 flex items-center w-full flex-col gap-6">
@@ -353,7 +380,7 @@ const ShopPage = ({ loginInfo }) => {
               <AccordionTrigger className="text-xl font-semibold text-black/80">
                 Price
               </AccordionTrigger>
-              <AccordionContent className="flex flex-col gap-1">
+              <AccordionContent className="flex flex-col gap-1 mx-4">
                 <MultiRangeSlider
                   style={{
                     border: "none",
@@ -380,7 +407,7 @@ const ShopPage = ({ loginInfo }) => {
           </Accordion>
           <div className="flex items-center w-full justify-between gap-1">
             <button
-              onClick={() => filteredProducts()}
+              onClick={() => handleSearchSubmit()}
               className="w-full justify-center flex items-center gap-1 bg-secondary group text-black font-bold py-2 text-lg pl-5 pr-4"
             >
               Filter
@@ -435,9 +462,9 @@ const ShopPage = ({ loginInfo }) => {
                 <span className="ml-2 text-gray-700">Loading...</span>
               </div>
             ) : (
-              <div className="grid grid-cols-1 max-w-6xl sm:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-16 ">
-                {products.results && products.results.length !== 0 ? (
-                  products.results.map((product) => (
+              <div className="grid grid-cols-1 max-w-6xl sm:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-16 place-items-center ">
+                {products && products.length !== 0 ? (
+                  products.map((product) => (
                     <ProductCard key={product._id} product={product} />
                   ))
                 ) : (
@@ -447,22 +474,55 @@ const ShopPage = ({ loginInfo }) => {
                 )}
               </div>
             )}
-            {/* <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination> */}
+            {/* Pagination */}
+            <Pagination className="mt-5 flex justify-center items-center space-x-2">
+              {/* Previous Button */}
+              <PaginationItem>
+                <button
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  className={`px-3 py-2 border rounded ${
+                    currentPage === 1
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+              </PaginationItem>
+
+              {/* Page Numbers */}
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`px-3 py-2 border rounded ${
+                    currentPage === index + 1
+                      ? "bg-[#C79B44] text-white font-bold"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+
+              {/* Next Button */}
+              <PaginationItem>
+                <button
+                  onClick={() =>
+                    handlePageChange(Math.min(totalPages, currentPage + 1))
+                  }
+                  className={`px-3 py-2 border rounded ${
+                    currentPage === totalPages
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </PaginationItem>
+            </Pagination>
           </div>
         </div>
       </div>
