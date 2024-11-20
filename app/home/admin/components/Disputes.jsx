@@ -64,13 +64,14 @@ const DisputePanel = ({
         },
         config
       );
-      setDisputes(
-        disputes.map((dispute) =>
-          dispute._id === disputeId
-            ? { ...dispute, status: "resolved" }
-            : dispute
-        )
-      );
+      // setDisputes(
+      //   disputes.map((dispute) =>
+      //     dispute._id === disputeId
+      //       ? { ...dispute, status: "resolved" }
+      //       : dispute
+      //   )
+      // );
+      router.refresh()
     } catch (error) {
       console.error("Error resolving dispute:", error);
     }
@@ -81,7 +82,8 @@ const DisputePanel = ({
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/disputes/${disputeId}`
       );
-      setDisputes(disputes.filter((dispute) => dispute._id !== disputeId));
+      // setDisputes(disputes.filter((dispute) => dispute._id !== disputeId));
+      router.refresh()
     } catch (error) {
       console.error("Error deleting dispute:", error);
     }

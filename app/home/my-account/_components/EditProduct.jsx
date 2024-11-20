@@ -286,17 +286,17 @@ const EditProductPage = ({ loginInfo, params }) => {
 
         {/* Image Uploads */}
         <ImageUpload
-          label="Image"
+          label="Image 1"
           onChange={handleImageChange("imageUrl")}
           imagePreview={formData.imageUrl}
         />
         <ImageUpload
-          label="Image URL 1"
+          label="Image 2"
           onChange={handleImageChange("imageUrl1")}
           imagePreview={formData.imageUrl1}
         />
         <ImageUpload
-          label="Image URL 2"
+          label="Image 3"
           onChange={handleImageChange("imageUrl2")}
           imagePreview={formData.imageUrl2}
         />

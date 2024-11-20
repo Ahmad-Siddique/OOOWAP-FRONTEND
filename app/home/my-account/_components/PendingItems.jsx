@@ -184,7 +184,7 @@ const PendingItems = ({ loginInfo }) => {
     setIsModalOpen(true);
   };
 
-  const handleReverseTrade = async (offerer) => {
+  const handleReverseTrade = async (selectedItem1) => {
     try {
       const token = loginInfo ? loginInfo.user.token : null;
       const config = {
@@ -197,7 +197,8 @@ const PendingItems = ({ loginInfo }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/trade/reverse`,
         {
           tradeId: selectedTrade._id,
-          selectedOffererProductId: selectedTrade.offererProduct._id,
+          // selectedOffererProductId: selectedTrade.offererProduct._id,
+          selectedOffererProductId: selectedItem1._id,
         },
         config
       );
@@ -340,7 +341,7 @@ const PendingItems = ({ loginInfo }) => {
               Cancel
             </Button>
             <Button
-              onClick={handleReverseTrade}
+              onClick={()=>handleReverseTrade(selectedItem)}
               disabled={!selectedItem}
               className="rounded-md bg-[#F5BA41] hover:bg-[#F5BA41] text-white"
             >

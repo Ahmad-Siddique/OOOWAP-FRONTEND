@@ -84,13 +84,13 @@ const QuestionsPage = ({ params, loginInfo }) => {
               <h2 className="text-lg font-semibold">{question.question}</h2>
               <p className="text-gray-600">
                 Status:{" "}
-                {question.answer != "No answer provided" ? (
+                {question.answer && question?.answer.length != 0 ? (
                   <span className="text-green-500">Answered</span>
                 ) : (
                   <span className="text-red-500">Not Answered</span>
                 )}
               </p>
-              {question.answer == "No answer provided" && (
+              {(!question.answer || question?.answer.length == 0) && (
                 <button
                   className="mt-2 bg-[#F5BA41] text-white py-1 px-3 rounded hover:bg-blue-600"
                   onClick={() => handleOpenModal(question)}
